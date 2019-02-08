@@ -6,9 +6,6 @@ Some sort of validator
 
 """
 
-from ufoProcessor import DesignSpaceProcessor, AxisDescriptor, SourceDescriptor, InstanceDescriptor, RuleDescriptor
-from getDesignSpaceWindow import getSkateboard
-
 class DesignSpaceError(object):
     _categories = {
         1: "designspace geometry",
@@ -107,7 +104,10 @@ class DesignSpaceError(object):
             t.append(self._errors.get(key))
         return "Designspace Error: " + ": ".join(t)
             
-                
+def allErrors():
+    e = DesignSpaceError()
+    return e._errors
+    
 def makeErrorDocumentationTable():
     # Print the categories and the errors in a md format for the docs page. 
     t = ["# Classes of problems"]
@@ -127,3 +127,17 @@ def makeErrorDocumentationTable():
     print("\n".join(t))
     
 makeErrorDocumentationTable()
+
+def makeFunctions():
+    # make descriptive function names
+    for key, desc in allErrors().items():
+        new = []
+        for i, p in enumerate(desc.split(" ")):
+            if i == 0:
+                new.append(p)
+            else:
+                new.append(p[0].upper()+ p[1:])
+        new.append("Error")
+        print("def %s():\n    # %s, %s\n    return DesignSpaceError(%d,%d)\n" % (''.join(new), desc, key, key[0], key[1]))
+        
+makeFunctions()
