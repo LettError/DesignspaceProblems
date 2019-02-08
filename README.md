@@ -11,7 +11,7 @@ This list is not intended to be normative, just an explanation of what the terms
 * **Non-breaking errors**: the class of errors that calculate well, but are still wrong. For instance: the location of starting point on a contour. Or the order of contours in a glyph, when each contour has the same number of points.
 * **Bootstrap errors**: Not enough data, or the wrong data. It is impossible to create an mutator.
 
-## Classes of problems
+## Conclusions
 1. can't build processor with available masters
 2. can't generate instance data with processor
 3. can't generate variable font from designspace
@@ -19,55 +19,81 @@ This list is not intended to be normative, just an explanation of what the terms
 4. instance contains failing glyphs
 5. instance is missing certain data (info, kerning, glyphs)
 
-## 1. Designspace geometry
-1. no axes defined in document
-	* (for older designspaces)
-	* no axis order defined
-3. location out of bounds
-3. mapping table has overlaps, switchbacks
-4. tag misnamed / missing
-5. axis name missing
+## Classes of problems
+	* 1. designspace geometry
+	* 2. sources
+	* 3. instances
+	* 4. glyphs
+	* 5. kerning
+	* 6. font info
+	* 7. rules
 
-## 2. Masters
-1. master not found
-2. layer not found in UFO
-3. no master on default location
-	3.1. in mutatormath systems: no flag found that indicates the default.
-4. no master data in foreground layer
-5. two or more masters on same location
-6. anisotropic location
-	* Allowed in mutatormath systems, not allowed in varlib systems.
-7. different UFO font source versions (is this really a problem?)
+## 1. designspace geometry
+	* 0. no axes defined
+	* 1. axis missing
+	* 2. axis maximum missing
+	* 3. axis minimum missing
+	* 4. axis default missing
+	* 5. axis name missing
+	* 6. axis tag missing
+	* 7. axis tag mismatch
+	* 8. mapping table has overlaps
 
-## 3. Instances
-1. no valid location
-2. missing names
+## 2. sources
+	* 0. no sources defined
+	* 1. source UFO missing
+	* 2. source UFO format too old
+	* 3. source layer missing
+	* 4. source location missing
+	* 5. source location has value for undefined axis
+	* 6. source location has out of bounds value
+	* 7. no source on default location
+	* 8. multiple sources on default location
+	* 9. multiple sources on location
+	* 10. source location is anisotropic
 
-## 4. Glyph objects
-1. different number of contours
-2. different number of components
-3. different number of anchors
-4. different number of on-curve points on a contour
-5. different number of off-curve points on a contour
-6. wrong curve type
-7. non-default glyph empty when default is not
-8. default glyph empty when non-default is not
+## 3. instances
+	* 1. instance location missing
+	* 2. instance location has value for undefined axis
+	* 3. instance location has out of bounds value
+	* 4. multiple sources on default location
+	* 5. instance location is anisotropic
+	* 6. missing family name
+	* 7. missing style name
+	* 8. missing output path
+	* 9. duplicate instances
 
-## 5. Kerning
-1. kerning is missing in one of the masters
-	* in neutral / one of the other masters
-	* there may be differences between mutatormath and varlib systems.
-3. specific exceptions are missing
-4. specific pairs are wrong
-	* through extrapolation
+## 4. glyphs
+	* 0. different number of contours in glyph
+	* 1. different number of components in glyph
+	* 2. different number of anchors in glyph
+	* 3. different number of on-curve points on contour
+	* 4. different number of off-curve points on contour
+	* 5. curve has wrong type
+	* 6. non-default glyph is empty
+	* 7. default glyph is empty
+	* 8. contour has wrong direction
 
-## 6. Font.info
-1. Missing values
-	* ascender, descender, unitsPerEm
+## 5. kerning
+	* 0. no kerning in source
+	* 1. no kerning in default
+	* 2. kerning group members do not match
+	* 3. kerning group missing
+	* 4. kerning pair missing
 
-## 6. Rules
-1. source or destination glyph missing
-2. condition values out of bounds
-3. condition values empty
-4. condition values the same
+## 6. font info
+	* 0. source font info missing value for units per em
+	* 1. source font info missing value for ascender
+	* 2. source font info missing value for descender
+	* 3. source font info missing value for xheight
 
+## 7. rules
+	* 0. source glyph missing
+	* 1. destination glyph missing
+	* 2. source and destination glyphs the same
+	* 3. no substition glyphs defined
+	* 4. no conditionset defined
+	* 5. condition values on unknown axis
+	* 6. condition values out of axis bounds
+	* 7. condition values are the same
+	* 8. duplicate conditions
