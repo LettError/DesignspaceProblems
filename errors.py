@@ -90,19 +90,27 @@ class DesignSpaceError(object):
         (7,8): 'duplicate conditions',
         }
         
-    def __init__(self, category=None, error=None):
+    def __init__(self, category=None, error=None, data=None):
         self.category = category
         self.error = error
+        self.data = data
     
+    def __eq__(self, otherError):
+        # this way we can test membership in a list
+        return (otherError.category,  otherError.error) == (self.category, self.error)
+        
     def __repr__(self):
         t = []
         key = (self.category, self.error)
-        print(key)
         if self.category in self._categories:
             t.append(self._categories.get(self.category))
         if key in self._errors:
             t.append(self._errors.get(key))
-        return "Designspace Error: " + ": ".join(t)
+        if self.data:
+            dt = " data"+ ' '.join("%s: %s" % (a, b) for a, b in self.data.items())
+        else:
+            dt = ''
+        return "Designspace Error: " + ": ".join(t) + dt
             
 def allErrors():
     e = DesignSpaceError()
@@ -126,18 +134,40 @@ def makeErrorDocumentationTable():
         t.append("  * `%d.%d\t%s`" % (cat, err, e._errors[(cat,err)]))
     print("\n".join(t))
     
-makeErrorDocumentationTable()
-
-def makeFunctions():
+def makeFunctions(whiteSpace=None):
     # make descriptive function names
+    modl = ["# generated from errors.py", 'from errors import DesignSpaceError']
+    if whiteSpace is None:
+        whiteSpace = "    "
+    text = []
     for key, desc in allErrors().items():
         new = []
         for i, p in enumerate(desc.split(" ")):
             if i == 0:
                 new.append(p)
             else:
-                new.append(p[0].upper()+ p[1:])
+                t = p[0].upper()+ p[1:]
+                new.append(t)
         new.append("Error")
-        print("def %s():\n    # %s, %s\n    return DesignSpaceError(%d,%d)\n" % (''.join(new), desc, key, key[0], key[1]))
+        new = ''.join(new)
+        new = new.replace('-', '')
+        func = "def %s(**kwargs):\n%s# %s, %s\n%sreturn DesignSpaceError(%d,%d,data=kwargs)\n" % (''.join(new), whiteSpace, desc, key, whiteSpace, key[0], key[1])
+        modl.append(func)
+    path = "./errorFunctions.py"
+    f = open(path, 'w')
+    f.write("\n".join(modl))
+    f.close()
         
+def testCompare():
+    # test the error comparing thing
+    for key1, desc1 in allErrors().items():
+        for key2, desc2 in allErrors().items():
+            e1 = DesignSpaceError(*key1, dict(item1=1, item2=2))
+            e2 = DesignSpaceError(*key2, dict(item1=3, item2=4))
+            if e1 == e2:
+                print(key1, key2, e1 == e2)
+                print(e1.data)
+
 makeFunctions()
+#makeErrorDocumentationTable()
+#testCompare()
