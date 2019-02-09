@@ -1,5 +1,4 @@
 import os, glob
-from errorFunctions import *
 import errors
 from importlib import reload
 reload(errors)
@@ -15,7 +14,11 @@ class DesignSpaceChecker(object):
         self.errors = []
         self.ds = DesignSpaceProcessor()
         if os.path.exists(path):
-            self.ds.read(path)
+            try:
+                self.ds.read(path)
+            except:
+                self.errors.append(DesignSpaceError(0,0))
+                
 
     def data_getAxisValues(self, axisName=None):
         # return the minimum / default / maximum for the axis
@@ -52,28 +55,36 @@ class DesignSpaceChecker(object):
         for i, ad in enumerate(self.ds.axes):
             # 1.5	axis name missing
             if ad.name is None:
-                name = "unnamed_axis_%d" %i
-                self.errors.append(DesignSpaceError(1,5), dict(name=name))
+                axisName = "unnamed_axis_%d" %i
+                self.errors.append(DesignSpaceError(1,5), dict(axisName=axisName))
             else:
-                name = ad.name
+                axisName = ad.name
             # 1.2	axis maximum missing
             if ad.maximum is None:
-                self.errors.append(DesignSpaceError(1,2), dict(name=name))
+                self.errors.append(DesignSpaceError(1,2, dict(axisName=axisName)))
             # 1.3	axis minimum missing
             if ad.minimum is None:
-                self.errors.append(DesignSpaceError(1,3), dict(name=name))
+                self.errors.append(DesignSpaceError(1,3, dict(axisName=axisName)))
             # 1.4	axis default missing
             if ad.default is None:
-                self.errors.append(DesignSpaceError(1,4), dict(name=name))
+                self.errors.append(DesignSpaceError(1,4, dict(axisName=axisName)))
+            # 1,9 minimum and maximum value are the same and not None
+            if (ad.minimum == ad.maximum) and ad.minimum != None:
+                self.errors.append(DesignSpaceError(1,9, dict(axisName=axisName)))
+            # 1,10 default not between minimum and maximum
+            if ad.minimum is not None and ad.maximum is not None and ad.default is not None:
+                if not ((ad.minimum < ad.default <= ad.maximum) or (ad.minimum <= ad.default < ad.maximum)):
+                    self.errors.append(DesignSpaceError(1,10, dict(axisName=axisName)))
+
             # 1.6	axis tag missing
             if ad.tag is None:
-                self.errors.append(DesignSpaceError(1,6), dict(name=name))
+                self.errors.append(DesignSpaceError(1,6, dict(axisName=axisName)))
             # 1.7	axis tag mismatch
             else:
                 if ad.tag in self._registeredTags:
                     regName = self._registeredTags[ad.tag]
-                    if regName not in name.lower():
-                        self.errors.append(DesignSpaceError(1,6), dict(name=name))
+                    if regName not in axisName.lower():
+                        self.errors.append(DesignSpaceError(1,6, dict(axisName=axisName)))
             # 1.8	mapping table has overlaps
             # XX
     
@@ -83,8 +94,10 @@ class DesignSpaceChecker(object):
         if len(self.ds.sources) == 0:
             self.errors.append(DesignSpaceError(2,0))
         for i, sd in enumerate(self.ds.sources):
+            if sd.path is None:
+                self.errors.append(DesignSpaceError(2,1, dict(path=sd.path)))
             # 2,1 source UFO missing
-            if not os.path.exists(sd.path):
+            elif not os.path.exists(sd.path):
                 self.errors.append(DesignSpaceError(2,1, dict(path=sd.path)))
             else:
                 # 2,2 source UFO format too old
@@ -104,14 +117,18 @@ class DesignSpaceChecker(object):
                     self.errors.append(DesignSpaceError(2,4, dict(path=sd.path)))
                 else:
                     for axisName, axisValue in sd.location.items():
-                        if axisName in axisValues:
-                            # 2,6 source location has out of bounds value
-                            mn, df, mx = axisValues[axisName]
-                            if axisValue < mn or axisValue > mx:
-                                self.errors.append(DesignSpaceError(2,6, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue)))
+                        if type(axisValue) == tuple:
+                            axisValues = list(axisValue)
+                            self.errors.append(DesignSpaceError(2,10, dict(location=sd.location)))
                         else:
-                            # 2,5 source location has value for undefined axis
-                            self.errors.append(DesignSpaceError(2,5, dict(axisName=axisName)))
+                            if axisName in axisValues:
+                                # 2,6 source location has out of bounds value
+                                mn, df, mx = axisValues[axisName]
+                                if axisValue < mn or axisValue > mx:
+                                    self.errors.append(DesignSpaceError(2,6, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue)))
+                            else:
+                                # 2,5 source location has value for undefined axis
+                                self.errors.append(DesignSpaceError(2,5, dict(axisName=axisName)))
         defaultLocation = self.ds.newDefaultLocation()
         defaultCandidates = []
         for i, sd in enumerate(self.ds.sources):
@@ -132,9 +149,9 @@ class DesignSpaceChecker(object):
             if key not in allLocations:
                 allLocations[key] = []
             allLocations[key].append(sd)
-            if tuple in [type(n) for n in sd.location.values()]:
-                # 2,10 source location is anisotropic
-                self.errors.append(DesignSpaceError(2,10))
+            # if tuple in [type(n) for n in sd.location.values()]:
+            #     # 2,10 source location is anisotropic
+            #     self.errors.append(DesignSpaceError(2,10))
         for key, items in allLocations.items():
             if len(items) > 1 and items[0].location != defaultLocation:
                 # 2,9 multiple sources on location
@@ -203,7 +220,14 @@ class DesignSpaceChecker(object):
     
     def checkRules(self):
         pass
-        
+    
+    def canGenerateUFOInstances(self):
+        # do we have the stuff to generate UFO instances?
+        pass
+    
+    def canGenerateVariableFont(self):
+        # do we have the stuff to generate a variable font?
+        pass
 
 if __name__ == "__main__":
     ufoProcessorRoot = "/Users/erik/code/ufoProcessor/Tests"

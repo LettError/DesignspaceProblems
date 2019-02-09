@@ -8,6 +8,7 @@ Some sort of validator
 
 class DesignSpaceError(object):
     _categories = {
+        0: "file",
         1: "designspace geometry",
         2: "sources",
         3: "instances",
@@ -17,6 +18,9 @@ class DesignSpaceError(object):
         7: "rules",
         }
     _errors = {
+        # 0 file 
+        (0,0): "file corrupt",
+
         # 1 designspace geometry
         (1,0): "no axes defined",
         (1,1): "axis missing",
@@ -28,6 +32,8 @@ class DesignSpaceError(object):
         (1,7): "axis tag mismatch",
 
         (1,8): "mapping table has overlaps",
+        (1,9): "minimum and maximum value are the same",
+        (1,10): "default not between minimum and maximum",
 
         # 2 sources
         (2,0): "no sources defined",
@@ -112,7 +118,7 @@ class DesignSpaceError(object):
             dt = ", "+ ' '.join("%s: %s" % (a, b) for a, b in self.data.items())
         else:
             dt = ''
-        return ": ".join(t) + dt + ' %s' % str(key)
+        return '[' + ": ".join(t) + dt + ' %s' % str(key) + ']'
             
 def allErrors():
     e = DesignSpaceError()
@@ -170,6 +176,8 @@ def testCompare():
                 print(key1, key2, e1 == e2)
                 print(e1.data)
 
-makeFunctions()
-#makeErrorDocumentationTable()
-#testCompare()
+if __name__ == "__main__":
+    makeFunctions()
+    makeErrorDocumentationTable()
+    #testCompare()
+    pass

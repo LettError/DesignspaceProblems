@@ -1,5 +1,9 @@
 # generated from errors.py
 from errors import DesignSpaceError
+def fileCorruptError(**kwargs):
+    # file corrupt, (0, 0)
+    return DesignSpaceError(0,0,data=kwargs)
+
 def noAxesDefinedError(**kwargs):
     # no axes defined, (1, 0)
     return DesignSpaceError(1,0,data=kwargs)
@@ -35,6 +39,14 @@ def axisTagMismatchError(**kwargs):
 def mappingTableHasOverlapsError(**kwargs):
     # mapping table has overlaps, (1, 8)
     return DesignSpaceError(1,8,data=kwargs)
+
+def minimumAndMaximumValueAreTheSameError(**kwargs):
+    # minimum and maximum value are the same, (1, 9)
+    return DesignSpaceError(1,9,data=kwargs)
+
+def defaultNotBetweenMinimumAndMaximumError(**kwargs):
+    # default not between minimum and maximum, (1, 10)
+    return DesignSpaceError(1,10,data=kwargs)
 
 def noSourcesDefinedError(**kwargs):
     # no sources defined, (2, 0)

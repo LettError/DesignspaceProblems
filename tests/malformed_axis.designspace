@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<designspace format="4.0">
+  <axes>
+    <axis tag="1111" name="snap" minimum="1000" maximum="1000" default="1000"/>
+    <axis tag="222" name="crackle" minimum="0" maximum="1000" default="-1000"/>
+  </axes>
+</designspace>
