@@ -46,7 +46,7 @@ class DesignSpaceError(object):
         (3,1): 'instance location missing',
         (3,2): "instance location has value for undefined axis",
         (3,3): "instance location has out of bounds value",
-        (3,4): "multiple sources on default location",
+        (3,4): "multiple instances on location",
         (3,5): "instance location requires extrapolation",
         (3,5): "instance location is anisotropic",
         (3,6): "missing family name",
@@ -97,6 +97,8 @@ class DesignSpaceError(object):
     
     def __eq__(self, otherError):
         # this way we can test membership in a list
+        if type(otherError) == tuple:
+            return otherError == (self.category, self.error)
         return (otherError.category,  otherError.error) == (self.category, self.error)
         
     def __repr__(self):
@@ -106,11 +108,11 @@ class DesignSpaceError(object):
             t.append(self._categories.get(self.category))
         if key in self._errors:
             t.append(self._errors.get(key))
-        if self.data:
-            dt = " data"+ ' '.join("%s: %s" % (a, b) for a, b in self.data.items())
+        if self.data is not None:
+            dt = ", "+ ' '.join("%s: %s" % (a, b) for a, b in self.data.items())
         else:
             dt = ''
-        return "Designspace Error: " + ": ".join(t) + dt
+        return ": ".join(t) + dt + ' %s' % str(key)
             
 def allErrors():
     e = DesignSpaceError()

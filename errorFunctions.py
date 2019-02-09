@@ -92,8 +92,8 @@ def instanceLocationHasOutOfBoundsValueError(**kwargs):
     # instance location has out of bounds value, (3, 3)
     return DesignSpaceError(3,3,data=kwargs)
 
-def multipleSourcesOnDefaultLocationError(**kwargs):
-    # multiple sources on default location, (3, 4)
+def multipleInstancesOnLocationError(**kwargs):
+    # multiple instances on location, (3, 4)
     return DesignSpaceError(3,4,data=kwargs)
 
 def instanceLocationIsAnisotropicError(**kwargs):
