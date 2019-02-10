@@ -20,6 +20,7 @@ This list is not intended to be normative, just an explanation of what the terms
 5. instance is missing certain data (info, kerning, glyphs)
 
 # Classes of problems
+  * 0. file
   * 1. designspace geometry
   * 2. sources
   * 3. instances
@@ -27,6 +28,10 @@ This list is not intended to be normative, just an explanation of what the terms
   * 5. kerning
   * 6. font info
   * 7. rules
+
+## 0 file
+
+  * `0.0	file corrupt`
 
 ## 1 designspace geometry
 
@@ -39,6 +44,8 @@ This list is not intended to be normative, just an explanation of what the terms
   * `1.6	axis tag missing`
   * `1.7	axis tag mismatch`
   * `1.8	mapping table has overlaps`
+  * `1.9	minimum and maximum value are the same`
+  * `1.10	default not between minimum and maximum`
 
 ## 2 sources
 
@@ -59,7 +66,7 @@ This list is not intended to be normative, just an explanation of what the terms
   * `3.1	instance location missing`
   * `3.2	instance location has value for undefined axis`
   * `3.3	instance location has out of bounds value`
-  * `3.4	multiple sources on default location`
+  * `3.4	multiple instances on location`
   * `3.5	instance location is anisotropic`
   * `3.6	missing family name`
   * `3.7	missing style name`
