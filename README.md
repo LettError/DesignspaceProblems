@@ -11,7 +11,7 @@ This list is not intended to be normative, just an explanation of what the terms
 * **Non-breaking errors**: the class of errors that calculate well, but are still wrong. For instance: the location of starting point on a contour. Or the order of contours in a glyph, when each contour has the same number of points.
 * **Bootstrap errors**: Not enough data, or the wrong data. It is impossible to create an mutator.
 
-## Conclusions
+## Actions and conclusions
 1. can't build processor with available masters
 2. can't generate instance data with processor
 3. can't generate variable font from designspace
@@ -29,11 +29,11 @@ This list is not intended to be normative, just an explanation of what the terms
   * `6. font info`
   * `7. rules`
 
-## 0 file
+## 0. file
 
   * `0.0	file corrupt`
 
-## 1 designspace geometry
+## 1. designspace geometry
 
   * `1.0	no axes defined`
   * `1.1	axis missing`
@@ -47,7 +47,7 @@ This list is not intended to be normative, just an explanation of what the terms
   * `1.9	minimum and maximum value are the same`
   * `1.10	default not between minimum and maximum`
 
-## 2 sources
+## 2. sources
 
   * `2.0	no sources defined`
   * `2.1	source UFO missing`
@@ -61,7 +61,7 @@ This list is not intended to be normative, just an explanation of what the terms
   * `2.9	multiple sources on location`
   * `2.10	source location is anisotropic`
 
-## 3 instances
+## 3. instances
 
   * `3.1	instance location missing`
   * `3.2	instance location has value for undefined axis`
@@ -73,7 +73,7 @@ This list is not intended to be normative, just an explanation of what the terms
   * `3.8	missing output path`
   * `3.9	duplicate instances`
 
-## 4 glyphs
+## 4. glyphs
 
   * `4.0	different number of contours in glyph`
   * `4.1	different number of components in glyph`
@@ -85,7 +85,7 @@ This list is not intended to be normative, just an explanation of what the terms
   * `4.7	default glyph is empty`
   * `4.8	contour has wrong direction`
 
-## 5 kerning
+## 5. kerning
 
   * `5.0	no kerning in source`
   * `5.1	no kerning in default`
@@ -93,14 +93,14 @@ This list is not intended to be normative, just an explanation of what the terms
   * `5.3	kerning group missing`
   * `5.4	kerning pair missing`
 
-## 6 font info
+## 6. font info
 
   * `6.0	source font info missing value for units per em`
   * `6.1	source font info missing value for ascender`
   * `6.2	source font info missing value for descender`
   * `6.3	source font info missing value for xheight`
 
-## 7 rules
+## 7. rules
 
   * `7.0	source glyph missing`
   * `7.1	destination glyph missing`
