@@ -20,14 +20,14 @@ This list is not intended to be normative, just an explanation of what the terms
 5. instance is missing certain data (info, kerning, glyphs)
 
 # Classes of problems
-  * 0. file
-  * 1. designspace geometry
-  * 2. sources
-  * 3. instances
-  * 4. glyphs
-  * 5. kerning
-  * 6. font info
-  * 7. rules
+  * `0. file`
+  * `1. designspace geometry`
+  * `2. sources`
+  * `3. instances`
+  * `4. glyphs`
+  * `5. kerning`
+  * `6. font info`
+  * `7. rules`
 
 ## 0 file
 
