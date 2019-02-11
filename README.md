@@ -7,7 +7,9 @@ This list is not intended to be normative, just an explanation of what the terms
 
 * **Mutator**: an **object** that can interpolate. It has all the relevant source data and designspace geometry for one specific thing, for instance a glyph. The processor can generate instances for arbitrary locations in the designspace. This can be a `mutatorMath` object, but also a `fonttools varlib.model` object. I'm sure there will be more.
 * **Designspace**: the **document** that contains data for the axes, the location of the sources, the location of the instances. The designspace can also contain data about the rules / feature variations.
-* **Breaking errors**: the class of errors that prevents any calculations from happening.
+* **Structural errors**: Errors in the structure of the designspace. Badly defined axes, missing sources, no default, multiple default, those kinds of things. This could include (but does not at this time) errors relating to the placement of the masters.
+* **Design errors**: Errors in the design data. Incompatible glyphs, missing glyphs, incompatible kerning groups. We can only check for design errors if there are no structural errors.
+* **Breaking errors**: errors that prevent the next step from happening. Can't generate a UFO if something is wrong with the masters.
 * **Non-breaking errors**: the class of errors that calculate well, but are still wrong. For instance: the location of starting point on a contour. Or the order of contours in a glyph, when each contour has the same number of points.
 * **Bootstrap errors**: Not enough data, or the wrong data. It is impossible to create an mutator.
 
