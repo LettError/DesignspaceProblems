@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<glyph name="narrow" format="2">
-  <advance width="100"/>
-  <unicode hex="00C9"/>
+<glyph name="wide" format="2">
+  <advance width="800"/>
+  <unicode hex="00CD"/>
   <outline>
     <contour>
       <point x="0" y="0" type="line"/>
-      <point x="100" y="0" type="line"/>
-      <point x="100" y="800" type="line"/>
+      <point x="800" y="0" type="line"/>
+      <point x="800" y="800" type="line"/>
       <point x="0" y="800" type="line"/>
     </contour>
   </outline>

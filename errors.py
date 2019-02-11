@@ -59,6 +59,7 @@ class DesignSpaceError(object):
         (3,7): "missing style name",
         (3,8): "missing output path",
         (3,9): "duplicate instances",
+        (3,10): "no instances defined",
         
         # 4 glyphs
         (4,0): 'different number of contours in glyph',
@@ -75,14 +76,17 @@ class DesignSpaceError(object):
         (5,0): 'no kerning in source',
         (5,1): 'no kerning in default',
         (5,2): 'kerning group members do not match',
-        (5,3): 'kerning group missing',
+        (5,3): 'kerning group missing in default',
         (5,4): 'kerning pair missing',
+        (5,5): 'no kerning groups in default',
+        (5,6): 'no kerning groups in source',
 
         # 6 font info
         (6,0): 'source font info missing value for units per em',
         (6,1): 'source font info missing value for ascender',
         (6,2): 'source font info missing value for descender',
         (6,3): 'source font info missing value for xheight',
+        (6,4): 'source font unitsPerEm value different from default unitsPerEm',
 
         # 7 rules
         (7,0): 'source glyph missing',
@@ -131,13 +135,13 @@ def makeErrorDocumentationTable():
     cats = list(e._categories.keys())
     cats.sort()
     for cat in cats:
-        t.append("  * %d. %s" % (cat, e._categories[cat]))
+        t.append("  * `%d. %s`" % (cat, e._categories[cat]))
     errs = list(e._errors.keys())
     errs.sort()
     lastCat = None
     for cat, err in errs:
         if cat != lastCat:
-            t.append("\n## %d %s\n" % (cat, e._categories[cat]))
+            t.append("\n## %d. %s\n" % (cat, e._categories[cat]))
             lastCat = cat
         t.append("  * `%d.%d\t%s`" % (cat, err, e._errors[(cat,err)]))
     print("\n".join(t))

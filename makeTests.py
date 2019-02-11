@@ -1,6 +1,7 @@
 # make some tests
 
 import os, glob
+from pprint import pprint
 import errors
 from importlib import reload
 reload(errors)
@@ -9,7 +10,7 @@ import checker
 reload(checker)
 from checker import DesignSpaceChecker
 import ufoProcessor
-from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer, AxisDescriptor, SourceDescriptor
+from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer, AxisDescriptor, SourceDescriptor, InstanceDescriptor
 from fontParts.fontshell import RFont
 
 def makeTests():
@@ -131,6 +132,43 @@ def makeTests():
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
     assert (2,10) in dc.errors        # source location is anisotropic
+
+    # ok axis, ok sources
+    d = DesignSpaceProcessor()
+    tp = os.path.join(path, "viable.designspace")
+    a1 = AxisDescriptor()
+    a1.name = "snap"
+    a1.minimum = 0
+    a1.maximum = 1000
+    a1.default = 0
+    a1.tag = "snap"
+    d.addAxis(a1)
+    s1 = SourceDescriptor()
+    #s1.name = "master.1"
+    s1.location = dict(snap=0)
+    s1.path = os.path.join(path, 'masters','geometryMaster1.ufo')
+    d.addSource(s1)
+    #s2.name = "master.2"
+    s2 = SourceDescriptor()
+    s2.location = dict(snap=1000)
+    s2.path = os.path.join(path, 'masters','geometryMaster2.ufo')
+    d.addSource(s2)
+    s3 = SourceDescriptor()
+    s3.location = dict(snap=500)
+    s3.path = os.path.join(path, 'masters','geometryMaster3.ufo')   # bad kerning
+    d.addSource(s3)
+    jd = InstanceDescriptor()
+    jd.familyName = "TestFamily"
+    jd.styleName = "TestStyle"
+    jd.location = dict(snap=500)
+    jd.path = os.path.join(path, 'instances','generatedInstance.ufo')
+    d.addInstance(jd)
+    d.write(tp)
+    # let's add the object rather than the path and see what happens
+    dc = DesignSpaceChecker(tp)
+    dc.checkEverything()
+    pprint(dc.errors)
+    assert not dc.hasStructuralErrors()   # minimum working designspace, ready for fonts
 
 
 makeTests()

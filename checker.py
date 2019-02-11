@@ -6,19 +6,22 @@ from errors import DesignSpaceError
 import ufoProcessor
 from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer
 from fontParts.fontshell import RFont
+from pprint import pprint
 
 class DesignSpaceChecker(object):
     _registeredTags = dict(wght = 'weight', wdth = 'width', slnt = 'slant', opsz = 'optical', ital = 'italic')
-    def __init__(self, path):
+    def __init__(self, pathOrObject):
         # check things
         self.errors = []
-        self.ds = DesignSpaceProcessor()
-        if os.path.exists(path):
-            try:
-                self.ds.read(path)
-            except:
-                self.errors.append(DesignSpaceError(0,0))
-                
+        if isinstance(pathOrObject, str):
+            self.ds = DesignSpaceProcessor()
+            if os.path.exists(pathOrObject):
+                try:
+                    self.ds.read(pathOrObject)
+                except:
+                    self.errors.append(DesignSpaceError(0,0))
+        else:
+            self.ds = pathOrObject
 
     def data_getAxisValues(self, axisName=None):
         # return the minimum / default / maximum for the axis
@@ -35,17 +38,39 @@ class DesignSpaceChecker(object):
             if ad.name == axisName:
                 return ad.minimum, ad.default, ad.maximum
         return None
-        
+    
+    def hasStructuralErrors(self):
+        # check if we have any errors from categories file / axes / sources
+        # this does not guarantee there won't be other problems!
+        for err in self.errors:
+            if err.category in [0,1,2]:
+                return True
+        return False
+
+    def hasDesignErrors(self):
+        # check if there are errors in font data itself, glyphs, fontinfo, kerning
+        if self.hasStructuralErrors():
+            return -1
+        for err in self.errors:
+            if err.category in [4,5,6]:
+                return True
+        return False
+
     def checkEverything(self):
         if not self.ds:
             return False
+        # designspace specific
         self.checkDesignSpaceGeometry()
         self.checkSources()
         self.checkInstances()
-        self.checkGlyphs()
-        self.checkKerning()
-        self.checkFontInfo()
         self.checkRules()
+        if not self.hasStructuralErrors():
+            # font specific
+            self.ds.loadFonts()
+            self.nf = self.ds.getNeutralFont()
+            self.checkKerning()
+            self.checkFontInfo()
+            self.checkGlyphs()
     
     def checkDesignSpaceGeometry(self):
         # 1.0	no axes defined
@@ -161,6 +186,8 @@ class DesignSpaceChecker(object):
         axisValues = self.data_getAxisValues()
         defaultLocation = self.ds.newDefaultLocation()
         defaultCandidates = []
+        if len(self.ds.instances) == 0:
+            self.errors.append(DesignSpaceError(3, 10))
         for i, jd in enumerate(self.ds.instances):
             if jd.location is None:            
                 # 3,1   instance location missing
@@ -210,42 +237,132 @@ class DesignSpaceChecker(object):
         # 3,9   duplicate instances
     
     def checkGlyphs(self):
+        # check all glyphs in all fonts
+        # need to load the fonts before we can do this
+        if not hasattr(self.ds, "collectMastersForGlyph"):
+            return
+        glyphs = {}
+        # 4.7 default glyph is empty
+        for fontName, fontObj in self.ds.fonts.items():
+            #print("fontObj", fontObj.path)
+            for glyphName in fontObj.keys():
+                if not glyphName in glyphs:
+                    glyphs[glyphName] = []
+                glyphs[glyphName].append(fontObj)
+        for name in glyphs.keys():
+            if name not in self.nf:
+                self.errors.append(DesignSpaceError(4,7, dict(glyphName=name)))
+            self.checkGlyph(name)
+
+
+    def checkGlyph(self, glyphName):
+        # 4.0 different number of contours in glyph
+        # 4.1 different number of components in glyph
+        # 4.2 different number of anchors in glyph
+        # 4.3 different number of on-curve points on contour
+        # 4.4 different number of off-curve points on contour
+        # 4.5 curve has wrong type
+        # 4.6 non-default glyph is empty
+        # 4.8 contour has wrong direction
+        items = self.ds.collectMastersForGlyph(glyphName)
+        #print(glyphName, len(items))
+        #for loc, mg, masters in items:
+        #    pprint(masters)
         pass
     
     def checkKerning(self):
-        pass
-    
+        # 5,0 no kerning in source
+        # 5,2 kerning group members do not match
+        # 5,3 kerning group missing
+        # 5,4 kerning pair missing
+        #print("checkKerning")
+        # 5,1 no kerning in default
+        if len(self.nf.kerning) == 0:
+            self.errors.append(DesignSpaceError(5,1, dict(fontObj=self.nf)))
+        # 5,5 no kerning groups in default
+        if len(self.nf.groups) == 0:
+            self.errors.append(DesignSpaceError(5,5, dict(fontObj=self.nf)))
+        defaultGroupNames = list(self.nf.groups.keys())
+        #print("defaultGroupNames", defaultGroupNames)
+        for fontName, fontObj in self.ds.fonts.items():
+            if fontObj == self.nf:
+                continue
+            # 5,0 no kerning in source
+            #print(fontObj, list(fontObj.kerning.keys()))
+            if len(fontObj.kerning.keys()) == 0:
+                self.errors.append(DesignSpaceError(5,0, dict(fontObj=self.nf)))
+            # 5,6 no kerning groups in source
+            if len(fontObj.groups.keys()) == 0:
+                self.errors.append(DesignSpaceError(5,6, dict(fontObj=self.nf)))
+            for sourceGroupName in fontObj.groups.keys():
+                #print("xx", sourceGroupName)
+                if not sourceGroupName in defaultGroupNames:
+                    # 5,3 kerning group missing
+                    self.errors.append(DesignSpaceError(5,3, dict(fontObj=self.nf, groupName=sourceGroupName)))
+                else:
+                    # check if they have the same members
+                    sourceGroupMembers = fontObj.groups[sourceGroupName]
+                    defaultGroupMembers = self.nf.groups[sourceGroupName]
+                    if sourceGroupMembers != defaultGroupMembers:
+                        # 5,2 kerning group members do not match
+                        self.errors.append(DesignSpaceError(5,2, dict(fontObj=self.nf, groupName=sourceGroupName)))
+
+
     def checkFontInfo(self):
-        pass
+        # check some basic font info values
+        # entirely debateable what we should be 
+        # 6,3 source font info missing value for xheight
+        if self.nf.info.unitsPerEm == None:
+            # 6,0 source font info missing value for units per em
+            self.errors.append(DesignSpaceError(6,0, dict(fontObj=self.nf)))
+        if self.nf.info.ascender == None:
+            # 6,1 source font info missing value for ascender
+            self.errors.append(DesignSpaceError(6,1, dict(fontObj=self.nf)))
+        if self.nf.info.descender == None:
+            # 6,2 source font info missing value for descender
+            self.errors.append(DesignSpaceError(6,2, dict(fontObj=self.nf)))
+        if self.nf.info.descender == None:
+            # 6,3 source font info missing value for xheight
+            self.errors.append(DesignSpaceError(6,3, dict(fontObj=self.nf)))
+        for fontName, fontObj in self.ds.fonts.items():
+            if fontObj == self.nf:
+                continue
+            # 6,4 source font unitsPerEm value different from default unitsPerEm
+            if fontObj.info.unitsPerEm != self.nf.info.unitsPerEm:
+                self.errors.append(DesignSpaceError(6,4, dict(fontObj=fontObj, fontValue=fontObj.info.unitsPerEm, defaultValue=self.nf.info.unitsPerEm)))
+
     
     def checkRules(self):
         pass
     
-    def canGenerateUFOInstances(self):
-        # do we have the stuff to generate UFO instances?
-        pass
-    
-    def canGenerateVariableFont(self):
-        # do we have the stuff to generate a variable font?
-        pass
 
 if __name__ == "__main__":
-    ufoProcessorRoot = "/Users/erik/code/ufoProcessor/Tests"
-    paths = []
-    for name in os.listdir(ufoProcessorRoot):
-        p = os.path.join(ufoProcessorRoot, name)
-        if os.path.isdir(p):
-            p2 = os.path.join(p, "*.designspace")
-            paths += glob.glob(p2)
-    for p in paths:
-        dc = DesignSpaceChecker(p)
-        dc.checkEverything()
-        if dc.errors:
-            print("\n")
-            print(os.path.basename(p))
-            # search for specific errors!
-            for n in dc.errors:
-                print("\t" + str(n))
-            for n in dc.errors:
-                if n.category == 3:
-                    print("\t -- "+str(n))
+    pass
+    # ufoProcessorRoot = "/Users/erik/code/ufoProcessor/Tests"
+    # paths = []
+    # for name in os.listdir(ufoProcessorRoot):
+    #     p = os.path.join(ufoProcessorRoot, name)
+    #     if os.path.isdir(p):
+    #         p2 = os.path.join(p, "*.designspace")
+    #         paths += glob.glob(p2)
+    # for p in paths:
+    #     dc = DesignSpaceChecker(p)
+    #     dc.checkEverything()
+    #     if dc.errors:
+    #         print("\n")
+    #         print(os.path.basename(p))
+    #         # search for specific errors!
+    #         for n in dc.errors:
+    #             print("\t" + str(n))
+    #         for n in dc.errors:
+    #             if n.category == 3:
+    #                 print("\t -- "+str(n))
+
+
+    path = "/Users/erik/code/eamesposter/EamesPoster.designspace"
+    dc = DesignSpaceChecker(path)
+    dc.checkEverything()
+    pprint(dc.errors)
+    print("hasStructuralErrors", dc.hasStructuralErrors())
+    print("hasDesignErrors", dc.hasDesignErrors())
+

@@ -128,6 +128,10 @@ def duplicateInstancesError(**kwargs):
     # duplicate instances, (3, 9)
     return DesignSpaceError(3,9,data=kwargs)
 
+def noInstancesDefinedError(**kwargs):
+    # no instances defined, (3, 10)
+    return DesignSpaceError(3,10,data=kwargs)
+
 def differentNumberOfContoursInGlyphError(**kwargs):
     # different number of contours in glyph, (4, 0)
     return DesignSpaceError(4,0,data=kwargs)
@@ -176,13 +180,21 @@ def kerningGroupMembersDoNotMatchError(**kwargs):
     # kerning group members do not match, (5, 2)
     return DesignSpaceError(5,2,data=kwargs)
 
-def kerningGroupMissingError(**kwargs):
-    # kerning group missing, (5, 3)
+def kerningGroupMissingInDefaultError(**kwargs):
+    # kerning group missing in default, (5, 3)
     return DesignSpaceError(5,3,data=kwargs)
 
 def kerningPairMissingError(**kwargs):
     # kerning pair missing, (5, 4)
     return DesignSpaceError(5,4,data=kwargs)
+
+def noKerningGroupsInDefaultError(**kwargs):
+    # no kerning groups in default, (5, 5)
+    return DesignSpaceError(5,5,data=kwargs)
+
+def noKerningGroupsInSourceError(**kwargs):
+    # no kerning groups in source, (5, 6)
+    return DesignSpaceError(5,6,data=kwargs)
 
 def sourceFontInfoMissingValueForUnitsPerEmError(**kwargs):
     # source font info missing value for units per em, (6, 0)
@@ -199,6 +211,10 @@ def sourceFontInfoMissingValueForDescenderError(**kwargs):
 def sourceFontInfoMissingValueForXheightError(**kwargs):
     # source font info missing value for xheight, (6, 3)
     return DesignSpaceError(6,3,data=kwargs)
+
+def sourceFontUnitsPerEmValueDifferentFromDefaultUnitsPerEmError(**kwargs):
+    # source font unitsPerEm value different from default unitsPerEm, (6, 4)
+    return DesignSpaceError(6,4,data=kwargs)
 
 def sourceGlyphMissingError(**kwargs):
     # source glyph missing, (7, 0)
