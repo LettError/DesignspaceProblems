@@ -359,10 +359,4 @@ if __name__ == "__main__":
     #                 print("\t -- "+str(n))
 
 
-    path = "/Users/erik/code/eamesposter/EamesPoster.designspace"
-    dc = DesignSpaceChecker(path)
-    dc.checkEverything()
-    pprint(dc.errors)
-    print("hasStructuralErrors", dc.hasStructuralErrors())
-    print("hasDesignErrors", dc.hasDesignErrors())
 
