@@ -72,6 +72,7 @@ This list is not intended to be normative, just an explanation of what the terms
   * `3.7	missing style name`
   * `3.8	missing output path`
   * `3.9	duplicate instances`
+  * `3.10	no instances defined`
 
 ## 4. glyphs
 
@@ -90,8 +91,10 @@ This list is not intended to be normative, just an explanation of what the terms
   * `5.0	no kerning in source`
   * `5.1	no kerning in default`
   * `5.2	kerning group members do not match`
-  * `5.3	kerning group missing`
+  * `5.3	kerning group missing in default`
   * `5.4	kerning pair missing`
+  * `5.5	no kerning groups in default`
+  * `5.6	no kerning groups in source`
 
 ## 6. font info
 
@@ -99,6 +102,7 @@ This list is not intended to be normative, just an explanation of what the terms
   * `6.1	source font info missing value for ascender`
   * `6.2	source font info missing value for descender`
   * `6.3	source font info missing value for xheight`
+  * `6.4	source font unitsPerEm value different from default unitsPerEm`
 
 ## 7. rules
 
