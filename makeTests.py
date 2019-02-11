@@ -167,8 +167,13 @@ def makeTests():
     # let's add the object rather than the path and see what happens
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
-    pprint(dc.errors)
+    #pprint(dc.errors)
     assert not dc.hasStructuralErrors()   # minimum working designspace, ready for fonts
+    assert (4,7) in dc.errors        # default glyph is empty, glyphName
+    assert (4,9) in dc.errors        # incompatible constructions for glyph
+    assert (5,0) in dc.errors        # kerning: no kerning in source
+    assert (5,6) in dc.errors        # no kerning groups in source
+    assert (6,4) in dc.errors        # source font unitsPerEm value different from default unitsPerEm
 
 
 makeTests()

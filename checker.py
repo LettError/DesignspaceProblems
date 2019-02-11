@@ -7,6 +7,7 @@ import ufoProcessor
 from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer
 from fontParts.fontshell import RFont
 from pprint import pprint
+from fontPens.digestPointPen import DigestPointStructurePen
 
 class DesignSpaceChecker(object):
     _registeredTags = dict(wght = 'weight', wdth = 'width', slnt = 'slant', opsz = 'optical', ital = 'italic')
@@ -244,7 +245,6 @@ class DesignSpaceChecker(object):
         glyphs = {}
         # 4.7 default glyph is empty
         for fontName, fontObj in self.ds.fonts.items():
-            #print("fontObj", fontObj.path)
             for glyphName in fontObj.keys():
                 if not glyphName in glyphs:
                     glyphs[glyphName] = []
@@ -256,26 +256,30 @@ class DesignSpaceChecker(object):
 
 
     def checkGlyph(self, glyphName):
-        # 4.0 different number of contours in glyph
-        # 4.1 different number of components in glyph
-        # 4.2 different number of anchors in glyph
-        # 4.3 different number of on-curve points on contour
-        # 4.4 different number of off-curve points on contour
-        # 4.5 curve has wrong type
         # 4.6 non-default glyph is empty
         # 4.8 contour has wrong direction
         items = self.ds.collectMastersForGlyph(glyphName)
-        #print(glyphName, len(items))
-        #for loc, mg, masters in items:
-        #    pprint(masters)
-        pass
+        patterns = {}
+        for loc, mg, masters in items:
+            pp = DigestPointStructurePen()
+            mg.drawPoints(pp)
+            pat = pp.getDigest()
+            if not pat in patterns:
+                patterns[pat] = []
+            patterns[pat].append(loc)
+        if len(patterns) != 1:
+            # 4,9 incompatible constructions for glyph
+            # maybe this is enough to start wtih
+            self.errors.append(DesignSpaceError(4,9, dict(glyphName=glyphName)))
+            # 4.0 different number of contours in glyph
+            # 4.1 different number of components in glyph
+            # 4.2 different number of anchors in glyph
+            # 4.3 different number of on-curve points on contour
+            # 4.4 different number of off-curve points on contour
+            # 4.5 curve has wrong type
     
     def checkKerning(self):
-        # 5,0 no kerning in source
-        # 5,2 kerning group members do not match
-        # 5,3 kerning group missing
         # 5,4 kerning pair missing
-        #print("checkKerning")
         # 5,1 no kerning in default
         if len(self.nf.kerning) == 0:
             self.errors.append(DesignSpaceError(5,1, dict(fontObj=self.nf)))
@@ -283,19 +287,16 @@ class DesignSpaceChecker(object):
         if len(self.nf.groups) == 0:
             self.errors.append(DesignSpaceError(5,5, dict(fontObj=self.nf)))
         defaultGroupNames = list(self.nf.groups.keys())
-        #print("defaultGroupNames", defaultGroupNames)
         for fontName, fontObj in self.ds.fonts.items():
             if fontObj == self.nf:
                 continue
             # 5,0 no kerning in source
-            #print(fontObj, list(fontObj.kerning.keys()))
             if len(fontObj.kerning.keys()) == 0:
                 self.errors.append(DesignSpaceError(5,0, dict(fontObj=self.nf)))
             # 5,6 no kerning groups in source
             if len(fontObj.groups.keys()) == 0:
                 self.errors.append(DesignSpaceError(5,6, dict(fontObj=self.nf)))
             for sourceGroupName in fontObj.groups.keys():
-                #print("xx", sourceGroupName)
                 if not sourceGroupName in defaultGroupNames:
                     # 5,3 kerning group missing
                     self.errors.append(DesignSpaceError(5,3, dict(fontObj=self.nf, groupName=sourceGroupName)))
@@ -313,16 +314,16 @@ class DesignSpaceChecker(object):
         # entirely debateable what we should be 
         # 6,3 source font info missing value for xheight
         if self.nf.info.unitsPerEm == None:
-            # 6,0 source font info missing value for units per em
+            # 6,0 default font info missing value for units per em
             self.errors.append(DesignSpaceError(6,0, dict(fontObj=self.nf)))
         if self.nf.info.ascender == None:
-            # 6,1 source font info missing value for ascender
+            # 6,1 default font info missing value for ascender
             self.errors.append(DesignSpaceError(6,1, dict(fontObj=self.nf)))
         if self.nf.info.descender == None:
-            # 6,2 source font info missing value for descender
+            # 6,2 default font info missing value for descender
             self.errors.append(DesignSpaceError(6,2, dict(fontObj=self.nf)))
         if self.nf.info.descender == None:
-            # 6,3 source font info missing value for xheight
+            # 6,3 default font info missing value for xheight
             self.errors.append(DesignSpaceError(6,3, dict(fontObj=self.nf)))
         for fontName, fontObj in self.ds.fonts.items():
             if fontObj == self.nf:
@@ -330,14 +331,12 @@ class DesignSpaceChecker(object):
             # 6,4 source font unitsPerEm value different from default unitsPerEm
             if fontObj.info.unitsPerEm != self.nf.info.unitsPerEm:
                 self.errors.append(DesignSpaceError(6,4, dict(fontObj=fontObj, fontValue=fontObj.info.unitsPerEm, defaultValue=self.nf.info.unitsPerEm)))
-
     
     def checkRules(self):
         pass
     
 
 if __name__ == "__main__":
-    pass
     # ufoProcessorRoot = "/Users/erik/code/ufoProcessor/Tests"
     # paths = []
     # for name in os.listdir(ufoProcessorRoot):
@@ -358,5 +357,4 @@ if __name__ == "__main__":
     #             if n.category == 3:
     #                 print("\t -- "+str(n))
 
-
-
+    pass

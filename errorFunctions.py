@@ -168,6 +168,10 @@ def contourHasWrongDirectionError(**kwargs):
     # contour has wrong direction, (4, 8)
     return DesignSpaceError(4,8,data=kwargs)
 
+def incompatibleConstructionsForGlyphError(**kwargs):
+    # incompatible constructions for glyph, (4, 9)
+    return DesignSpaceError(4,9,data=kwargs)
+
 def noKerningInSourceError(**kwargs):
     # no kerning in source, (5, 0)
     return DesignSpaceError(5,0,data=kwargs)
@@ -196,20 +200,20 @@ def noKerningGroupsInSourceError(**kwargs):
     # no kerning groups in source, (5, 6)
     return DesignSpaceError(5,6,data=kwargs)
 
-def sourceFontInfoMissingValueForUnitsPerEmError(**kwargs):
-    # source font info missing value for units per em, (6, 0)
+def defaultFontInfoMissingValueForUnitsPerEmError(**kwargs):
+    # default font info missing value for units per em, (6, 0)
     return DesignSpaceError(6,0,data=kwargs)
 
-def sourceFontInfoMissingValueForAscenderError(**kwargs):
-    # source font info missing value for ascender, (6, 1)
+def defaultFontInfoMissingValueForAscenderError(**kwargs):
+    # default font info missing value for ascender, (6, 1)
     return DesignSpaceError(6,1,data=kwargs)
 
-def sourceFontInfoMissingValueForDescenderError(**kwargs):
-    # source font info missing value for descender, (6, 2)
+def defaultFontInfoMissingValueForDescenderError(**kwargs):
+    # default font info missing value for descender, (6, 2)
     return DesignSpaceError(6,2,data=kwargs)
 
-def sourceFontInfoMissingValueForXheightError(**kwargs):
-    # source font info missing value for xheight, (6, 3)
+def defaultFontInfoMissingValueForXheightError(**kwargs):
+    # default font info missing value for xheight, (6, 3)
     return DesignSpaceError(6,3,data=kwargs)
 
 def sourceFontUnitsPerEmValueDifferentFromDefaultUnitsPerEmError(**kwargs):

@@ -4,10 +4,103 @@
   <unicode hex="00CD"/>
   <outline>
     <contour>
-      <point x="0" y="0" type="line"/>
-      <point x="800" y="0" type="line"/>
-      <point x="800" y="800" type="line"/>
-      <point x="0" y="800" type="line"/>
+      <point x="0" y="0" type="curve"/>
+      <point x="0" y="0"/>
+      <point x="800" y="0"/>
+      <point x="800" y="0" type="curve"/>
+      <point x="800" y="0"/>
+      <point x="800" y="800"/>
+      <point x="800" y="800" type="curve"/>
+      <point x="800" y="800"/>
+      <point x="0" y="800"/>
+      <point x="0" y="800" type="curve"/>
+      <point x="0" y="800"/>
+      <point x="0" y="0"/>
     </contour>
   </outline>
+  <lib>
+    <dict>
+      <key>responsiveComponents</key>
+      <array>
+        <dict>
+          <key>bounds</key>
+          <array>
+            <real>252.44247824631861</real>
+            <real>189.64671184738972</real>
+            <real>483.36617302543584</real>
+            <real>497.50313755020056</real>
+          </array>
+          <key>componentName</key>
+          <string>width</string>
+        </dict>
+        <dict>
+          <key>bounds</key>
+          <array>
+            <real>-94.14700468540838</real>
+            <real>181.3792670682733</real>
+            <real>232.5974732262382</real>
+            <real>499.97134370816616</real>
+          </array>
+          <key>componentName</key>
+          <string>width</string>
+        </dict>
+      </array>
+      <key>responsiveDeltas</key>
+      <dict>
+        <key>smaller</key>
+        <array>
+          <array>
+            <array>
+              <integer>178</integer>
+              <integer>102</integer>
+            </array>
+            <array>
+              <integer>178</integer>
+              <integer>102</integer>
+            </array>
+            <array>
+              <integer>-107</integer>
+              <integer>78</integer>
+            </array>
+            <array>
+              <integer>-107</integer>
+              <integer>78</integer>
+            </array>
+            <array>
+              <integer>-107</integer>
+              <integer>78</integer>
+            </array>
+            <array>
+              <integer>-122</integer>
+              <integer>-164</integer>
+            </array>
+            <array>
+              <integer>-122</integer>
+              <integer>-164</integer>
+            </array>
+            <array>
+              <integer>-122</integer>
+              <integer>-164</integer>
+            </array>
+            <array>
+              <integer>116</integer>
+              <integer>-131</integer>
+            </array>
+            <array>
+              <integer>116</integer>
+              <integer>-131</integer>
+            </array>
+            <array>
+              <integer>116</integer>
+              <integer>-131</integer>
+            </array>
+            <array>
+              <integer>178</integer>
+              <integer>102</integer>
+            </array>
+          </array>
+        </array>
+      </dict>
+    </dict>
+  </lib>
 </glyph>

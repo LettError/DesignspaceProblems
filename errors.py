@@ -71,6 +71,7 @@ class DesignSpaceError(object):
         (4,6): 'non-default glyph is empty',
         (4,7): 'default glyph is empty',
         (4,8): 'contour has wrong direction',
+        (4,9): 'incompatible constructions for glyph',
 
         # 5 kerning
         (5,0): 'no kerning in source',
@@ -82,10 +83,10 @@ class DesignSpaceError(object):
         (5,6): 'no kerning groups in source',
 
         # 6 font info
-        (6,0): 'source font info missing value for units per em',
-        (6,1): 'source font info missing value for ascender',
-        (6,2): 'source font info missing value for descender',
-        (6,3): 'source font info missing value for xheight',
+        (6,0): 'default font info missing value for units per em',
+        (6,1): 'default font info missing value for ascender',
+        (6,2): 'default font info missing value for descender',
+        (6,3): 'default font info missing value for xheight',
         (6,4): 'source font unitsPerEm value different from default unitsPerEm',
 
         # 7 rules
