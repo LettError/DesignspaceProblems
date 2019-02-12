@@ -139,8 +139,10 @@ def allProblems():
     return e._problems
     
 def makeErrorDocumentationTable():
-    # Print the categories and the errors in a md format for the docs page. 
-    t = ["# Classes of problems"]
+    # write the categories and the errors in a .md file
+    import os
+    path = os.path.join(os.path.dirname(os.path.dirname(os.getcwd())), 'problems.md')
+    t = ["# problem categories"]
     e = DesignSpaceProblem()
     cats = list(e._categories.keys())
     cats.sort()
@@ -154,7 +156,9 @@ def makeErrorDocumentationTable():
             t.append("\n## %d. %s\n" % (cat, e._categories[cat]))
             lastCat = cat
         t.append("  * `%d.%d\t%s`" % (cat, err, e._problems[(cat,err)]))
-    print("\n".join(t))
+    f = open(path, 'w')
+    f.write("\n".join(t))
+    f.close()
     
 def makeFunctions(whiteSpace=None):
     # make descriptive function names

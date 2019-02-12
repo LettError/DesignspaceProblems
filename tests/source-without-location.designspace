@@ -5,10 +5,6 @@
   </axes>
   <sources>
     <source filename="masters/geometryMaster1.ufo">
-      <lib copy="1"/>
-      <groups copy="1"/>
-      <features copy="1"/>
-      <info copy="1"/>
       <location>
         <dimension name="snap" xvalue="0"/>
       </location>
