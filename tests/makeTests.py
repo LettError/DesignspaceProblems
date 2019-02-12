@@ -2,20 +2,20 @@
 
 import os, glob
 from pprint import pprint
-import errors
+import designspaceProblems.problems
 from importlib import reload
-reload(errors)
-from errors import DesignSpaceError
-import checker
-reload(checker)
-from checker import DesignSpaceChecker
+reload(designspaceProblems.problems)
+from designspaceProblems.problems import DesignSpaceProblem
+import designspaceProblems
+reload(designspaceProblems)
+from designspaceProblems import DesignSpaceChecker
 import ufoProcessor
 from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer, AxisDescriptor, SourceDescriptor, InstanceDescriptor
 from fontParts.fontshell import RFont
 
 def makeTests():
-    path = os.path.join(os.getcwd(), "tests")
-    errs = errors.allErrors()
+    path = os.getcwd()
+    errs = designspaceProblems.problems.allProblems()
 
     # empty designspace
     d = DesignSpaceProcessor()
@@ -23,9 +23,9 @@ def makeTests():
     d.write(tp)
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
-    assert (1,0) in dc.errors    # no axes defined
-    assert (2,0) in dc.errors    # no sources defined
-    assert (2,7) in dc.errors    # no source on default location
+    assert (1,0) in dc.problems    # no axes defined
+    assert (2,0) in dc.problems    # no sources defined
+    assert (2,7) in dc.problems    # no source on default location
 
     # malformed file
     d = DesignSpaceProcessor()
@@ -40,7 +40,7 @@ def makeTests():
     f.close()
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
-    assert (0,0) in dc.errors    # no axes defined
+    assert (0,0) in dc.problems    # no axes defined
 
     # malformed axes
     d = DesignSpaceProcessor()
@@ -62,10 +62,10 @@ def makeTests():
     d.write(tp)
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
-    assert (1,9) in dc.errors    # minimum and maximum value are the same
-    assert (1,10) in dc.errors   # minimum and maximum value are the same
-    assert (2,0) in dc.errors    # no sources defined
-    assert (2,7) in dc.errors    # no source on default location
+    assert (1,9) in dc.problems    # minimum and maximum value are the same
+    assert (1,10) in dc.problems   # minimum and maximum value are the same
+    assert (2,0) in dc.problems    # no sources defined
+    assert (2,7) in dc.problems    # no source on default location
     
     # ok axis, a source, but no default
     d = DesignSpaceProcessor()
@@ -84,7 +84,7 @@ def makeTests():
     d.write(tp)
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
-    assert (2,7) in dc.errors    # no source on default location
+    assert (2,7) in dc.problems    # no source on default location
 
     # ok axis, multiple sources on default
     d = DesignSpaceProcessor()
@@ -107,8 +107,8 @@ def makeTests():
     d.write(tp)
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
-    assert (2,8) in dc.errors        # multiple sources on default location
-    assert (2,1) not in dc.errors    # not: source UFO missing
+    assert (2,8) in dc.problems        # multiple sources on default location
+    assert (2,1) not in dc.problems    # not: source UFO missing
 
     # ok axis, source without location
     d = DesignSpaceProcessor()
@@ -131,7 +131,7 @@ def makeTests():
     d.write(tp)
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
-    assert (2,10) in dc.errors        # source location is anisotropic
+    assert (2,10) in dc.problems        # source location is anisotropic
 
     # ok axis, ok sources
     d = DesignSpaceProcessor()
@@ -164,16 +164,22 @@ def makeTests():
     jd.path = os.path.join(path, 'instances','generatedInstance.ufo')
     d.addInstance(jd)
     d.write(tp)
-    # let's add the object rather than the path and see what happens
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
-    #pprint(dc.errors)
-    assert not dc.hasStructuralErrors()   # minimum working designspace, ready for fonts
-    assert (4,7) in dc.errors        # default glyph is empty, glyphName
-    assert (4,9) in dc.errors        # incompatible constructions for glyph
-    assert (5,0) in dc.errors        # kerning: no kerning in source
-    assert (5,6) in dc.errors        # no kerning groups in source
-    assert (6,4) in dc.errors        # source font unitsPerEm value different from default unitsPerEm
+    pprint(dc.problems)
+    assert not dc.hasStructuralProblems()   # minimum working designspace, ready for fonts
+    assert (4,7) in dc.problems        # default glyph is empty, glyphName
+    assert (4,9) in dc.problems        # incompatible constructions for glyph
+    assert (5,0) in dc.problems        # kerning: no kerning in source
+    assert (5,6) in dc.problems        # no kerning groups in source
+    assert (6,4) in dc.problems        # source font unitsPerEm value different from default unitsPerEm
 
-
+def makeEdit(path, find, replace):
+    f = open(path, 'r')
+    t = f.read()
+    f.close()
+    t = t.replace(find, replace)
+    f = open(path, 'w')
+    f.write(t)
+    f.close()
 makeTests()

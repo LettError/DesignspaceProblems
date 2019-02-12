@@ -6,7 +6,7 @@ Some sort of validator
 
 """
 
-class DesignSpaceError(object):
+class DesignSpaceProblem(object):
     _categories = {
         0: "file",
         1: "designspace geometry",
@@ -17,7 +17,7 @@ class DesignSpaceError(object):
         6: "font info",
         7: "rules",
         }
-    _errors = {
+    _problems = {
         # 0 file 
         (0,0): "file corrupt",
 
@@ -103,57 +103,66 @@ class DesignSpaceError(object):
         
     def __init__(self, category=None, error=None, data=None):
         self.category = category
-        self.error = error
+        self.problem = error
         self.data = data
     
-    def __eq__(self, otherError):
+    def __eq__(self, otherProblem):
         # this way we can test membership in a list
-        if type(otherError) == tuple:
-            return otherError == (self.category, self.error)
-        return (otherError.category,  otherError.error) == (self.category, self.error)
-        
-    def __repr__(self):
+        if type(otherProblem) == tuple:
+            return otherProblem == (self.category, self.problem)
+        return (otherProblem.category,  otherProblem.error) == (self.category, self.problem)
+
+    def getDescription(self):
         t = []
-        key = (self.category, self.error)
+        key = (self.category, self.problem)
         if self.category in self._categories:
             t.append(self._categories.get(self.category))
-        if key in self._errors:
-            t.append(self._errors.get(key))
+        if key in self._problems:
+            t.append(self._problems.get(key))
+        return t
+
+    def __repr__(self):
+        t = []
+        key = (self.category, self.problem)
+        if self.category in self._categories:
+            t.append(self._categories.get(self.category))
+        if key in self._problems:
+            t.append(self._problems.get(key))
         if self.data is not None:
             dt = ", "+ ' '.join("%s: %s" % (a, b) for a, b in self.data.items())
         else:
             dt = ''
         return '[' + ": ".join(t) + dt + ' %s' % str(key) + ']'
             
-def allErrors():
-    e = DesignSpaceError()
-    return e._errors
+def allProblems():
+    e = DesignSpaceProblem()
+    return e._problems
     
 def makeErrorDocumentationTable():
     # Print the categories and the errors in a md format for the docs page. 
     t = ["# Classes of problems"]
-    e = DesignSpaceError()
+    e = DesignSpaceProblem()
     cats = list(e._categories.keys())
     cats.sort()
     for cat in cats:
         t.append("  * `%d. %s`" % (cat, e._categories[cat]))
-    errs = list(e._errors.keys())
+    errs = list(e._problems.keys())
     errs.sort()
     lastCat = None
     for cat, err in errs:
         if cat != lastCat:
             t.append("\n## %d. %s\n" % (cat, e._categories[cat]))
             lastCat = cat
-        t.append("  * `%d.%d\t%s`" % (cat, err, e._errors[(cat,err)]))
+        t.append("  * `%d.%d\t%s`" % (cat, err, e._problems[(cat,err)]))
     print("\n".join(t))
     
 def makeFunctions(whiteSpace=None):
     # make descriptive function names
-    modl = ["# generated from errors.py", 'from errors import DesignSpaceError']
+    modl = ["# generated from errors.py", 'from errors import DesignSpaceProblem']
     if whiteSpace is None:
         whiteSpace = "    "
     text = []
-    for key, desc in allErrors().items():
+    for key, desc in allProblems().items():
         new = []
         for i, p in enumerate(desc.split(" ")):
             if i == 0:
@@ -161,10 +170,10 @@ def makeFunctions(whiteSpace=None):
             else:
                 t = p[0].upper()+ p[1:]
                 new.append(t)
-        new.append("Error")
+        new.append("Problem")
         new = ''.join(new)
         new = new.replace('-', '')
-        func = "def %s(**kwargs):\n%s# %s, %s\n%sreturn DesignSpaceError(%d,%d,data=kwargs)\n" % (''.join(new), whiteSpace, desc, key, whiteSpace, key[0], key[1])
+        func = "def %s(**kwargs):\n%s# %s, %s\n%sreturn DesignSpaceProblem(%d,%d,data=kwargs)\n" % (''.join(new), whiteSpace, desc, key, whiteSpace, key[0], key[1])
         modl.append(func)
     path = "./errorFunctions.py"
     f = open(path, 'w')
@@ -173,10 +182,10 @@ def makeFunctions(whiteSpace=None):
         
 def testCompare():
     # test the error comparing thing
-    for key1, desc1 in allErrors().items():
-        for key2, desc2 in allErrors().items():
-            e1 = DesignSpaceError(*key1, dict(item1=1, item2=2))
-            e2 = DesignSpaceError(*key2, dict(item1=3, item2=4))
+    for key1, desc1 in allProblems().items():
+        for key2, desc2 in allProblems().items():
+            e1 = DesignSpaceProblem(*key1, dict(item1=1, item2=2))
+            e2 = DesignSpaceProblem(*key2, dict(item1=3, item2=4))
             if e1 == e2:
                 print(key1, key2, e1 == e2)
                 print(e1.data)
