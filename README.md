@@ -4,7 +4,7 @@ If we have different libraries looking at interpolating systems such as designsp
 
 This list of problems is probably not complete and perhaps not granular enough. But the numbering system allows for many more problems to be added. The problems are roughly organised from big to small.
 
-# problem categories
+# designspace problem categories
 
   * `0. file`
   * `1. designspace geometry`
@@ -15,7 +15,7 @@ This list of problems is probably not complete and perhaps not granular enough. 
   * `6. font info`
   * `7. rules`
 
-  Categories 0, 1, 2 are structural: such problems need to be solved before anything else can happen. Categories 3, 4, 5, 6, 7 need access to the fonts. 
+  Categories 0, 1, 2 are structural: such problems need to be solved before anything else can happen. Categories 3, 4, 5, 6, 7 need access to the fonts, so before loading you could check if it is necessary.
 
 The `designspaceProblems.DesignSpaceChecker` can either read a path or accept a working `ufoProcessor.DesignSpaceProcessor` object. Tests and example code in `/tests/makeTests.py`
 
