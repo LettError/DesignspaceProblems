@@ -163,7 +163,7 @@ def makeErrorDocumentationTable():
     
 def makeFunctions(whiteSpace=None):
     # make descriptive function names
-    modl = ["# generated from problems.py", 'from errors import DesignSpaceProblem']
+    modl = ["# generated from problems.py", 'from designspaceProblems.problems import DesignSpaceProblem']
     if whiteSpace is None:
         whiteSpace = "    "
     text = []

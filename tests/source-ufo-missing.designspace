@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<designspace format="4.0">
+  <axes>
+    <axis tag="snap" name="snap" minimum="0" maximum="1000" default="0"/>
+  </axes>
+  <sources>
+    <source filename="masters/geometryMaster1.ufo">
+      <location>
+        <dimension name="snap" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster2.ufo" layer="missing_layer">
+      <location>
+        <dimension name="snap" xvalue="500"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster_missing.ufo">
+      <location>
+        <dimension name="snap" xvalue="1000"/>
+      </location>
+    </source>
+  </sources>
+</designspace>

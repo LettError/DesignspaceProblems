@@ -1,5 +1,5 @@
 # generated from problems.py
-from errors import DesignSpaceProblem
+from designspaceProblems.problems import DesignSpaceProblem
 def fileCorruptProblem(**kwargs):
     # file corrupt, (0, 0)
     return DesignSpaceProblem(0,0,data=kwargs)
@@ -255,3 +255,7 @@ def conditionValuesAreTheSameProblem(**kwargs):
 def duplicateConditionsProblem(**kwargs):
     # duplicate conditions, (7, 8)
     return DesignSpaceProblem(7,8,data=kwargs)
+
+def ruleWithoutANameProblem(**kwargs):
+    # rule without a name, (7, 9)
+    return DesignSpaceProblem(7,9,data=kwargs)

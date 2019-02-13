@@ -1,7 +1,7 @@
 import os, glob
-import designspaceProblems
+import designspaceProblems.problems
 from importlib import reload
-reload(designspaceProblems)
+reload(designspaceProblems.problems)
 from designspaceProblems.problems import DesignSpaceProblem
 import ufoProcessor
 from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer
@@ -351,11 +351,21 @@ class DesignSpaceChecker(object):
             if not rd.subs:
                 # 7.3 no substition glyphs defined
                 self.problems.append(DesignSpaceProblem(7,3, data=dict(rule=name)))
+                
             if len(rd.conditionSets) == 0:
                 # 7.4 no conditionset defined
                 self.problems.append(DesignSpaceProblem(7,4, data=dict(rule=name)))
             for cds in rd.conditionSets:
+                patterns = {}
                 for cd in cds:
+                    # check duplicate conditions
+                    pat = list(cd.items())
+                    pat.sort()
+                    pat = tuple(pat)
+                    if not pat in patterns:
+                        patterns[pat] = True
+                    else:
+                        self.problems.append(DesignSpaceProblem(7,8, data=dict(rule=name)))
                     if cd['minimum'] == cd['maximum']:
                         # 7.7 condition values are the same
                         self.problems.append(DesignSpaceProblem(7,7, data=dict(rule=name)))

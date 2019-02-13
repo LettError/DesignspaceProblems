@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# note: taken from UFOprocessor and modified, but it doesn't work properly
+
 import sys
 from setuptools import setup, find_packages
 from io import open

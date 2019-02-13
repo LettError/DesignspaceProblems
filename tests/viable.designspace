@@ -9,23 +9,31 @@
         <condition name="lalala" minimum="100" maximum="200"/>
         <condition name="snap" minimum="10000" maximum="2000"/>
       </conditionset>
+      <conditionset>
+        <condition name="samesees" minimum="200" maximum="200"/>
+        <condition name="samesees" minimum="200" maximum="200"/>
+        <condition name="samesees" minimum="200" maximum="200"/>
+      </conditionset>
     </rule>
     <rule name="rule_no_conditionset">
       <sub name="glyphFour" with="glyphFour"/>
     </rule>
+    <rule name="rule_values_the_same">
+      <sub name="glyphFour" with="glyphFour"/>
+    </rule>
   </rules>
   <sources>
-    <source filename="masters/geometryMaster1.ufo" name="master.0">
+    <source filename="masters/geometryMaster1.ufo">
       <location>
         <dimension name="snap" xvalue="0"/>
       </location>
     </source>
-    <source filename="masters/geometryMaster2.ufo" name="master.1">
+    <source filename="masters/geometryMaster2.ufo">
       <location>
         <dimension name="snap" xvalue="1000"/>
       </location>
     </source>
-    <source filename="masters/geometryMaster3.ufo" name="master.2">
+    <source filename="masters/geometryMaster3.ufo">
       <location>
         <dimension name="snap" xvalue="500"/>
       </location>
@@ -35,6 +43,13 @@
     <instance familyname="TestFamily" stylename="TestStyle" filename="instances/generatedInstance.ufo">
       <location>
         <dimension name="snap" xvalue="500"/>
+      </location>
+      <kerning/>
+      <info/>
+    </instance>
+    <instance filename="instances/generatedInstance2.ufo">
+      <location>
+        <dimension name="snap" xvalue="600"/>
       </location>
       <kerning/>
       <info/>
