@@ -3,18 +3,29 @@
   <axes>
     <axis tag="snap" name="snap" minimum="0" maximum="1000" default="0"/>
   </axes>
+  <rules>
+    <rule name="rule_no_subs">
+      <conditionset>
+        <condition name="lalala" minimum="100" maximum="200"/>
+        <condition name="snap" minimum="10000" maximum="2000"/>
+      </conditionset>
+    </rule>
+    <rule name="rule_no_conditionset">
+      <sub name="glyphFour" with="glyphFour"/>
+    </rule>
+  </rules>
   <sources>
-    <source filename="masters/geometryMaster1.ufo">
+    <source filename="masters/geometryMaster1.ufo" name="master.0">
       <location>
         <dimension name="snap" xvalue="0"/>
       </location>
     </source>
-    <source filename="masters/geometryMaster2.ufo">
+    <source filename="masters/geometryMaster2.ufo" name="master.1">
       <location>
         <dimension name="snap" xvalue="1000"/>
       </location>
     </source>
-    <source filename="masters/geometryMaster3.ufo">
+    <source filename="masters/geometryMaster3.ufo" name="master.2">
       <location>
         <dimension name="snap" xvalue="500"/>
       </location>

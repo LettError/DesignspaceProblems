@@ -10,7 +10,7 @@ import designspaceProblems
 reload(designspaceProblems)
 from designspaceProblems import DesignSpaceChecker
 import ufoProcessor
-from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer, AxisDescriptor, SourceDescriptor, InstanceDescriptor
+from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer, AxisDescriptor, SourceDescriptor, InstanceDescriptor, RuleDescriptor
 from fontParts.fontshell import RFont
 
 def makeTests():
@@ -163,16 +163,34 @@ def makeTests():
     jd.location = dict(snap=500)
     jd.path = os.path.join(path, 'instances','generatedInstance.ufo')
     d.addInstance(jd)
+
+    r1 = RuleDescriptor()
+    r1.name = "rule_no_subs"
+    cd1 = dict(name='lalala', minimum=100, maximum=200)
+    cd2 = dict(name='snap', minimum=10000, maximum=2000)
+    r1.conditionSets.append([cd1, cd2])
+    d.addRule(r1)
+    r2 = RuleDescriptor()
+    r2.name = "rule_no_conditionset"
+    r2.subs.append(('glyphFour', 'glyphFour'))
+    d.addRule(r2)
+    d.write(tp)
+    dc = DesignSpaceChecker(d)
+    dc.checkEverything()
     d.write(tp)
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
-    pprint(dc.problems)
     assert not dc.hasStructuralProblems()   # minimum working designspace, ready for fonts
     assert (4,7) in dc.problems        # default glyph is empty, glyphName
     assert (4,9) in dc.problems        # incompatible constructions for glyph
     assert (5,0) in dc.problems        # kerning: no kerning in source
     assert (5,6) in dc.problems        # no kerning groups in source
     assert (6,4) in dc.problems        # source font unitsPerEm value different from default unitsPerEm
+    assert (7,2) in dc.problems        # source and destination glyphs the same
+    assert (7,3) in dc.problems        # no substition glyphs defined
+    assert (7,4) in dc.problems        # no conditionset defined
+    assert (7,5) in dc.problems        # condition values on unknown axis
+    assert (7,6) in dc.problems        # condition values out of axis bounds
 
 def makeEdit(path, find, replace):
     f = open(path, 'r')

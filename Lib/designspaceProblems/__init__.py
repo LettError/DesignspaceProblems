@@ -64,7 +64,6 @@ class DesignSpaceChecker(object):
         self.checkDesignSpaceGeometry()
         self.checkSources()
         self.checkInstances()
-        self.checkRules()
         if not self.hasStructuralProblems():
             # font specific
             self.ds.loadFonts()
@@ -72,6 +71,7 @@ class DesignSpaceChecker(object):
             self.checkKerning()
             self.checkFontInfo()
             self.checkGlyphs()
+            self.checkRules()
     
     def checkDesignSpaceGeometry(self):
         # 1.0	no axes defined
@@ -195,7 +195,6 @@ class DesignSpaceChecker(object):
                 self.problems.append(DesignSpaceProblem(3,1, dict(path=jd.path)))
             else:
                 for axisName, axisValue in jd.location.items():
-                    print("axisName", axisName)
                     if type(axisValue) == tuple:
                         thisAxisValues = list(axisValue)
                     else:
@@ -312,7 +311,8 @@ class DesignSpaceChecker(object):
 
     def checkFontInfo(self):
         # check some basic font info values
-        # entirely debateable what we should be 
+        # entirely debateable what we should be testing.
+        # Let's start with basic geometry
         # 6,3 source font info missing value for xheight
         if self.nf.info.unitsPerEm == None:
             # 6,0 default font info missing value for units per em
@@ -334,8 +334,39 @@ class DesignSpaceChecker(object):
                 self.problems.append(DesignSpaceProblem(6,4, dict(fontObj=fontObj, fontValue=fontObj.info.unitsPerEm, defaultValue=self.nf.info.unitsPerEm)))
     
     def checkRules(self):
-        pass
-    
+        # check the rules in the designspace
+        # 7.0 source glyph missing
+        # 7.1 destination glyph missing
+        # 7.8 duplicate conditions
+        axisValues = self.data_getAxisValues()
+        for i, rd in enumerate(self.ds.rules):
+            if rd.name is None:
+                name = "unnamed_rule_%d" % i
+            else:
+                name = rd.name
+            for a, b in rd.subs:
+                if a == b:
+                    # 7.2 source and destination glyphs the same
+                    self.problems.append(DesignSpaceProblem(7,2, data=dict(rule=name, glyphName=a)))
+            if not rd.subs:
+                # 7.3 no substition glyphs defined
+                self.problems.append(DesignSpaceProblem(7,3, data=dict(rule=name)))
+            if len(rd.conditionSets) == 0:
+                # 7.4 no conditionset defined
+                self.problems.append(DesignSpaceProblem(7,4, data=dict(rule=name)))
+            for cds in rd.conditionSets:
+                for cd in cds:
+                    if cd['minimum'] == cd['maximum']:
+                        # 7.7 condition values are the same
+                        self.problems.append(DesignSpaceProblem(7,7, data=dict(rule=name)))
+                    if cd['name'] not in axisValues.keys():
+                        # 7.5 condition values on unknown axis
+                        self.problems.append(DesignSpaceProblem(7,5, data=dict(rule=name, axisName=cd['name'])))
+                    else:
+                        if cd['minimum'] < min(axisValues[cd['name']]) or cd['maximum'] > max(axisValues[cd['name']]):
+                            # 7.6 condition values out of axis bounds
+                            self.problems.append(DesignSpaceProblem(7,6, data=dict(rule=name, axisValues=axisValues[cd['name']])))
+
 
 if __name__ == "__main__":
     # ufoProcessorRoot = "/Users/erik/code/ufoProcessor/Tests"

@@ -99,6 +99,7 @@ class DesignSpaceProblem(object):
         (7,6): 'condition values out of axis bounds',
         (7,7): 'condition values are the same',
         (7,8): 'duplicate conditions',
+        (7,9): 'rule without a name',
         }
         
     def __init__(self, category=None, error=None, data=None):
