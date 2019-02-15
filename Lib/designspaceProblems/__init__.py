@@ -273,11 +273,16 @@ class DesignSpaceChecker(object):
             mg.drawPoints(pp)
             pat = pp.getDigest()
             for cm in mg.components:
-                print('cm', cm)
+                # collect component counts
+                if not cm['baseGlyph'] in components:
+                    components[cm['baseGlyph']] = 0
+                components[cm['baseGlyph']] += 1
             for ad in mg.anchors:
+                # collect anchor counts
                 if ad['name'] not in anchors:
                     anchors[ad['name']] = 0
                 anchors[ad['name']] += 1                
+            # collect patterns of the whole glyph
             if not pat in patterns:
                 patterns[pat] = []
             patterns[pat].append(loc)
@@ -289,6 +294,13 @@ class DesignSpaceChecker(object):
             if not contourCount in contours:
                 contours[contourCount] = 0
             contours[contourCount] += 1
+        if len(components) != 0:
+            for baseGlyphName, refCount in components.items():
+                if refCount % len(items) != 0:
+                    # there can be multiples of components with the same baseglyph
+                    # so the actual number of components is not important
+                    # but each master should have the same number
+                    self.problems.append(DesignSpaceProblem(4,1, dict(glyphName=glyphName, baseGlyph=baseGlyphName)))
         if len(anchors) != 0:
             for anchorName, anchorCount in anchors.items():
                 if anchorCount < len(items):
@@ -369,6 +381,7 @@ class DesignSpaceChecker(object):
         for i, rd in enumerate(self.ds.rules):
             if rd.name is None:
                 name = "unnamed_rule_%d" % i
+                self.problems.append(DesignSpaceProblem(7,9, data=dict(rule=name)))
             else:
                 name = rd.name
             for a, b in rd.subs:

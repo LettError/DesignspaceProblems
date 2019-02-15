@@ -27,6 +27,8 @@ def showUntested():
     # these problems can't be tested because UFOprocessor already ignores these faults
     untestable = [(1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7),
         (2, 4), (2,5), (3, 2),
+        (6, 0), (6, 1), (6, 2), (6, 3), 
+        (4, 5),
     ]
     print("\n\nTested problems")
     app = allProblems()
@@ -185,14 +187,13 @@ def makeTests():
     s1.path = os.path.join(path, 'masters','geometryMaster1_no_kerning.ufo')
     d.addSource(s1)
     s2 = SourceDescriptor()
-    s2.location = dict(snap=(10,11))
+    s2.location = dict(snap=1000)
     s2.path = os.path.join(path, 'masters','geometryMaster2.ufo')
     d.addSource(s2)
     d.write(tp)
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
     showProblems(dc)
-    print(dc.problems)
     assert (5,1) in dc.problems    # ok axis, source without location
     
     d = DesignSpaceProcessor()
@@ -217,7 +218,6 @@ def makeTests():
     dc.checkEverything()
     showProblems(dc)
     assert (2,10) in dc.problems        # source location is anisotropic
-
 
     # ok space, missing UFO
     d = DesignSpaceProcessor()
@@ -382,10 +382,10 @@ def makeTests():
     dc = DesignSpaceChecker(d)
     dc.checkEverything()
     showProblems(dc)
-
     assert not dc.hasStructuralProblems()   # minimum working designspace, ready for fonts
     assert (3,6) in dc.problems        # missing family name
     assert (3,7) in dc.problems        # missing style name
+    assert (4,2) in dc.problems        # default glyph is empty, glyphName
     assert (4,7) in dc.problems        # default glyph is empty, glyphName
     assert (4,9) in dc.problems        # incompatible constructions for glyph
     assert (5,0) in dc.problems        # kerning: no kerning in source

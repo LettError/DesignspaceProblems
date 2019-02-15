@@ -11,7 +11,7 @@
     </source>
     <source filename="masters/geometryMaster2.ufo">
       <location>
-        <dimension name="snap" xvalue="10" yvalue="11"/>
+        <dimension name="snap" xvalue="1000"/>
       </location>
     </source>
   </sources>
