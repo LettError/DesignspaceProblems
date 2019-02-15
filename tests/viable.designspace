@@ -54,5 +54,12 @@
       <kerning/>
       <info/>
     </instance>
+    <instance familyname="Aa" stylename="Bb">
+      <location>
+        <dimension name="snap" xvalue="600"/>
+      </location>
+      <kerning/>
+      <info/>
+    </instance>
   </instances>
 </designspace>

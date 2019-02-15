@@ -58,13 +58,12 @@ class DesignSpaceProblem(object):
         (3,6): "missing family name",
         (3,7): "missing style name",
         (3,8): "missing output path",
-        (3,9): "duplicate instances",
         (3,10): "no instances defined",
         
         # 4 glyphs
         (4,0): 'different number of contours in glyph',
-        (4,1): 'different number of components in glyph',
-        (4,2): 'different number of anchors in glyph',
+        (4,1): 'different components in glyph',
+        (4,2): 'different anchors in glyph',
         (4,3): 'different number of on-curve points on contour',
         (4,4): 'different number of off-curve points on contour',
         (4,5): 'curve has wrong type',

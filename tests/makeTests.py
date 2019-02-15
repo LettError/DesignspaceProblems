@@ -24,11 +24,17 @@ def showProblems(dc):
 
 def showUntested():
     global testedProblems
+    # these problems can't be tested because UFOprocessor already ignores these faults
+    untestable = [(1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7),
+        (2, 4), (2,5), (3, 2),
+    ]
     print("\n\nTested problems")
     app = allProblems()
     for ap in list(app.keys()):
         if ap in testedProblems:
             print("✅", ap, app.get(ap))
+        elif ap in untestable:
+            print("❔", ap, app.get(ap))
         else:
             print("❌", ap, app.get(ap))
 
@@ -164,6 +170,55 @@ def makeTests():
     showProblems(dc)
     assert (2,10) in dc.problems        # source location is anisotropic
 
+    # ok space, no kerning in default
+    d = DesignSpaceProcessor()
+    tp = os.path.join(path, "no-kerning-in-default.designspace")
+    a1 = AxisDescriptor()
+    a1.name = "snap"
+    a1.minimum = 0
+    a1.maximum = 1000
+    a1.default = 0
+    a1.tag = "snap"
+    d.addAxis(a1)
+    s1 = SourceDescriptor()
+    s1.location = dict(snap=0)
+    s1.path = os.path.join(path, 'masters','geometryMaster1_no_kerning.ufo')
+    d.addSource(s1)
+    s2 = SourceDescriptor()
+    s2.location = dict(snap=(10,11))
+    s2.path = os.path.join(path, 'masters','geometryMaster2.ufo')
+    d.addSource(s2)
+    d.write(tp)
+    dc = DesignSpaceChecker(tp)
+    dc.checkEverything()
+    showProblems(dc)
+    print(dc.problems)
+    assert (5,1) in dc.problems    # ok axis, source without location
+    
+    d = DesignSpaceProcessor()
+    tp = os.path.join(path, "source-without-location.designspace")
+    a1 = AxisDescriptor()
+    a1.name = "snap"
+    a1.minimum = 0
+    a1.maximum = 1000
+    a1.default = 0
+    a1.tag = "snap"
+    d.addAxis(a1)
+    s1 = SourceDescriptor()
+    s1.location = dict(snap=0)
+    s1.path = os.path.join(path, 'masters','geometryMaster1.ufo')
+    d.addSource(s1)
+    s2 = SourceDescriptor()
+    s2.location = dict(snap=(10,11))
+    s2.path = os.path.join(path, 'masters','geometryMaster2.ufo')
+    d.addSource(s2)
+    d.write(tp)
+    dc = DesignSpaceChecker(tp)
+    dc.checkEverything()
+    showProblems(dc)
+    assert (2,10) in dc.problems        # source location is anisotropic
+
+
     # ok space, missing UFO
     d = DesignSpaceProcessor()
     tp = os.path.join(path, "source-ufo-missing.designspace")
@@ -193,6 +248,74 @@ def makeTests():
     showProblems(dc)
     assert (2,1) in dc.problems        # source location is anisotropic
     assert (2,3) in dc.problems        # source layer missing
+
+    # multiple ssources in same location
+    d = DesignSpaceProcessor()
+    tp = os.path.join(path, "multiple_sources_on_same_location.designspace")
+    a1 = AxisDescriptor()
+    a1.name = "snap"
+    a1.minimum = 0
+    a1.maximum = 1000
+    a1.default = 0
+    a1.tag = "snap"
+    d.addAxis(a1)
+    s1 = SourceDescriptor()
+    #s1.name = "master.1"
+    s1.location = dict(snap=0)
+    s1.path = os.path.join(path, 'masters','geometryMaster1.ufo')
+    d.addSource(s1)
+    #s2.name = "master.2"
+    for i in range(3):
+        s2 = SourceDescriptor()
+        s2.location = dict(snap=1500)
+        s2.path = os.path.join(path, 'masters','geometryMaster2.ufo')
+        d.addSource(s2)
+    d.write(tp)
+    dc = DesignSpaceChecker(d)
+    dc.checkEverything()
+    showProblems(dc)
+
+    # instance without location
+    d = DesignSpaceProcessor()
+    tp = os.path.join(path, "instance_without_location.designspace")
+    a1 = AxisDescriptor()
+    a1.name = "snap"
+    a1.minimum = 0
+    a1.maximum = 1000
+    a1.default = 0
+    a1.tag = "snap"
+    d.addAxis(a1)
+    s1 = SourceDescriptor()
+    #s1.name = "master.1"
+    s1.location = dict(snap=0)
+    s1.path = os.path.join(path, 'masters','geometryMaster1.ufo')
+    d.addSource(s1)
+    #s2.name = "master.2"
+    s2 = SourceDescriptor()
+    s2.location = dict(snap=1000)
+    s2.path = os.path.join(path, 'masters','geometryMaster2.ufo')
+    d.addSource(s2)
+    jd = InstanceDescriptor()
+    jd.familyName = None
+    jd.styleName = None
+    jd.location = None
+    jd.path = None
+    d.addInstance(jd)
+
+    for i in range(3):
+        jd = InstanceDescriptor()
+        jd.familyName = "Duped"
+        jd.styleName = "Duped"
+        jd.location = dict(snap=666)
+        jd.path = "some/path.ufo"
+        d.addInstance(jd)
+
+    d.write(tp)
+    dc = DesignSpaceChecker(d)
+    dc.checkEverything()
+    showProblems(dc)
+    assert (3,1) in dc.problems        # instance location missing
+    assert (3,4) in dc.problems        # multiple instances on location*
 
     # ok axis, ok sources
     d = DesignSpaceProcessor()
@@ -230,6 +353,13 @@ def makeTests():
     jd.styleName = None
     jd.location = dict(snap=600)
     jd.path = os.path.join(path, 'instances','generatedInstance2.ufo')
+    d.addInstance(jd)
+
+    jd = InstanceDescriptor()
+    jd.familyName = "Aa"
+    jd.styleName = "Bb"
+    jd.location = dict(snap=600)
+    jd.path = None
     d.addInstance(jd)
 
     r1 = RuleDescriptor()

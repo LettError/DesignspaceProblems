@@ -9,6 +9,7 @@ from fontParts.fontshell import RFont
 from pprint import pprint
 from fontPens.digestPointPen import DigestPointStructurePen
 
+
 class DesignSpaceChecker(object):
     _registeredTags = dict(wght = 'weight', wdth = 'width', slnt = 'slant', opsz = 'optical', ital = 'italic')
     def __init__(self, pathOrObject):
@@ -202,7 +203,7 @@ class DesignSpaceChecker(object):
                     for axisValue in thisAxisValues:
                         if axisName in axisValues:
                             mn, df, mx = axisValues[axisName]
-                            if axisValue < mn or axisValue > mx:
+                            if axisValue < mn or mx > axisValue:
                                 # 3,5   instance location requires extrapolation
                                 # 3,3   instance location has out of bounds value
                                 self.problems.append(DesignSpaceProblem(3,3, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue)))
@@ -213,12 +214,15 @@ class DesignSpaceChecker(object):
                             self.problems.append(DesignSpaceProblem(3,2, dict(axisName=axisName)))
         allLocations = {}
         for i, jd in enumerate(self.ds.instances):
-            key = list(jd.location.items())
-            key.sort()
-            key = tuple(key)
-            if key not in allLocations:
-                allLocations[key] = []
-            allLocations[key].append((i,jd))
+            if jd.location is None:
+                self.problems.append(DesignSpaceProblem(3,1, dict(instance=i)))
+            else:
+                key = list(jd.location.items())
+                key.sort()
+                key = tuple(key)
+                if key not in allLocations:
+                    allLocations[key] = []
+                allLocations[key].append((i,jd))
         for key, items in allLocations.items():
             # 3,4   multiple sources on location
             if len(items) > 1:
@@ -233,7 +237,7 @@ class DesignSpaceChecker(object):
             if jd.styleName is None:
                 self.problems.append(DesignSpaceProblem(3,7, dict(instance=i)))
             # 3,8   missing output path
-            if jd.path is None:
+            if jd.filename is None:
                 self.problems.append(DesignSpaceProblem(3,8, dict(instance=i)))
         # 3,9   duplicate instances
     
@@ -260,20 +264,44 @@ class DesignSpaceChecker(object):
         # 4.8 contour has wrong direction
         items = self.ds.collectMastersForGlyph(glyphName)
         patterns = {}
+        contours = {}
+        components = {}
+        anchors = {}
         for loc, mg, masters in items:
             pp = DigestPointStructurePen()
+            # get the structure of the glyph, count a couple of thing
             mg.drawPoints(pp)
             pat = pp.getDigest()
+            for cm in mg.components:
+                print('cm', cm)
+            for ad in mg.anchors:
+                if ad['name'] not in anchors:
+                    anchors[ad['name']] = 0
+                anchors[ad['name']] += 1                
             if not pat in patterns:
                 patterns[pat] = []
             patterns[pat].append(loc)
+            contourCount = 0
+            for item in pat:
+                if item is None: continue
+                if "beginPath" in item:
+                    contourCount += 1
+            if not contourCount in contours:
+                contours[contourCount] = 0
+            contours[contourCount] += 1
+        if len(anchors) != 0:
+            for anchorName, anchorCount in anchors.items():
+                if anchorCount < len(items):
+                    # 4.2 different number of anchors in glyph
+                    self.problems.append(DesignSpaceProblem(4,2, dict(glyphName=glyphName, anchorName=anchorName)))
+        if len(contours) != 1:
+            # 4.0 different number of contours in glyph
+            self.problems.append(DesignSpaceProblem(4,0, dict(glyphName=glyphName)))
         if len(patterns) != 1:
             # 4,9 incompatible constructions for glyph
             # maybe this is enough to start wtih
             self.problems.append(DesignSpaceProblem(4,9, dict(glyphName=glyphName)))
-            # 4.0 different number of contours in glyph
             # 4.1 different number of components in glyph
-            # 4.2 different number of anchors in glyph
             # 4.3 different number of on-curve points on contour
             # 4.4 different number of off-curve points on contour
             # 4.5 curve has wrong type
@@ -307,7 +335,6 @@ class DesignSpaceChecker(object):
                     if sourceGroupMembers != defaultGroupMembers:
                         # 5,2 kerning group members do not match
                         self.problems.append(DesignSpaceProblem(5,2, dict(fontObj=self.nf, groupName=sourceGroupName)))
-
 
     def checkFontInfo(self):
         # check some basic font info values

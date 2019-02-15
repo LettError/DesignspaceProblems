@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<designspace format="4.0">
+  <axes>
+    <axis tag="snap" name="snap" minimum="0" maximum="1000" default="0"/>
+  </axes>
+  <sources>
+    <source filename="masters/geometryMaster1_no_kerning.ufo">
+      <location>
+        <dimension name="snap" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster2.ufo">
+      <location>
+        <dimension name="snap" xvalue="10" yvalue="11"/>
+      </location>
+    </source>
+  </sources>
+</designspace>

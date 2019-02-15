@@ -136,12 +136,12 @@ def differentNumberOfContoursInGlyphProblem(**kwargs):
     # different number of contours in glyph, (4, 0)
     return DesignSpaceProblem(4,0,data=kwargs)
 
-def differentNumberOfComponentsInGlyphProblem(**kwargs):
-    # different number of components in glyph, (4, 1)
+def differentComponentsInGlyphProblem(**kwargs):
+    # different components in glyph, (4, 1)
     return DesignSpaceProblem(4,1,data=kwargs)
 
-def differentNumberOfAnchorsInGlyphProblem(**kwargs):
-    # different number of anchors in glyph, (4, 2)
+def differentAnchorsInGlyphProblem(**kwargs):
+    # different anchors in glyph, (4, 2)
     return DesignSpaceProblem(4,2,data=kwargs)
 
 def differentNumberOfOncurvePointsOnContourProblem(**kwargs):

@@ -14,6 +14,8 @@
     <string>glyphT_hree.glif</string>
     <key>glyphTwo</key>
     <string>glyphT_wo.glif</string>
+    <key>glyph_with_many_contours</key>
+    <string>glyph_with_many_contours.glif</string>
     <key>narrow</key>
     <string>narrow.glif</string>
     <key>narrow.component</key>
