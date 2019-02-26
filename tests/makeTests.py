@@ -170,6 +170,7 @@ def makeTests():
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
     showProblems(dc)
+    print(dc.problems)
     assert (2,10) in dc.problems        # source location is anisotropic
 
     # ok space, no kerning in default

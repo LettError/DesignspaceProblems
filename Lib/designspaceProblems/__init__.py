@@ -58,6 +58,15 @@ class DesignSpaceChecker(object):
                 return True
         return False
 
+    def hasRulesProblems(self):
+        # check if there are errors in rule data
+        if self.hasStructuralProblems():
+            return -1
+        for err in self.problems:
+            if err.category in [7]:
+                return True
+        return False
+
     def checkEverything(self):
         if not self.ds:
             return False
@@ -203,7 +212,7 @@ class DesignSpaceChecker(object):
                     for axisValue in thisAxisValues:
                         if axisName in axisValues:
                             mn, df, mx = axisValues[axisName]
-                            if axisValue < mn or mx > axisValue:
+                            if not  (mn <= axisValue <= mx):
                                 # 3,5   instance location requires extrapolation
                                 # 3,3   instance location has out of bounds value
                                 self.problems.append(DesignSpaceProblem(3,3, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue)))

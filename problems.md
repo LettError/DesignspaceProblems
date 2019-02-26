@@ -46,11 +46,11 @@
   * `3.2	instance location has value for undefined axis`
   * `3.3	instance location has out of bounds value`
   * `3.4	multiple instances on location`
-  * `3.5	instance location is anisotropic`
+  * `3.5	instance location requires extrapolation`
   * `3.6	missing family name`
   * `3.7	missing style name`
   * `3.8	missing output path`
-  * `3.9	duplicate instances`
+  * `3.9	instance location is anisotropic`
   * `3.10	no instances defined`
 
 ## 4. glyphs

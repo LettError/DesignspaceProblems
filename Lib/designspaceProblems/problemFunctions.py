@@ -108,9 +108,13 @@ def multipleInstancesOnLocationProblem(**kwargs):
     # multiple instances on location, (3, 4)
     return DesignSpaceProblem(3,4,data=kwargs)
 
-def instanceLocationIsAnisotropicProblem(**kwargs):
-    # instance location is anisotropic, (3, 5)
+def instanceLocationRequiresExtrapolationProblem(**kwargs):
+    # instance location requires extrapolation, (3, 5)
     return DesignSpaceProblem(3,5,data=kwargs)
+
+def instanceLocationIsAnisotropicProblem(**kwargs):
+    # instance location is anisotropic, (3, 9)
+    return DesignSpaceProblem(3,9,data=kwargs)
 
 def missingFamilyNameProblem(**kwargs):
     # missing family name, (3, 6)
@@ -123,10 +127,6 @@ def missingStyleNameProblem(**kwargs):
 def missingOutputPathProblem(**kwargs):
     # missing output path, (3, 8)
     return DesignSpaceProblem(3,8,data=kwargs)
-
-def duplicateInstancesProblem(**kwargs):
-    # duplicate instances, (3, 9)
-    return DesignSpaceProblem(3,9,data=kwargs)
 
 def noInstancesDefinedProblem(**kwargs):
     # no instances defined, (3, 10)
