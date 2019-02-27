@@ -1,1 +1,15 @@
-.eggs
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.idea
+*.log
+
+# Distribution / Packaging
+*.egg-info
+*.eggs
+build
+dist
+
+# auto-generated version file
+Lib/designspaceProblems/_version.py
+
