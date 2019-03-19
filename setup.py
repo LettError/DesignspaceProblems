@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# note: taken from UFOprocessor and modified, but it doesn't work properly
-
 import sys
 from setuptools import setup, find_packages
 from io import open
@@ -14,14 +12,14 @@ with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name="designspaceProblems/",
+    name="designspaceProblems",
     use_scm_version={"write_to": "Lib/designspaceProblems/_version.py"},
     description="Check designspace data.",
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="Erik van Blokland",
     author_email="erik@letterror.com",
-    url="https://github.com/letterror/DesignSpaceErrors",
+    url="https://github.com/LettError/DesignspaceProblems",
     keywords='font development tools',
     license="MIT",
     packages=find_packages("Lib"),
