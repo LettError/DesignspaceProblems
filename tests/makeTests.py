@@ -230,6 +230,15 @@ def makeTests():
     a1.default = 0
     a1.tag = "snap"
     d.addAxis(a1)
+
+    a2 = AxisDescriptor()
+    a2.name = "pop"
+    a2.minimum = 0
+    a2.maximum = 1000
+    a2.default = 0
+    a2.tag = "pop_"
+    d.addAxis(a1)
+
     s1 = SourceDescriptor()
     s1.location = dict(snap=0)
     s1.path = os.path.join(path, 'masters','geometryMaster1.ufo')
@@ -318,6 +327,54 @@ def makeTests():
     assert (3,1) in dc.problems        # instance location missing
     assert (3,4) in dc.problems        # multiple instances on location*
 
+    # mapping tests
+    d = DesignSpaceProcessor()
+    tp = os.path.join(path, "axismapping.designspace")
+    a1 = AxisDescriptor()
+    a1.name = "ok_axis"
+    a1.minimum = 0
+    a1.maximum = 1000
+    a1.default = 0
+    a1.tag = "ax01"
+    a1.map = [(0,200), (300, 500), (1000, 800)] # map is ok
+    d.addAxis(a1)
+
+    a2 = AxisDescriptor()
+    a2.name = "input_regression_axis"
+    a2.minimum = 0
+    a2.maximum = 1000
+    a2.default = 0
+    a2.tag = "ax02"
+    a2.map = [(200,100), (10, 500), (1000, 800)] # input regresses ok, output ok
+    d.addAxis(a2)
+
+    a3 = AxisDescriptor()
+    a3.name = "output_regression_axis"
+    a3.minimum = 0
+    a3.maximum = 1000
+    a3.default = 0
+    a3.tag = "ax03"
+    a3.map = [(0,500), (300, 200), (1000, 800)] # input progresses ok, output regresses
+    d.addAxis(a3)
+
+    s1 = SourceDescriptor()
+    #s1.name = "master.1"
+    s1.location = dict(ok_axis=0, output_regression_axis=0)
+    s1.path = os.path.join(path, 'masters','geometryMaster1.ufo')
+    d.addSource(s1)
+    #s2.name = "master.2"
+    s2 = SourceDescriptor()
+    s2.location = dict(ok_axis=1000, output_regression_axis=0)
+    s2.path = os.path.join(path, 'masters','geometryMaster2.ufo')
+    d.addSource(s2)
+    d.write(tp)
+    dc = DesignSpaceChecker(d)
+    dc.checkEverything()
+    showProblems(dc)
+    assert (1,11) in dc.problems
+    assert (1,12) in dc.problems
+    pprint(dc.problems)
+
     # ok axis, ok sources
     d = DesignSpaceProcessor()
     tp = os.path.join(path, "viable.designspace")
@@ -398,6 +455,64 @@ def makeTests():
     assert (7,5) in dc.problems        # condition values on unknown axis
     assert (7,6) in dc.problems        # condition values out of axis bounds
 
+    # badly populated designspace
+    # this system does not have on-axis masters
+    # but a couple of non-aligned off-axis masters.
+    # Varlib will complain
+    d = DesignSpaceProcessor()
+    tp = os.path.join(path, "badly_populated.designspace")
+    a1 = AxisDescriptor()
+    a1.name = "weight"
+    a1.minimum = 0
+    a1.maximum = 1000
+    a1.default = 0
+    a1.tag = "wght"
+    d.addAxis(a1)
+
+    a2.name = "width"
+    a2.minimum = -500
+    a2.maximum = 500
+    a2.default = 0
+    a2.tag = "wdth"
+    d.addAxis(a2)
+
+    a3.name = "optical"
+    a3.minimum = 0
+    a3.maximum = 1000
+    a3.default = 0
+    a3.tag = "opsz"
+    d.addAxis(a3)
+
+    # neutral
+    s1 = SourceDescriptor()
+    s1.location = dict(weight=0, width=0, optical=0)
+    s1.path = os.path.join(path, 'masters','geometryMaster1.ufo')
+    d.addSource(s1)
+
+    # offaxis master 1
+    s2 = SourceDescriptor()
+    s2.location = dict(width=-500, weight=1000, optical=0)
+    s2.path = os.path.join(path, 'masters','geometryMaster2.ufo')
+    d.addSource(s2)
+
+    # offaxis master 2
+    s3 = SourceDescriptor()
+    s3.location = dict(width=0, weight=1000, optical=1000)
+    s3.path = os.path.join(path, 'masters','geometryMaster2.ufo')
+    d.addSource(s3)
+
+    # offaxis master 2
+    s4 = SourceDescriptor()
+    s4.location = dict(width=500, weight=1000, optical=1000)
+    s4.path = os.path.join(path, 'masters','geometryMaster2.ufo')
+    d.addSource(s4)
+
+    d.write(tp)
+    dc = DesignSpaceChecker(d)
+    dc.checkEverything()
+    
+    showProblems(dc)
+    
     showUntested()
 
 def makeEdit(path, find, replace):

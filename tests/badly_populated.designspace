@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<designspace format="4.0">
+  <axes>
+    <axis tag="wght" name="weight" minimum="0" maximum="1000" default="0"/>
+    <axis tag="wdth" name="width" minimum="-500" maximum="500" default="0">
+      <map input="200" output="100"/>
+      <map input="10" output="500"/>
+      <map input="1000" output="800"/>
+    </axis>
+    <axis tag="opsz" name="optical" minimum="0" maximum="1000" default="0">
+      <map input="0" output="500"/>
+      <map input="300" output="200"/>
+      <map input="1000" output="800"/>
+    </axis>
+  </axes>
+  <sources>
+    <source filename="masters/geometryMaster1.ufo">
+      <location>
+        <dimension name="weight" xvalue="0"/>
+        <dimension name="width" xvalue="0"/>
+        <dimension name="optical" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster2.ufo">
+      <location>
+        <dimension name="weight" xvalue="1000"/>
+        <dimension name="width" xvalue="-500"/>
+        <dimension name="optical" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster2.ufo">
+      <location>
+        <dimension name="weight" xvalue="1000"/>
+        <dimension name="width" xvalue="0"/>
+        <dimension name="optical" xvalue="1000"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster2.ufo">
+      <location>
+        <dimension name="weight" xvalue="1000"/>
+        <dimension name="width" xvalue="500"/>
+        <dimension name="optical" xvalue="1000"/>
+      </location>
+    </source>
+  </sources>
+</designspace>

@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<designspace format="4.0">
+  <axes>
+    <axis tag="ax01" name="ok_axis" minimum="0" maximum="1000" default="0">
+      <map input="0" output="200"/>
+      <map input="300" output="500"/>
+      <map input="1000" output="800"/>
+    </axis>
+    <axis tag="ax02" name="input_regression_axis" minimum="0" maximum="1000" default="0">
+      <map input="200" output="100"/>
+      <map input="10" output="500"/>
+      <map input="1000" output="800"/>
+    </axis>
+    <axis tag="ax03" name="output_regression_axis" minimum="0" maximum="1000" default="0">
+      <map input="0" output="500"/>
+      <map input="300" output="200"/>
+      <map input="1000" output="800"/>
+    </axis>
+  </axes>
+  <sources>
+    <source filename="masters/geometryMaster1.ufo">
+      <location>
+        <dimension name="ok_axis" xvalue="0"/>
+        <dimension name="input_regression_axis" xvalue="0"/>
+        <dimension name="output_regression_axis" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster2.ufo">
+      <location>
+        <dimension name="ok_axis" xvalue="1000"/>
+        <dimension name="input_regression_axis" xvalue="0"/>
+        <dimension name="output_regression_axis" xvalue="0"/>
+      </location>
+    </source>
+  </sources>
+</designspace>

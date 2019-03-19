@@ -36,10 +36,6 @@ def axisTagMismatchProblem(**kwargs):
     # axis tag mismatch, (1, 7)
     return DesignSpaceProblem(1,7,data=kwargs)
 
-def mappingTableHasOverlapsProblem(**kwargs):
-    # mapping table has overlaps, (1, 8)
-    return DesignSpaceProblem(1,8,data=kwargs)
-
 def minimumAndMaximumValueAreTheSameProblem(**kwargs):
     # minimum and maximum value are the same, (1, 9)
     return DesignSpaceProblem(1,9,data=kwargs)
@@ -47,6 +43,14 @@ def minimumAndMaximumValueAreTheSameProblem(**kwargs):
 def defaultNotBetweenMinimumAndMaximumProblem(**kwargs):
     # default not between minimum and maximum, (1, 10)
     return DesignSpaceProblem(1,10,data=kwargs)
+
+def mappingTableHasOverlappingInputValuesProblem(**kwargs):
+    # mapping table has overlapping input values, (1, 11)
+    return DesignSpaceProblem(1,11,data=kwargs)
+
+def mappingTableHasOverlappingOutputValuesProblem(**kwargs):
+    # mapping table has overlapping output values, (1, 12)
+    return DesignSpaceProblem(1,12,data=kwargs)
 
 def noSourcesDefinedProblem(**kwargs):
     # no sources defined, (2, 0)
@@ -91,6 +95,10 @@ def multipleSourcesOnLocationProblem(**kwargs):
 def sourceLocationIsAnisotropicProblem(**kwargs):
     # source location is anisotropic, (2, 10)
     return DesignSpaceProblem(2,10,data=kwargs)
+
+def axisWithoutOnaxisSourcesProblem(**kwargs):
+    # axis without on-axis sources, (2, 11)
+    return DesignSpaceProblem(2,11,data=kwargs)
 
 def instanceLocationMissingProblem(**kwargs):
     # instance location missing, (3, 1)

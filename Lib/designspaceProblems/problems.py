@@ -31,9 +31,10 @@ class DesignSpaceProblem(object):
         (1,6): "axis tag missing",
         (1,7): "axis tag mismatch",
 
-        (1,8): "mapping table has overlaps",
         (1,9): "minimum and maximum value are the same",
         (1,10): "default not between minimum and maximum",
+        (1,11): "mapping table has overlapping input values",
+        (1,12): "mapping table has overlapping output values",
 
         # 2 sources
         (2,0): "no sources defined",
@@ -47,7 +48,8 @@ class DesignSpaceProblem(object):
         (2,8): "multiple sources on default location",
         (2,9): "multiple sources on location",
         (2,10): "source location is anisotropic",
-        
+        (2,11): "axis without on-axis sources",
+
         # 3 instances
         (3,1): 'instance location missing',
         (3,2): "instance location has value for undefined axis",

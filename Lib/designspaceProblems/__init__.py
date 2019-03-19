@@ -1,20 +1,41 @@
-import os, glob
+import os, glob, plistlib
 import designspaceProblems.problems
 from importlib import reload
 reload(designspaceProblems.problems)
 from designspaceProblems.problems import DesignSpaceProblem
 import ufoProcessor
 from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer
+from ufoProcessor.varModels import AxisMapper
 from fontParts.fontshell import RFont
 from pprint import pprint
 from fontPens.digestPointPen import DigestPointStructurePen
 
+
+def getUFOLayers(ufoPath):
+    # Peek into a ufo to read its layers.
+    # <?xml version='1.0' encoding='UTF-8'?>
+    # <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    # <plist version="1.0">
+    #   <array>
+    #     <array>
+    #       <string>public.default</string>
+    #       <string>glyphs</string>
+    #     </array>
+    #   </array>
+    # </plist>
+    layercontentsPath = os.path.join(ufoPath, "layercontents.plist")
+    if os.path.exists(layercontentsPath):
+        p = plistlib.readPlist(layercontentsPath)
+        return [a for a, b in p]
+    return []
 
 class DesignSpaceChecker(object):
     _registeredTags = dict(wght = 'weight', wdth = 'width', slnt = 'slant', opsz = 'optical', ital = 'italic')
     def __init__(self, pathOrObject):
         # check things
         self.problems = []
+        self.axesOK = None
+        self.mapper = None
         if isinstance(pathOrObject, str):
             self.ds = DesignSpaceProcessor()
             if os.path.exists(pathOrObject):
@@ -88,42 +109,78 @@ class DesignSpaceChecker(object):
         if len(self.ds.axes) == 0:
             self.problems.append(DesignSpaceProblem(1,0))
         # 1.1	axis missing
+        allAxes = []
         for i, ad in enumerate(self.ds.axes):
+            axisOK = True
             # 1.5	axis name missing
             if ad.name is None:
                 axisName = "unnamed_axis_%d" %i
                 self.problems.append(DesignSpaceProblem(1,5), dict(axisName=axisName))
+                axisOK = False
             else:
                 axisName = ad.name
             # 1.2	axis maximum missing
             if ad.maximum is None:
                 self.problems.append(DesignSpaceProblem(1,2, dict(axisName=axisName)))
+                axisOK = False
             # 1.3	axis minimum missing
             if ad.minimum is None:
                 self.problems.append(DesignSpaceProblem(1,3, dict(axisName=axisName)))
+                axisOK = False
             # 1.4	axis default missing
             if ad.default is None:
                 self.problems.append(DesignSpaceProblem(1,4, dict(axisName=axisName)))
+                axisOK = False
             # 1,9 minimum and maximum value are the same and not None
             if (ad.minimum == ad.maximum) and ad.minimum != None:
                 self.problems.append(DesignSpaceProblem(1,9, dict(axisName=axisName)))
+                axisOK = False
             # 1,10 default not between minimum and maximum
             if ad.minimum is not None and ad.maximum is not None and ad.default is not None:
                 if not ((ad.minimum < ad.default <= ad.maximum) or (ad.minimum <= ad.default < ad.maximum)):
                     self.problems.append(DesignSpaceProblem(1,10, dict(axisName=axisName)))
-
+                    axisOK = False
             # 1.6	axis tag missing
             if ad.tag is None:
                 self.problems.append(DesignSpaceProblem(1,6, dict(axisName=axisName)))
+                axisOK = False
             # 1.7	axis tag mismatch
             else:
                 if ad.tag in self._registeredTags:
                     regName = self._registeredTags[ad.tag]
                     if regName not in axisName.lower():
                         self.problems.append(DesignSpaceProblem(1,6, dict(axisName=axisName)))
-            # 1.8	mapping table has overlaps
-            # XX
-    
+                        axisOK = False
+            allAxes.append(axisOK)
+            if axisOK:
+                # check the map for this axis
+                # 1.8	mapping table has overlaps
+                inputs = []
+                outputs = []
+                if ad.map:
+                    last = None
+                    for a, b in ad.map:
+                        if last is None:
+                            last = a, b
+                            continue
+                        da = a-last[0]
+                        db = b-last[1]
+                        inputs.append(da)
+                        outputs.append(db)
+                        last = a,b
+                if inputs:
+                    if min(inputs)<0 and max(inputs)>0:
+                        self.problems.append(DesignSpaceProblem(1,11, dict(axisName=axisName, axisMap=ad.map)))
+                if outputs:
+                    if min(outputs)<0 and max(outputs)>0:
+                        self.problems.append(DesignSpaceProblem(1,12, dict(axisName=axisName, axisMap=ad.map)))
+
+        # XX
+        #print('allAxes', allAxes)
+        #if not False in allAxes:
+        #    self.mapper = AxisMapper(self.ds.axes)
+        #    print('self.mapper', self.mapper)
+
     def checkSources(self):
         axisValues = self.data_getAxisValues()
         # 2,0 no sources defined
@@ -144,9 +201,9 @@ class DesignSpaceChecker(object):
                 else:
                     # 2,3 source layer missing
                     if sd.layerName is not None:
-                        ufo = RFont(sd.path, showInterface=False)    
-                        layerObj = getLayer(ufo, sd.layerName)
-                        if layerObj is None:
+                        # XX make this more lazy?
+                        # or a faster scan that doesn't load the whole ufo?
+                        if not sd.layerName in getUFOLayers(sd.path):
                             self.problems.append(DesignSpaceProblem(2,3, dict(path=sd.path, layerName=sd.layerName)))
                 if sd.location is None:            
                     # 2,4 source location missing
@@ -192,6 +249,29 @@ class DesignSpaceChecker(object):
             if len(items) > 1 and items[0].location != defaultLocation:
                 # 2,9 multiple sources on location
                 self.problems.append(DesignSpaceProblem(2,9))
+        onAxis = set()
+        # check if all axes have on-axis masters
+        for i, sd in enumerate(self.ds.sources):
+            name = self.isOnAxis(sd.location)
+            if name:
+                onAxis |= set([name])
+        for axisName in axisValues:
+            if axisName not in onAxis:
+                self.problems.append(DesignSpaceProblem(2,11, dict(axisName=axisName)))
+
+    def isOnAxis(self, loc):
+        # test of a location is on-axis
+        axisValues = self.data_getAxisValues()
+        checks = []
+        whichAxis = None
+        for axisName in axisValues.keys():
+            whichAxis = axisName
+            default = axisValues.get(axisName)[1]
+            if loc.get(axisName, default) != default:
+                checks.append(1)
+        if sum(checks)<=1:
+            return whichAxis
+        return False
     
     def checkInstances(self):
         axisValues = self.data_getAxisValues()
