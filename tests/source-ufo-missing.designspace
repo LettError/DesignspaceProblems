@@ -2,6 +2,7 @@
 <designspace format="4.0">
   <axes>
     <axis tag="snap" name="snap" minimum="0" maximum="1000" default="0"/>
+    <axis tag="snap" name="snap" minimum="0" maximum="1000" default="0"/>
   </axes>
   <sources>
     <source filename="masters/geometryMaster1.ufo">

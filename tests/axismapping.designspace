@@ -21,14 +21,14 @@
     <source filename="masters/geometryMaster1.ufo">
       <location>
         <dimension name="ok_axis" xvalue="0"/>
-        <dimension name="input_regression_axis" xvalue="0"/>
+        <dimension name="input_regression_axis" xvalue="490"/>
         <dimension name="output_regression_axis" xvalue="0"/>
       </location>
     </source>
     <source filename="masters/geometryMaster2.ufo">
       <location>
         <dimension name="ok_axis" xvalue="1000"/>
-        <dimension name="input_regression_axis" xvalue="0"/>
+        <dimension name="input_regression_axis" xvalue="490"/>
         <dimension name="output_regression_axis" xvalue="0"/>
       </location>
     </source>
