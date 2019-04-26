@@ -444,6 +444,7 @@ def makeTests():
     assert not dc.hasStructuralProblems()   # minimum working designspace, ready for fonts
     assert (3,6) in dc.problems        # missing family name
     assert (3,7) in dc.problems        # missing style name
+    assert (4,1) in dc.problems        # components
     assert (4,2) in dc.problems        # default glyph is empty, glyphName
     assert (4,7) in dc.problems        # default glyph is empty, glyphName
     assert (4,9) in dc.problems        # incompatible constructions for glyph

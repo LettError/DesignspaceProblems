@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <key>broken_component</key>
+    <string>broken_component.glif</string>
     <key>extra.glyph.for.neutral</key>
     <string>extra.glyph.for.neutral.glif</string>
     <key>glyphFive</key>

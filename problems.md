@@ -31,7 +31,7 @@
 
   * `2.0	no sources defined`
   * `2.1	source UFO missing`
-  * `2.2	source UFO format too old`
+  * `2.2	source UFO format too old, recommend update.`
   * `2.3	source layer missing`
   * `2.4	source location missing`
   * `2.5	source location has value for undefined axis`

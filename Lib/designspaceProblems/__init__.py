@@ -7,7 +7,7 @@ import ufoProcessor
 from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer
 from ufoProcessor.varModels import AxisMapper
 from fontParts.fontshell import RFont
-from pprint import pprint
+#from pprint import pprint
 from fontPens.digestPointPen import DigestPointStructurePen
 
 
@@ -408,7 +408,7 @@ class DesignSpaceChecker(object):
             # 4.3 different number of on-curve points on contour
             # 4.4 different number of off-curve points on contour
             # 4.5 curve has wrong type
-    
+
     def checkKerning(self):
         # 5,4 kerning pair missing
         # 5,1 no kerning in default

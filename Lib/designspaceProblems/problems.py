@@ -179,6 +179,8 @@ def makeFunctions(whiteSpace=None):
         new.append("Problem")
         new = ''.join(new)
         new = new.replace('-', '')
+        new = new.replace(',', '')
+        new = new.replace('.', '')
         func = "def %s(**kwargs):\n%s# %s, %s\n%sreturn DesignSpaceProblem(%d,%d,data=kwargs)\n" % (''.join(new), whiteSpace, desc, key, whiteSpace, key[0], key[1])
         modl.append(func)
     path = "./problemFunctions.py"

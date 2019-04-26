@@ -66,6 +66,7 @@
       <string>glyphFive</string>
       <string>narrow.component</string>
       <string>wide.component</string>
+      <string>broken_component</string>
       <string>glyph_with_many_contours</string>
       <string>extra.glyph.for.master2</string>
     </array>
