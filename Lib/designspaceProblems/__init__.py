@@ -7,7 +7,6 @@ import ufoProcessor
 from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer
 from ufoProcessor.varModels import AxisMapper
 from fontParts.fontshell import RFont
-#from pprint import pprint
 from fontPens.digestPointPen import DigestPointStructurePen
 
 
@@ -31,6 +30,10 @@ def getUFOLayers(ufoPath):
 
 class DesignSpaceChecker(object):
     _registeredTags = dict(wght = 'weight', wdth = 'width', slnt = 'slant', opsz = 'optical', ital = 'italic')
+    _structuralProblems = [
+        
+    ]
+
     def __init__(self, pathOrObject):
         # check things
         self.problems = []
@@ -66,7 +69,7 @@ class DesignSpaceChecker(object):
         # check if we have any errors from categories file / axes / sources
         # this does not guarantee there won't be other problems!
         for err in self.problems:
-            if err.category in [0,1,2]:
+            if err.isStructural():
                 return True
         return False
 
@@ -340,6 +343,9 @@ class DesignSpaceChecker(object):
         glyphs = {}
         # 4.7 default glyph is empty
         for fontName, fontObj in self.ds.fonts.items():
+            if fontObj is None:
+                #print('-------------- fontName', fontName)
+                continue
             for glyphName in fontObj.keys():
                 if not glyphName in glyphs:
                     glyphs[glyphName] = []
@@ -409,9 +415,21 @@ class DesignSpaceChecker(object):
             # 4.4 different number of off-curve points on contour
             # 4.5 curve has wrong type
 
+    def _anyKerning(self):
+        # return True if there is kerning in one of the masters
+        for fontName, fontObj in self.ds.fonts.items():
+            if fontObj is not None:
+                if len(fontObj.kerning) > 0:
+                    return True
+        return False
+
     def checkKerning(self):
         # 5,4 kerning pair missing
         # 5,1 no kerning in default
+        if not self._anyKerning():
+            # Check if there is *any* kerning first. If there is no kerning anywhere,
+            # we should assume this is intentional and not flood warnings.
+            return
         if len(self.nf.kerning) == 0:
             self.problems.append(DesignSpaceProblem(5,1, dict(fontObj=self.nf)))
         # 5,5 no kerning groups in default
@@ -420,6 +438,9 @@ class DesignSpaceChecker(object):
         defaultGroupNames = list(self.nf.groups.keys())
         for fontName, fontObj in self.ds.fonts.items():
             if fontObj == self.nf:
+                continue
+            if fontObj is None:
+                #print('-------------- fontName kerning', fontName)
                 continue
             # 5,0 no kerning in source
             #print("------ fontObj", fontObj.path)
@@ -461,6 +482,9 @@ class DesignSpaceChecker(object):
             self.problems.append(DesignSpaceProblem(6,3, dict(fontObj=self.nf)))
         for fontName, fontObj in self.ds.fonts.items():
             if fontObj == self.nf:
+                continue
+            if fontObj is None:
+                #print('-------------- fontName info', fontName)
                 continue
             # 6,4 source font unitsPerEm value different from default unitsPerEm
             if fontObj.info.unitsPerEm != self.nf.info.unitsPerEm:
