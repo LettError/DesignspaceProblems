@@ -426,6 +426,7 @@ class DesignSpaceChecker(object):
     def checkKerning(self):
         # 5,4 kerning pair missing
         # 5,1 no kerning in default
+        if self.nf is None: return
         if not self._anyKerning():
             # Check if there is *any* kerning first. If there is no kerning anywhere,
             # we should assume this is intentional and not flood warnings.
@@ -468,6 +469,7 @@ class DesignSpaceChecker(object):
         # entirely debateable what we should be testing.
         # Let's start with basic geometry
         # 6,3 source font info missing value for xheight
+        if self.nf is None: return
         if self.nf.info.unitsPerEm == None:
             # 6,0 default font info missing value for units per em
             self.problems.append(DesignSpaceProblem(6,0, dict(fontObj=self.nf)))
