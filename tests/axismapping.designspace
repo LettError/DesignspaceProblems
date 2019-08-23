@@ -1,35 +1,35 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <designspace format="4.0">
   <axes>
-    <axis tag="ax01" name="ok_axis" minimum="0" maximum="1000" default="0">
-      <map input="0" output="200"/>
-      <map input="300" output="500"/>
-      <map input="1000" output="800"/>
+    <axis tag="ax01" name="ok_axis" minimum="200" maximum="800" default="200">
+      <map input="200" output="0"/>
+      <map input="500" output="500"/>
+      <map input="800" output="1000"/>
     </axis>
-    <axis tag="ax02" name="input_regression_axis" minimum="0" maximum="1000" default="0">
+    <axis tag="ax02" name="input_regression_axis" minimum="200" maximum="800" default="500">
       <map input="200" output="100"/>
-      <map input="10" output="500"/>
-      <map input="1000" output="800"/>
+      <map input="190" output="150"/>
+      <map input="800" output="200"/>
     </axis>
-    <axis tag="ax03" name="output_regression_axis" minimum="0" maximum="1000" default="0">
-      <map input="0" output="500"/>
-      <map input="300" output="200"/>
-      <map input="1000" output="800"/>
+    <axis tag="ax03" name="output_regression_axis" minimum="500" maximum="800" default="600">
+      <map input="500" output="0"/>
+      <map input="600" output="500"/>
+      <map input="800" output="490"/>
     </axis>
   </axes>
   <sources>
     <source filename="masters/geometryMaster1.ufo">
       <location>
-        <dimension name="ok_axis" xvalue="0"/>
-        <dimension name="input_regression_axis" xvalue="490"/>
-        <dimension name="output_regression_axis" xvalue="0"/>
+        <dimension name="ok_axis" xvalue="200"/>
+        <dimension name="input_regression_axis" xvalue="500"/>
+        <dimension name="output_regression_axis" xvalue="600"/>
       </location>
     </source>
     <source filename="masters/geometryMaster2.ufo">
       <location>
-        <dimension name="ok_axis" xvalue="1000"/>
-        <dimension name="input_regression_axis" xvalue="490"/>
-        <dimension name="output_regression_axis" xvalue="0"/>
+        <dimension name="ok_axis" xvalue="200"/>
+        <dimension name="input_regression_axis" xvalue="500"/>
+        <dimension name="output_regression_axis" xvalue="800"/>
       </location>
     </source>
   </sources>

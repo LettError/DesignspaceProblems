@@ -4,13 +4,13 @@
     <axis tag="wght" name="weight" minimum="0" maximum="1000" default="0"/>
     <axis tag="wdth" name="width" minimum="-500" maximum="500" default="0">
       <map input="200" output="100"/>
-      <map input="10" output="500"/>
-      <map input="1000" output="800"/>
+      <map input="190" output="150"/>
+      <map input="800" output="200"/>
     </axis>
     <axis tag="opsz" name="optical" minimum="0" maximum="1000" default="0">
-      <map input="0" output="500"/>
-      <map input="300" output="200"/>
-      <map input="1000" output="800"/>
+      <map input="500" output="0"/>
+      <map input="600" output="500"/>
+      <map input="800" output="490"/>
     </axis>
   </axes>
   <sources>

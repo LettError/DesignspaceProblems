@@ -333,39 +333,39 @@ def makeTests():
     tp = os.path.join(path, "axismapping.designspace")
     a1 = AxisDescriptor()
     a1.name = "ok_axis"
-    a1.minimum = 0
-    a1.maximum = 1000
-    a1.default = 0
+    a1.minimum = 200
+    a1.maximum = 800
+    a1.default = 200
     a1.tag = "ax01"
-    a1.map = [(0,200), (300, 500), (1000, 800)] # map is ok
+    a1.map = [(200,0), (500, 500), (800, 1000)] # map is ok
     d.addAxis(a1)
 
     a2 = AxisDescriptor()
     a2.name = "input_regression_axis"
-    a2.minimum = 0
-    a2.maximum = 1000
-    a2.default = 0
+    a2.minimum = 200
+    a2.maximum = 800
+    a2.default = 500
     a2.tag = "ax02"
-    a2.map = [(200,100), (10, 500), (1000, 800)] # input regresses ok, output ok
+    a2.map = [(200,100), (190, 150), (800, 200)] # input regresses ok, output ok
     d.addAxis(a2)
 
     a3 = AxisDescriptor()
     a3.name = "output_regression_axis"
-    a3.minimum = 0
-    a3.maximum = 1000
-    a3.default = 0
+    a3.minimum = 500
+    a3.maximum = 800
+    a3.default = 600
     a3.tag = "ax03"
-    a3.map = [(0,500), (300, 200), (1000, 800)] # input progresses ok, output regresses
+    a3.map = [(500,0), (600, 500), (800, 490)] # input progresses ok, output regresses
     d.addAxis(a3)
 
     s1 = SourceDescriptor()
     #s1.name = "master.1"
-    s1.location = dict(ok_axis=0, output_regression_axis=0)
+    s1.location = dict(ok_axis=a1.default, output_regression_axis=a3.default)
     s1.path = os.path.join(path, 'masters','geometryMaster1.ufo')
     d.addSource(s1)
     #s2.name = "master.2"
     s2 = SourceDescriptor()
-    s2.location = dict(ok_axis=1000, output_regression_axis=0)
+    s2.location = dict(ok_axis=a1.default, output_regression_axis=a3.maximum)
     s2.path = os.path.join(path, 'masters','geometryMaster2.ufo')
     d.addSource(s2)
     d.write(tp)

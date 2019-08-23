@@ -106,7 +106,7 @@ class DesignSpaceChecker(object):
             self.checkFontInfo()
             self.checkGlyphs()
             self.checkRules()
-    
+            
     def checkDesignSpaceGeometry(self):
         # 1.0	no axes defined
         if len(self.ds.axes) == 0:
@@ -157,6 +157,7 @@ class DesignSpaceChecker(object):
                         axisOK = False
             allAxes.append(axisOK)
             if axisOK:
+                # get the mapped values
                 # check the map for this axis
                 # 1.8	mapping table has overlaps
                 inputs = []
@@ -173,17 +174,19 @@ class DesignSpaceChecker(object):
                         outputs.append(db)
                         last = a,b
                 if inputs:
+                    # the graph can only be positive or negative
+                    # it can't be both, so that's what we test for
+                    #print('inputs', inputs)
                     if min(inputs)<0 and max(inputs)>0:
                         self.problems.append(DesignSpaceProblem(1,11, dict(axisName=axisName, axisMap=ad.map)))
                 if outputs:
+                    #print('outputs', outputs)
                     if min(outputs)<0 and max(outputs)>0:
                         self.problems.append(DesignSpaceProblem(1,12, dict(axisName=axisName, axisMap=ad.map)))
 
         # XX
-        #print('allAxes', allAxes)
-        #if not False in allAxes:
-        #    self.mapper = AxisMapper(self.ds.axes)
-        #    print('self.mapper', self.mapper)
+        if not False in allAxes:
+           self.mapper = AxisMapper(self.ds.axes)
 
     def checkSources(self):
         axisValues = self.data_getAxisValues()
@@ -227,6 +230,7 @@ class DesignSpaceChecker(object):
                                 # 2,5 source location has value for undefined axis
                                 self.problems.append(DesignSpaceProblem(2,5, dict(axisName=axisName)))
         defaultLocation = self.ds.newDefaultLocation()
+        print("defaultLocation", defaultLocation)
         defaultCandidates = []
         for i, sd in enumerate(self.ds.sources):
             if sd.location == defaultLocation:
