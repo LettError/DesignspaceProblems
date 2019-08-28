@@ -370,6 +370,9 @@ def makeTests():
     d.addSource(s2)
     d.write(tp)
     dc = DesignSpaceChecker(d)
+    print('\taxisvalues for mapped', dc.data_getAxisValues(mapped=True))
+    print('\taxisvalues for unmapped', dc.data_getAxisValues(mapped=False))
+
     dc.checkEverything()
     showProblems(dc)
     assert (1,11) in dc.problems
