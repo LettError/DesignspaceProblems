@@ -428,18 +428,31 @@ def makeTests():
     r1.name = "rule_no_subs"
     cd1 = dict(name='lalala', minimum=100, maximum=200)
     cd2 = dict(name='snap', minimum=10000, maximum=2000)
-    r1.conditionSets.append([cd1, cd2])
+    cd3 = dict(name='snap', minimum=10000, maximum=None)    # problem 7,10
+    cd4 = dict(name='snap', minimum=None, maximum=10000)    # problem 7,11
+    r1.conditionSets.append([cd1, cd2, cd3, cd4])
     d.addRule(r1)
+
     r2 = RuleDescriptor()
     r2.name = "rule_no_conditionset"
     r2.subs.append(('glyphFour', 'glyphFour'))
     d.addRule(r2)
+    
     r3 = RuleDescriptor()
     r3.name = "rule_values_the_same"
     cd1 = dict(name='samesees', minimum=200, maximum=200)
     r1.conditionSets.append([cd1, cd1, cd1])
     r3.subs.append(('glyphFour', 'glyphFour'))
     d.addRule(r3)
+
+    # data for 7, 9 rule without a name
+    r4 = RuleDescriptor()
+    r4.name = None
+    cd1 = dict(name='samesees', minimum=200, maximum=200)
+    r1.conditionSets.append([cd1, cd1, cd1])
+    r4.subs.append(('glyphFour', 'glyphFour'))
+    d.addRule(r4)
+    
     d.write(tp)
     dc = DesignSpaceChecker(d)
     dc.checkEverything()

@@ -8,6 +8,13 @@
       <conditionset>
         <condition name="lalala" minimum="100" maximum="200"/>
         <condition name="snap" minimum="10000" maximum="2000"/>
+        <condition name="snap" minimum="10000"/>
+        <condition name="snap" maximum="10000"/>
+      </conditionset>
+      <conditionset>
+        <condition name="samesees" minimum="200" maximum="200"/>
+        <condition name="samesees" minimum="200" maximum="200"/>
+        <condition name="samesees" minimum="200" maximum="200"/>
       </conditionset>
       <conditionset>
         <condition name="samesees" minimum="200" maximum="200"/>
@@ -19,6 +26,9 @@
       <sub name="glyphFour" with="glyphFour"/>
     </rule>
     <rule name="rule_values_the_same">
+      <sub name="glyphFour" with="glyphFour"/>
+    </rule>
+    <rule>
       <sub name="glyphFour" with="glyphFour"/>
     </rule>
   </rules>

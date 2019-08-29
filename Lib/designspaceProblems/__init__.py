@@ -193,7 +193,6 @@ class DesignSpaceChecker(object):
         # XX
         if not False in allAxes:
            self.mapper = AxisMapper(self.ds.axes)
-
     def checkSources(self):
         axisValues = self.data_getAxisValues()
         # 2,0 no sources defined
@@ -544,16 +543,23 @@ class DesignSpaceChecker(object):
                         patterns[pat] = True
                     else:
                         self.problems.append(DesignSpaceProblem(7,8, data=dict(rule=name)))
+
                     if cd['minimum'] == cd['maximum']:
                         # 7.7 condition values are the same
                         self.problems.append(DesignSpaceProblem(7,7, data=dict(rule=name)))
-                    if cd['name'] not in axisValues.keys():
-                        # 7.5 condition values on unknown axis
-                        self.problems.append(DesignSpaceProblem(7,5, data=dict(rule=name, axisName=cd['name'])))
+                    if cd['minimum'] != None and cd['maximum'] != None:
+                        if cd['name'] not in axisValues.keys():
+                            # 7.5 condition values on unknown axis
+                            self.problems.append(DesignSpaceProblem(7,5, data=dict(rule=name, axisName=cd['name'])))
+                        else:
+                            if cd['minimum'] < min(axisValues[cd['name']]) or cd['maximum'] > max(axisValues[cd['name']]):
+                                # 7.6 condition values out of axis bounds
+                                self.problems.append(DesignSpaceProblem(7,6, data=dict(rule=name, axisValues=axisValues[cd['name']])))
                     else:
-                        if cd['minimum'] < min(axisValues[cd['name']]) or cd['maximum'] > max(axisValues[cd['name']]):
-                            # 7.6 condition values out of axis bounds
-                            self.problems.append(DesignSpaceProblem(7,6, data=dict(rule=name, axisValues=axisValues[cd['name']])))
+                        if cd['minimum'] == None:
+                            self.problems.append(DesignSpaceProblem(7,10, data=dict(rule=name, axisValues=axisValues[cd['name']])))
+                        if cd['maximum'] == None:
+                            self.problems.append(DesignSpaceProblem(7,11, data=dict(rule=name, axisValues=axisValues[cd['name']])))
 
 
 if __name__ == "__main__":
