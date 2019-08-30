@@ -142,13 +142,20 @@ class DesignSpaceChecker(object):
             if ad.default is None:
                 self.problems.append(DesignSpaceProblem(1,4, dict(axisName=axisName)))
                 axisOK = False
+
+            # problem: in order to check the validity of the axis values
+            # we need to get the mapped values for minimum, default and maximum. 
+            # but any problems in the axis map can only be determined if we
+            # are sure the axis is valid.
+            mappedMin, mappedDef, mappedMax = self.data_getAxisValues(axisName, mapped=True)
+
             # 1,9 minimum and maximum value are the same and not None
-            if (ad.minimum == ad.maximum) and ad.minimum != None:
+            if (mappedMin == mappedMax) and mappedMin != None:
                 self.problems.append(DesignSpaceProblem(1,9, dict(axisName=axisName)))
                 axisOK = False
             # 1,10 default not between minimum and maximum
-            if ad.minimum is not None and ad.maximum is not None and ad.default is not None:
-                if not ((ad.minimum < ad.default <= ad.maximum) or (ad.minimum <= ad.default < ad.maximum)):
+            if mappedMin is not None and mappedMax is not None and mappedDef is not None:
+                if not ((mappedMin < mappedDef <= mappedMax) or (mappedMin <= mappedDef < mappedMax)):
                     self.problems.append(DesignSpaceProblem(1,10, dict(axisName=axisName)))
                     axisOK = False
             # 1.6	axis tag missing
@@ -193,6 +200,7 @@ class DesignSpaceChecker(object):
         # XX
         if not False in allAxes:
            self.mapper = AxisMapper(self.ds.axes)
+
     def checkSources(self):
         axisValues = self.data_getAxisValues()
         # 2,0 no sources defined
