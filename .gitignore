@@ -14,3 +14,4 @@ dist
 Lib/designspaceProblems/_version.py
 
 tests/20190324 ufolib issue
+tests/_*
