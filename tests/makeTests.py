@@ -171,7 +171,6 @@ def makeTests():
     dc = DesignSpaceChecker(tp)
     dc.checkEverything()
     showProblems(dc)
-    print(dc.problems)
     assert (2,10) in dc.problems        # source location is anisotropic
 
     # ok space, no kerning in default
@@ -355,7 +354,7 @@ def makeTests():
     a3.maximum = 800
     a3.default = 600
     a3.tag = "ax03"
-    a3.map = [(500,0), (600, 500), (800, 490)] # input progresses ok, output regresses
+    a3.map = [(500,0), (600, 500), (700, 700), (800, 690)] # input progresses ok, output regresses
     d.addAxis(a3)
 
     s1 = SourceDescriptor()
@@ -370,14 +369,11 @@ def makeTests():
     d.addSource(s2)
     d.write(tp)
     dc = DesignSpaceChecker(d)
-    print('\taxisvalues for mapped', dc.data_getAxisValues(mapped=True))
-    print('\taxisvalues for unmapped', dc.data_getAxisValues(mapped=False))
 
     dc.checkEverything()
-    showProblems(dc)
     assert (1,11) in dc.problems
     assert (1,12) in dc.problems
-    pprint(dc.problems)
+    showProblems(dc)
 
     # ok axis, ok sources
     d = DesignSpaceProcessor()

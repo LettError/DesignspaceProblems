@@ -14,7 +14,8 @@
     <axis tag="ax03" name="output_regression_axis" minimum="500" maximum="800" default="600">
       <map input="500" output="0"/>
       <map input="600" output="500"/>
-      <map input="800" output="490"/>
+      <map input="700" output="700"/>
+      <map input="800" output="690"/>
     </axis>
   </axes>
   <sources>

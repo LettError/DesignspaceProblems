@@ -177,7 +177,7 @@ class DesignSpaceChecker(object):
                 # 1.8	mapping table has overlaps
                 inputs = []
                 outputs = []
-                if ad.map:
+                if len(ad.map)>0:
                     last = None
                     for a, b in ad.map:
                         if last is None:
@@ -188,14 +188,16 @@ class DesignSpaceChecker(object):
                         inputs.append(da)
                         outputs.append(db)
                         last = a,b
-                if inputs:
+                if len(outputs)>0:
+                    if min(outputs)<=0 and max(outputs)>=0:
+                        p = DesignSpaceProblem(1,12, dict(axisName=axisName, axisMap=ad.map))
+                        self.problems.append(p)
+                if len(inputs)>0:
                     # the graph can only be positive or negative
                     # it can't be both, so that's what we test for
-                    if min(inputs)<0 and max(inputs)>0:
-                        self.problems.append(DesignSpaceProblem(1,11, dict(axisName=axisName, axisMap=ad.map)))
-                if outputs:
-                    if min(outputs)<0 and max(outputs)>0:
-                        self.problems.append(DesignSpaceProblem(1,12, dict(axisName=axisName, axisMap=ad.map)))
+                    if min(inputs)<=0 and max(inputs)>=0:
+                        p = DesignSpaceProblem(1,11, dict(axisName=axisName, axisMap=ad.map))
+                        self.problems.append(p)
 
         # XX
         if not False in allAxes:
@@ -242,15 +244,17 @@ class DesignSpaceChecker(object):
                             else:
                                 # 2,5 source location has value for undefined axis
                                 self.problems.append(DesignSpaceProblem(2,5, dict(axisName=axisName)))
-        defaultLocation = self.ds.newDefaultLocation(bend=True)
-        defaultCandidates = []
+        mappedDefaultLocation = self.ds.newDefaultLocation(bend=True)
+        mappedDefaultCandidates = []
+        #unmappedDefaultLocation = self.ds.newDefaultLocation(bend=False)
+        #unmappedDefaultCandidates = []
         for i, sd in enumerate(self.ds.sources):
-            if sd.location == defaultLocation:
-                defaultCandidates.append(sd)
-        if len(defaultCandidates) == 0:
-            # 2,7 no source on default location
+            if sd.location == mappedDefaultLocation:
+                mappedDefaultCandidates.append(sd)
+        if len(mappedDefaultCandidates) == 0:
+            # 2,7 no source on mapped default location
             self.problems.append(DesignSpaceProblem(2,7))
-        elif len(defaultCandidates) > 1:
+        elif len(mappedDefaultCandidates) > 1:
             # 2,8 multiple sources on default location
             self.problems.append(DesignSpaceProblem(2,8))
         allLocations = {}
@@ -266,7 +270,7 @@ class DesignSpaceChecker(object):
             #     # 2,10 source location is anisotropic
             #     self.problems.append(DesignSpaceProblem(2,10))
         for key, items in allLocations.items():
-            if len(items) > 1 and items[0].location != defaultLocation:
+            if len(items) > 1 and items[0].location != mappedDefaultLocation:
                 # 2,9 multiple sources on location
                 self.problems.append(DesignSpaceProblem(2,9))
         onAxis = set()

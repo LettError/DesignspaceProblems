@@ -21,7 +21,7 @@ class DesignSpaceProblem(object):
     _structural = [
         (0,0),
         (1,0),(1,1),(1,2),(1,3),(1,4),(1,5),
-        (1,9),(1,10),(1,11), (1,12),
+        (1,9),(1,10),
         (2,0),(2,4),(2,7), (2,8),(2,9),(2,10),
         ]
 
@@ -41,8 +41,8 @@ class DesignSpaceProblem(object):
 
         (1,9): "minimum and maximum value are the same",
         (1,10): "default not between minimum and maximum",
-        (1,11): "mapping table has overlapping input values",
-        (1,12): "mapping table has overlapping output values",
+        (1,11): "mapped axis has overlapping input values (userspace)",
+        (1,12): "mapped axis has overlapping output values (designspace)",
 
         # 2 sources
         (2,0): "no sources defined",
@@ -52,7 +52,8 @@ class DesignSpaceProblem(object):
         (2,4): "source location missing",
         (2,5): "source location has value for undefined axis",
         (2,6): "source location has out of bounds value",
-        (2,7): "no source on default location",
+        (2,7): "no source on unmapped default location",
+        (2,12): "no source on mapped default location",
         (2,8): "multiple sources on default location",
         (2,9): "multiple sources on location",
         (2,10): "source location is anisotropic",

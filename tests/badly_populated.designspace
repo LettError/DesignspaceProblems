@@ -10,7 +10,8 @@
     <axis tag="opsz" name="optical" minimum="0" maximum="1000" default="0">
       <map input="500" output="0"/>
       <map input="600" output="500"/>
-      <map input="800" output="490"/>
+      <map input="700" output="700"/>
+      <map input="800" output="690"/>
     </axis>
   </axes>
   <sources>

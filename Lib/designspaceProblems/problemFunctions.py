@@ -44,12 +44,12 @@ def defaultNotBetweenMinimumAndMaximumProblem(**kwargs):
     # default not between minimum and maximum, (1, 10)
     return DesignSpaceProblem(1,10,data=kwargs)
 
-def mappingTableHasOverlappingInputValuesProblem(**kwargs):
-    # mapping table has overlapping input values, (1, 11)
+def mappedAxisHasOverlappingInputValues(userspace)Problem(**kwargs):
+    # mapped axis has overlapping input values (userspace), (1, 11)
     return DesignSpaceProblem(1,11,data=kwargs)
 
-def mappingTableHasOverlappingOutputValuesProblem(**kwargs):
-    # mapping table has overlapping output values, (1, 12)
+def mappedAxisHasOverlappingOutputValues(designspace)Problem(**kwargs):
+    # mapped axis has overlapping output values (designspace), (1, 12)
     return DesignSpaceProblem(1,12,data=kwargs)
 
 def noSourcesDefinedProblem(**kwargs):
@@ -80,9 +80,13 @@ def sourceLocationHasOutOfBoundsValueProblem(**kwargs):
     # source location has out of bounds value, (2, 6)
     return DesignSpaceProblem(2,6,data=kwargs)
 
-def noSourceOnDefaultLocationProblem(**kwargs):
-    # no source on default location, (2, 7)
+def noSourceOnUnmappedDefaultLocationProblem(**kwargs):
+    # no source on unmapped default location, (2, 7)
     return DesignSpaceProblem(2,7,data=kwargs)
+
+def noSourceOnMappedDefaultLocationProblem(**kwargs):
+    # no source on mapped default location, (2, 12)
+    return DesignSpaceProblem(2,12,data=kwargs)
 
 def multipleSourcesOnDefaultLocationProblem(**kwargs):
     # multiple sources on default location, (2, 8)
