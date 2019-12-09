@@ -17,6 +17,7 @@
       <map input="700" output="700"/>
       <map input="800" output="690"/>
     </axis>
+    <axis tag="ax04" name="mixedup_extremes_axis" minimum="1000" maximum="800" default="0"/>
   </axes>
   <sources>
     <source filename="masters/geometryMaster1.ufo">
@@ -24,6 +25,7 @@
         <dimension name="ok_axis" xvalue="200"/>
         <dimension name="input_regression_axis" xvalue="500"/>
         <dimension name="output_regression_axis" xvalue="600"/>
+        <dimension name="mixedup_extremes_axis" xvalue="0"/>
       </location>
     </source>
     <source filename="masters/geometryMaster2.ufo">
@@ -31,6 +33,7 @@
         <dimension name="ok_axis" xvalue="200"/>
         <dimension name="input_regression_axis" xvalue="500"/>
         <dimension name="output_regression_axis" xvalue="800"/>
+        <dimension name="mixedup_extremes_axis" xvalue="0"/>
       </location>
     </source>
   </sources>

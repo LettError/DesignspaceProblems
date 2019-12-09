@@ -357,6 +357,14 @@ def makeTests():
     a3.map = [(500,0), (600, 500), (700, 700), (800, 690)] # input progresses ok, output regresses
     d.addAxis(a3)
 
+    a4 = AxisDescriptor()
+    a4.name = "mixedup_extremes_axis"
+    a4.minimum = 1000
+    a4.maximum = 800
+    a4.default = 00
+    a4.tag = "ax04"
+    d.addAxis(a4)
+
     s1 = SourceDescriptor()
     #s1.name = "master.1"
     s1.location = dict(ok_axis=a1.default, output_regression_axis=a3.default)

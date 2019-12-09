@@ -147,15 +147,24 @@ class DesignSpaceChecker(object):
             # we need to get the mapped values for minimum, default and maximum. 
             # but any problems in the axis map can only be determined if we
             # are sure the axis is valid.
-            mappedMin, mappedDef, mappedMax = self.data_getAxisValues(axisName, mapped=True)
+            axisMin, axisDef, axisMax = self.data_getAxisValues(axisName, mapped=False)
+            mappedAxisMin, mappedAxisDef, mappedAxisMax = self.data_getAxisValues(axisName, mapped=True)
+            # 1,13 mapped minimum > mapped maximum
+            if mappedAxisMin > mappedAxisMax:
+                self.problems.append(DesignSpaceProblem(1,13, dict(axisName=axisName, maximum=mappedAxisMax, minimum=mappedAxisMin)))
+                axisOK = False
+            # 1,14 mapped minimum > mapped maximum
+            if axisMin > axisMax:
+                self.problems.append(DesignSpaceProblem(1,14, dict(axisName=axisName, maximum=mappedAxisMax, minimum=mappedAxisMin)))
+                axisOK = False
 
             # 1,9 minimum and maximum value are the same and not None
-            if (mappedMin == mappedMax) and mappedMin != None:
+            if (mappedAxisMin == mappedAxisMax) and mappedAxisMin != None:
                 self.problems.append(DesignSpaceProblem(1,9, dict(axisName=axisName)))
                 axisOK = False
             # 1,10 default not between minimum and maximum
-            if mappedMin is not None and mappedMax is not None and mappedDef is not None:
-                if not ((mappedMin < mappedDef <= mappedMax) or (mappedMin <= mappedDef < mappedMax)):
+            if mappedAxisMin is not None and mappedAxisMax is not None and mappedAxisDef is not None:
+                if not ((mappedAxisMin < mappedAxisDef <= mappedAxisMax) or (mappedAxisMin <= mappedAxisDef < mappedAxisMax)):
                     self.problems.append(DesignSpaceProblem(1,10, dict(axisName=axisName)))
                     axisOK = False
             # 1.6	axis tag missing

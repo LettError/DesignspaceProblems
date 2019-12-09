@@ -26,6 +26,8 @@
   * `1.10	default not between minimum and maximum`
   * `1.11	mapped axis has overlapping input values (userspace)`
   * `1.12	mapped axis has overlapping output values (designspace)`
+  * `1.13	mapped minimum > mapped maximum`
+  * `1.14	axis minimum > axis maximum`
 
 ## 2. sources
 
