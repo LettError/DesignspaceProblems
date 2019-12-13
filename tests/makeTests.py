@@ -361,7 +361,7 @@ def makeTests():
     a4.name = "mixedup_extremes_axis"
     a4.minimum = 1000
     a4.maximum = 800
-    a4.default = 00
+    a4.default = 0
     a4.tag = "ax04"
     d.addAxis(a4)
 

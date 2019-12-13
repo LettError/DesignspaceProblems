@@ -28,6 +28,37 @@ def getUFOLayers(ufoPath):
         return [a for a, b in p]
     return []
 
+class UnicodeCollector(object):
+    def __init__(self):
+        # do some admin on the unicodes of master glyphs
+        # aeach glyph can have multiple unicodes
+        # so rake in all unicodes of all masters
+        self.unicodes = {}
+        self.masterCount = 0
+
+    def add(self, glyph):
+        # assume these are mathglyphs
+        self.masterCount +=1
+        if not glyph.unicodes:
+            if not None in self.unicodes:
+                self.unicodes[None] = 0
+            self.unicodes[None]+=1
+            return
+        for u in glyph.unicodes:
+            if not u in self.unicodes:
+                self.unicodes[u] = 0
+            self.unicodes[u]+=1
+
+    def evaluate(self):
+        # so what do we think of what we've seen
+        incomplete = []
+        for u, count in self.unicodes.items():
+            if count != self.masterCount:
+                incomplete.append(u)
+        return incomplete
+
+
+
 class DesignSpaceChecker(object):
     _registeredTags = dict(wght = 'weight', wdth = 'width', slnt = 'slant', opsz = 'optical', ital = 'italic')
     _structuralProblems = [
@@ -402,14 +433,17 @@ class DesignSpaceChecker(object):
         # For this test all glyphs will be loaded.
         # 4.6 non-default glyph is empty
         # 4.8 contour has wrong direction
+        # 4.10 different unicodes in glyph
         items = self.ds.collectMastersForGlyph(glyphName)
         patterns = {}
         contours = {}
         components = {}
+        unicodes = UnicodeCollector()
         anchors = {}
         for loc, mg, masters in items:
             pp = DigestPointStructurePen()
             # get the structure of the glyph, count a couple of things
+            unicodes.add(mg)
             mg.drawPoints(pp)
             pat = pp.getDigest()
             for cm in mg.components:
@@ -434,6 +468,9 @@ class DesignSpaceChecker(object):
             if not contourCount in contours:
                 contours[contourCount] = 0
             contours[contourCount] += 1
+        unicodeResults = unicodes.evaluate()
+        if unicodeResults:
+            self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults)))
         if len(components) != 0:
             for baseGlyphName, refCount in components.items():
                 if refCount % len(items) != 0:

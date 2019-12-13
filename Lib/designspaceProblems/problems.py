@@ -84,6 +84,7 @@ class DesignSpaceProblem(object):
         (4,7): 'default glyph is empty',
         (4,8): 'contour has wrong direction',
         (4,9): 'incompatible constructions for glyph',
+        (4,10): 'different unicodes in glyph',
 
         # 5 kerning
         (5,0): 'no kerning in source',
