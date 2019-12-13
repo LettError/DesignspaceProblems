@@ -604,7 +604,6 @@ class DesignSpaceChecker(object):
 
                     if cd['minimum'] == cd['maximum']:
                         # 7.7 condition values are the same
-                        print('xxx cd', cd)
                         self.problems.append(DesignSpaceProblem(7,7, data=dict(rule=name)))
                     if cd['minimum'] != None and cd['maximum'] != None:
                         if cd['name'] not in axisValues.keys():
