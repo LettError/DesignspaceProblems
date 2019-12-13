@@ -12,14 +12,14 @@
         <condition name="snap" maximum="10000"/>
       </conditionset>
       <conditionset>
-        <condition name="samesees" minimum="200" maximum="200"/>
-        <condition name="samesees" minimum="200" maximum="200"/>
-        <condition name="samesees" minimum="200" maximum="200"/>
+        <condition name="samesees_1" minimum="200" maximum="200"/>
+        <condition name="samesees_1" minimum="200" maximum="200"/>
+        <condition name="samesees_1" minimum="200" maximum="200"/>
       </conditionset>
       <conditionset>
-        <condition name="samesees" minimum="200" maximum="200"/>
-        <condition name="samesees" minimum="200" maximum="200"/>
-        <condition name="samesees" minimum="200" maximum="200"/>
+        <condition name="samesees_2" minimum="200" maximum="200"/>
+        <condition name="samesees_2" minimum="200" maximum="200"/>
+        <condition name="samesees_2" minimum="200" maximum="200"/>
       </conditionset>
     </rule>
     <rule name="rule_no_conditionset">

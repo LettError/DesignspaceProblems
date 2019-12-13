@@ -444,7 +444,7 @@ def makeTests():
     
     r3 = RuleDescriptor()
     r3.name = "rule_values_the_same"
-    cd1 = dict(name='samesees', minimum=200, maximum=200)
+    cd1 = dict(name='samesees_1', minimum=200, maximum=200)
     r1.conditionSets.append([cd1, cd1, cd1])
     r3.subs.append(('glyphFour', 'glyphFour'))
     d.addRule(r3)
@@ -452,7 +452,7 @@ def makeTests():
     # data for 7, 9 rule without a name
     r4 = RuleDescriptor()
     r4.name = None
-    cd1 = dict(name='samesees', minimum=200, maximum=200)
+    cd1 = dict(name='samesees_2', minimum=200, maximum=200)
     r1.conditionSets.append([cd1, cd1, cd1])
     r4.subs.append(('glyphFour', 'glyphFour'))
     d.addRule(r4)
