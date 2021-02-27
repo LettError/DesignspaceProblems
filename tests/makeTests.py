@@ -461,6 +461,10 @@ def makeTests():
     dc = DesignSpaceChecker(d)
     dc.checkEverything()
     showProblems(dc)
+
+    for p in dc.problems:
+        print(p)
+
     assert not dc.hasStructuralProblems()   # minimum working designspace, ready for fonts
     assert (3,6) in dc.problems        # missing family name
     assert (3,7) in dc.problems        # missing style name
