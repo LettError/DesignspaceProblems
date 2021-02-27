@@ -22,6 +22,8 @@
 		<string>narrow.glif</string>
 		<key>narrow.component</key>
 		<string>narrow.component.glif</string>
+		<key>offCurveCompatibilityTest</key>
+		<string>offC_urveC_ompatibilityT_est.glif</string>
 		<key>wide</key>
 		<string>wide.glif</string>
 		<key>wide.component</key>

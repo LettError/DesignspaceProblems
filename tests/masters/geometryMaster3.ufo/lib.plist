@@ -53,8 +53,24 @@
 				<string>decompositionBase</string>
 			</dict>
 		</array>
+		<key>com.typemytype.robofont.compileSettings.autohint</key>
+		<true/>
+		<key>com.typemytype.robofont.compileSettings.checkOutlines</key>
+		<false/>
+		<key>com.typemytype.robofont.compileSettings.createDummyDSIG</key>
+		<true/>
+		<key>com.typemytype.robofont.compileSettings.decompose</key>
+		<false/>
+		<key>com.typemytype.robofont.compileSettings.generateFormat</key>
+		<integer>0</integer>
+		<key>com.typemytype.robofont.compileSettings.releaseMode</key>
+		<false/>
+		<key>com.typemytype.robofont.italicSlantOffset</key>
+		<integer>0</integer>
 		<key>com.typemytype.robofont.segmentType</key>
 		<string>curve</string>
+		<key>com.typemytype.robofont.shouldAddPointsInSplineConversion</key>
+		<integer>1</integer>
 		<key>com.typemytype.robofont.smartSets.uniqueKey</key>
 		<string>6734156624</string>
 		<key>public.glyphOrder</key>
@@ -71,6 +87,13 @@
 			<string>broken_component</string>
 			<string>glyph_with_many_contours</string>
 			<string>extra.glyph.for.master2</string>
+			<string>offCurveCompatibilityTest</string>
+		</array>
+		<key>public.postscriptNames</key>
+		<dict>
+		</dict>
+		<key>public.skipExportGlyphs</key>
+		<array>
 		</array>
 		<key>ufoProcessor.test.lib.entry</key>
 		<string>Lib entry for master 2</string>

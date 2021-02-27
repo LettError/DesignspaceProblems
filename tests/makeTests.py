@@ -477,6 +477,10 @@ def makeTests():
     assert (7,5) in dc.problems        # condition values on unknown axis
     assert (7,6) in dc.problems        # condition values out of axis bounds
 
+    print(tp)
+    for p in dc.problems:
+        if p == (4,9):
+            print(p)
     # badly populated designspace
     # this system does not have on-axis masters
     # but a couple of non-aligned off-axis masters.

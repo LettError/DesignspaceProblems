@@ -10,6 +10,8 @@
 		<string>This is the copyright notice from master 2</string>
 		<key>descender</key>
 		<integer>-100</integer>
+		<key>familyName</key>
+		<string>Master 3</string>
 		<key>guidelines</key>
 		<array>
 		</array>
