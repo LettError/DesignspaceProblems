@@ -81,6 +81,7 @@
   * `5.4	kerning pair missing`
   * `5.5	no kerning groups in default`
   * `5.6	no kerning groups in source`
+  * `5.7	kerning group members sorted differently`
 
 ## 6. font info
 

@@ -374,8 +374,9 @@ class DesignSpaceChecker(object):
                             if not  (mn <= axisValue <= mx):
                                 # 3,5   instance location requires extrapolation
                                 # 3,3   instance location has out of bounds value
-                                self.problems.append(DesignSpaceProblem(3,3, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue)))
-                                self.problems.append(DesignSpaceProblem(3,5, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue)))
+                                deets = f'axis value for {axisName} is outside of extremes: {mn}, {mx}'
+                                self.problems.append(DesignSpaceProblem(3,3, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue), details=deets))
+                                self.problems.append(DesignSpaceProblem(3,5, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue), details=deets))
                         else:
                             # doesn't happen as ufoprocessor won't read add undefined axes to the locations
                             # 3,2   instance location has value for undefined axis
@@ -394,7 +395,8 @@ class DesignSpaceChecker(object):
         for key, items in allLocations.items():
             # 3,4   multiple instances on location
             if len(items) > 1:
-                self.problems.append(DesignSpaceProblem(3,4, dict(location=items[0][1].location, instances=[b for a,b in items])))
+                deets = f"multiple instances on {items[0][1].location}"
+                self.problems.append(DesignSpaceProblem(3,4, dict(location=items[0][1].location, instances=[b for a,b in items]), details=deets))
         
         # 3,5   instance location is anisotropic
         for i, jd in enumerate(self.ds.instances):
@@ -453,6 +455,8 @@ class DesignSpaceChecker(object):
                 components[cm['baseGlyph']] += 1
             for ad in mg.anchors:
                 # collect anchor counts
+                if not 'name' in ad:
+                    continue
                 if ad['name'] not in anchors:
                     anchors[ad['name']] = 0
                 anchors[ad['name']] += 1                
@@ -470,7 +474,8 @@ class DesignSpaceChecker(object):
             contours[contourCount] += 1
         unicodeResults = unicodes.evaluate()
         if unicodeResults:
-            self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults)))
+            deets = f'multiple unicode values in glyph {glyphName}: {unicodeResults}'
+            self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults), details=deets))
         if len(components) != 0:
             for baseGlyphName, refCount in components.items():
                 if refCount % len(items) != 0:
@@ -486,7 +491,7 @@ class DesignSpaceChecker(object):
         if len(contours) != 1:
             # 4.0 different number of contours in glyph
             self.problems.append(DesignSpaceProblem(4,0, dict(glyphName=glyphName)))
-        if len(patterns) != 1:
+        if len(patterns) > 1:
             # 4,9 incompatible constructions for glyph
             # maybe this is enough to start wtih
             self.problems.append(DesignSpaceProblem(4,9, dict(glyphName=glyphName)))
@@ -538,7 +543,8 @@ class DesignSpaceChecker(object):
                     defaultGroupMembers = self.nf.groups[sourceGroupName]
                     if sourceGroupMembers != defaultGroupMembers:
                         # 5,2 kerning group members do not match
-                        self.problems.append(DesignSpaceProblem(5,2, dict(fontObj=self.nf, groupName=sourceGroupName)))
+                        deets = f'{sourceGroupName}: {sourceGroupMembers}, {defaultGroupMembers}'
+                        self.problems.append(DesignSpaceProblem(5,2, dict(fontObj=self.nf, groupName=sourceGroupName), details=deets))
 
     def checkFontInfo(self):
         # check some basic font info values
@@ -643,3 +649,8 @@ if __name__ == "__main__":
     #                 print("\t -- "+str(n))
 
     pass
+    
+    p = '/Users/erik/code/eamesposter/EamesPoster_and_Text.designspace'
+    dc = DesignSpaceChecker(p)
+    dc.checkEverything()
+    print(dc.problems)
