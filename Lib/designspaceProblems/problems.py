@@ -142,8 +142,8 @@ class DesignSpaceProblem(object):
             t.append(self._categories.get(self.category))
         if key in self._problems:
             t.append(self._problems.get(key))
-        if self.details is not None:
-            t.append(self.details)
+        #if self.details is not None:
+        #    t.append(self.details)
         return t
 
     def __repr__(self):
