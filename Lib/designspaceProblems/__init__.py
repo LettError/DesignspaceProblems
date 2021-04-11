@@ -530,7 +530,7 @@ class DesignSpaceChecker(object):
         # return True if there is kerning in one of the masters
         for fontName, fontObj in self.ds.fonts.items():
             if fontObj is not None:
-                if len(fontObj.kerning) > 0:
+                if len(fontObj.kerning.items()) > 0:
                     return True
         return False
 
@@ -542,7 +542,7 @@ class DesignSpaceChecker(object):
             # Check if there is *any* kerning first. If there is no kerning anywhere,
             # we should assume this is intentional and not flood warnings.
             return
-        if len(self.nf.kerning) == 0:
+        if len(self.nf.kerning.items()) == 0:
             self.problems.append(DesignSpaceProblem(5,1, dict(fontObj=self.nf)))
         # 5,5 no kerning groups in default
         if len(self.nf.groups) == 0:
@@ -555,10 +555,10 @@ class DesignSpaceChecker(object):
                 continue
             # 5,0 no kerning in source
             if len(fontObj.kerning.keys()) == 0:
-                self.problems.append(DesignSpaceProblem(5,0, dict(fontObj=self.nf)))
+                self.problems.append(DesignSpaceProblem(5,0, dict(fontObj=fontObj)))
             # 5,6 no kerning groups in source
             if len(fontObj.groups.keys()) == 0:
-                self.problems.append(DesignSpaceProblem(5,6, dict(fontObj=self.nf)))
+                self.problems.append(DesignSpaceProblem(5,6, dict(fontObj=fontObj)))
             for sourceGroupName in fontObj.groups.keys():
                 if not sourceGroupName in defaultGroupNames:
                     # 5,3 kerning group missing
