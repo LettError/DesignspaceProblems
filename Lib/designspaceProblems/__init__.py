@@ -478,6 +478,7 @@ class DesignSpaceChecker(object):
                 if not cm.baseGlyph in components:
                     components[cm.baseGlyph] = 0
                 components[cm.baseGlyph] += 1
+            #print('checkGlyph mg.anchors', mg.anchors, type(mg.anchors))
             for ad in mg.anchors:
                 # collect anchor counts
                 if not 'name' in ad:
@@ -676,7 +677,7 @@ if __name__ == "__main__":
 
     pass
     
-    p = '/Users/erik/code/eamesposter/EamesPoster_and_Text.designspace'
+    p = '../../tests/viable.designspace'
     dc = DesignSpaceChecker(p)
     dc.checkEverything()
     print(dc.problems)
