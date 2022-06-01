@@ -16,17 +16,18 @@ class DesignSpaceProblem(object):
         5: "kerning",
         6: "font info",
         7: "rules",
-        }
+        8: "features"
+    }
     # problems that should prevent the designspace from doing anything
     _structural = [
         (0,0),
         (1,0),(1,1),(1,2),(1,3),(1,4),(1,5),
         (1,9),(1,10),
         (2,0),(2,4),(2,7), (2,8),(2,9),(2,10),
-        ]
+    ]
 
     _problems = {
-        # 0 file 
+        # 0 file
         (0,0): "file corrupt",
 
         # 1 designspace geometry
@@ -45,6 +46,10 @@ class DesignSpaceProblem(object):
         (1,12): "mapped axis has overlapping output values (designspace)",
         (1,13): "mapped minimum > mapped maximum",
         (1,14): "axis minimum > axis maximum",
+
+        # 1 discrete axis
+        (1, 30): "discrete axis values missing",
+        (1, 31): "discrete axis default not in values",
 
         # 2 sources
         (2,0):  "no sources defined",
@@ -72,7 +77,7 @@ class DesignSpaceProblem(object):
         (3,7):  "missing style name",
         (3,8):  "missing output path",
         (3,10): "no instances defined",
-        
+
         # 4 glyphs
         (4,0): 'different number of contours in glyph',
         (4,1): 'different components in glyph',
@@ -116,19 +121,23 @@ class DesignSpaceProblem(object):
         (7,9): 'rule without a name',
         (7,10): 'condition with missing minimum',
         (7,11): 'condition with missing maximum',
-        }
-        
+
+        # 8 features
+        (8,0): 'source features file corrupt',
+        (8,1): 'source is missing feature'
+    }
+
     def __init__(self, category=None, error=None, data=None, details=None):
         self.category = category
         self.problem = error
         self.data = data
         self.details = details
-    
+
     def __eq__(self, otherProblem):
         # this way we can test membership in a list
-        if type(otherProblem) == tuple:
+        if isinstance(otherProblem, tuple):
             return otherProblem == (self.category, self.problem)
-        return (otherProblem.category,  otherProblem.error) == (self.category, self.problem)
+        return (otherProblem.category, otherProblem.error) == (self.category, self.problem)
 
     def isStructural(self):
         # return True if the problem is "structural"
@@ -157,13 +166,15 @@ class DesignSpaceProblem(object):
         if self.details is not None:
             dt += " / " + self.details
         if self.data is not None:
-            dt += ", "+ ' '.join("%s: %s" % (a, b) for a, b in self.data.items())
+            dt += ", " + ' '.join(f"{a}: {b}" for a, b in self.data.items())
         return '[' + ": ".join(t) + dt + ' %s' % str(key) + ']'
-            
+
+
 def allProblems():
     e = DesignSpaceProblem()
     return e._problems
-    
+
+
 def makeErrorDocumentationTable():
     # write the categories and the errors in a .md file
     import os
@@ -181,11 +192,12 @@ def makeErrorDocumentationTable():
         if cat != lastCat:
             t.append("\n## %d. %s\n" % (cat, e._categories[cat]))
             lastCat = cat
-        t.append("  * `%d.%d\t%s`" % (cat, err, e._problems[(cat,err)]))
+        t.append("  * `%d.%d\t%s`" % (cat, err, e._problems[(cat, err)]))
     f = open(path, 'w')
     f.write("\n".join(t))
     f.close()
-    
+
+
 def makeFunctions(whiteSpace=None):
     # make descriptive function names
     modl = ["# generated from problems.py", 'from designspaceProblems.problems import DesignSpaceProblem']
@@ -215,7 +227,8 @@ def makeFunctions(whiteSpace=None):
     f = open(path, 'w')
     f.write("\n".join(modl))
     f.close()
-        
+
+
 def testCompare():
     # test the error comparing thing
     for key1, desc1 in allProblems().items():
@@ -226,6 +239,7 @@ def testCompare():
                 print(key1, key2, e1 == e2)
                 print(e1.data)
 
+
 def showStructuralProblems():
     # show which problems are marked as structural and which arent
     e = DesignSpaceProblem()
@@ -235,13 +249,14 @@ def showStructuralProblems():
         if k in e._structural:
             s.append((k, v))
         else:
-            ns.append((k,v))
+            ns.append((k, v))
     print("These problems are marked as structural, and will prevent the file from opening")
     for k, v in s:
-        print("\t%s:\t%s" %(k, v))
+        print("\t%s:\t%s" % (k, v))
     print("\nThese problems are NOT marked as structural")
     for k, v in ns:
-        print("\t%s:\t%s" %(k, v))
+        print("\t%s:\t%s" % (k, v))
+
 
 if __name__ == "__main__":
     #makeFunctions()

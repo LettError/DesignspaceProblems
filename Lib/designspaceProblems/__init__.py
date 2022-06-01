@@ -1,13 +1,20 @@
-import os, glob, plistlib, math
-import designspaceProblems.problems
-from importlib import reload
-reload(designspaceProblems.problems)
-from designspaceProblems.problems import DesignSpaceProblem
+import os
+import glob
+import plistlib
+import math
+import io
+
+from fontTools.feaLib.parser import Parser as FeatureParser
+from fontTools.feaLib import ast as featureElements
+
 import ufoProcessor
 from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer
 from ufoProcessor.varModels import AxisMapper
-from fontParts.fontshell import RFont
+
 from fontPens.digestPointPen import DigestPointStructurePen
+
+from designspaceProblems.problems import DesignSpaceProblem
+
 
 def prettyLocation(loc):
     if loc is None:
@@ -17,7 +24,8 @@ def prettyLocation(loc):
     names.sort()
     for n in names:
         t.append(f'{n}:{loc[n]:9.3f}')
-    return '['+' '.join(t)+']'
+    return '[' + ' '.join(t) + ']'
+
 
 def getUFOLayers(ufoPath):
     # Peek into a ufo to read its layers.
@@ -37,6 +45,7 @@ def getUFOLayers(ufoPath):
         return [a for a, b in p]
     return []
 
+
 class UnicodeCollector(object):
     def __init__(self):
         # do some admin on the unicodes of master glyphs
@@ -47,16 +56,16 @@ class UnicodeCollector(object):
 
     def add(self, glyph):
         # assume these are mathglyphs
-        self.masterCount +=1
+        self.masterCount += 1
         if not glyph.unicodes:
-            if not None in self.unicodes:
+            if None not in self.unicodes:
                 self.unicodes[None] = 0
-            self.unicodes[None]+=1
+            self.unicodes[None] += 1
             return
         for u in glyph.unicodes:
-            if not u in self.unicodes:
+            if u not in self.unicodes:
                 self.unicodes[u] = 0
-            self.unicodes[u]+=1
+            self.unicodes[u] += 1
 
     def evaluate(self):
         # so what do we think of what we've seen
@@ -67,12 +76,10 @@ class UnicodeCollector(object):
         return incomplete
 
 
-
 class DesignSpaceChecker(object):
-    _registeredTags = dict(wght = 'weight', wdth = 'width', slnt = 'slant', opsz = 'optical', ital = 'italic')
-    _structuralProblems = [
-        
-    ]
+
+    _registeredTags = dict(wght='weight', wdth='width', slnt='slant', opsz='optical', ital='italic')
+    _structuralProblems = []
 
     def __init__(self, pathOrObject):
         # check things
@@ -84,8 +91,8 @@ class DesignSpaceChecker(object):
             if os.path.exists(pathOrObject):
                 try:
                     self.ds.read(pathOrObject)
-                except:
-                    self.problems.append(DesignSpaceProblem(0,0))
+                except Exception:
+                    self.problems.append(DesignSpaceProblem(0,0), dict())
         else:
             self.ds = pathOrObject
 
@@ -112,7 +119,7 @@ class DesignSpaceChecker(object):
                 else:
                     return ad.minimum, ad.default, ad.maximum
         return None
-    
+
     def hasStructuralProblems(self):
         # check if we have any errors from categories file / axes / sources
         # this does not guarantee there won't be other problems!
@@ -126,7 +133,7 @@ class DesignSpaceChecker(object):
         if self.hasStructuralProblems():
             return -1
         for err in self.problems:
-            if err.category in [4,5,6]:
+            if err.category in [4, 5, 6]:
                 return True
         return False
 
@@ -154,7 +161,8 @@ class DesignSpaceChecker(object):
             self.checkFontInfo()
             self.checkGlyphs()
             self.checkRules()
-            
+            self.checkFeatures()
+
     def checkDesignSpaceGeometry(self):
         # 1.0	no axes defined
         if len(self.ds.axes) == 0:
@@ -162,20 +170,21 @@ class DesignSpaceChecker(object):
         # 1.1	axis missing
         allAxes = []
         for i, ad in enumerate(self.ds.axes):
+            axisIsDiscete = hasattr(ad, "values")
             axisOK = True
             # 1.5	axis name missing
             if ad.name is None:
-                axisName = "unnamed_axis_%d" %i
+                axisName = f"unnamed_axis_{i}"
                 self.problems.append(DesignSpaceProblem(1,5), dict(axisName=axisName))
                 axisOK = False
             else:
                 axisName = ad.name
             # 1.2	axis maximum missing
-            if ad.maximum is None:
+            if not axisIsDiscete and ad.maximum is None:
                 self.problems.append(DesignSpaceProblem(1,2, dict(axisName=axisName)))
                 axisOK = False
             # 1.3	axis minimum missing
-            if ad.minimum is None:
+            if not axisIsDiscete and ad.minimum is None:
                 self.problems.append(DesignSpaceProblem(1,3, dict(axisName=axisName)))
                 axisOK = False
             # 1.4	axis default missing
@@ -184,28 +193,40 @@ class DesignSpaceChecker(object):
                 axisOK = False
 
             # problem: in order to check the validity of the axis values
-            # we need to get the mapped values for minimum, default and maximum. 
+            # we need to get the mapped values for minimum, default and maximum.
             # but any problems in the axis map can only be determined if we
             # are sure the axis is valid.
-            axisMin, axisDef, axisMax = self.data_getAxisValues(axisName, mapped=False)
-            mappedAxisMin, mappedAxisDef, mappedAxisMax = self.data_getAxisValues(axisName, mapped=True)
-            # 1,13 mapped minimum > mapped maximum
-            if mappedAxisMin > mappedAxisMax:
-                self.problems.append(DesignSpaceProblem(1,13, dict(axisName=axisName, maximum=mappedAxisMax, minimum=mappedAxisMin)))
-                axisOK = False
-            # 1,14 mapped minimum > mapped maximum
-            if axisMin > axisMax:
-                self.problems.append(DesignSpaceProblem(1,14, dict(axisName=axisName, maximum=mappedAxisMax, minimum=mappedAxisMin)))
-                axisOK = False
+            if not axisIsDiscete:
+                # its a continuous axis
+                axisMin, axisDef, axisMax = self.data_getAxisValues(axisName, mapped=False)
+                mappedAxisMin, mappedAxisDef, mappedAxisMax = self.data_getAxisValues(axisName, mapped=True)
+                # 1,13 mapped minimum > mapped maximum
+                if mappedAxisMin > mappedAxisMax:
+                    self.problems.append(DesignSpaceProblem(1,13, dict(axisName=axisName, maximum=mappedAxisMax, minimum=mappedAxisMin)))
+                    axisOK = False
+                # 1,14 mapped minimum > mapped maximum
+                if axisMin > axisMax:
+                    self.problems.append(DesignSpaceProblem(1,14, dict(axisName=axisName, maximum=mappedAxisMax, minimum=mappedAxisMin)))
+                    axisOK = False
 
-            # 1,9 minimum and maximum value are the same and not None
-            if (mappedAxisMin == mappedAxisMax) and mappedAxisMin != None:
-                self.problems.append(DesignSpaceProblem(1,9, dict(axisName=axisName)))
-                axisOK = False
-            # 1,10 default not between minimum and maximum
-            if mappedAxisMin is not None and mappedAxisMax is not None and mappedAxisDef is not None:
-                if not ((mappedAxisMin < mappedAxisDef <= mappedAxisMax) or (mappedAxisMin <= mappedAxisDef < mappedAxisMax)):
-                    self.problems.append(DesignSpaceProblem(1,10, dict(axisName=axisName)))
+                # 1,9 minimum and maximum value are the same and not None
+                if (mappedAxisMin == mappedAxisMax) and mappedAxisMin != None:
+                    self.problems.append(DesignSpaceProblem(1,9, dict(axisName=axisName)))
+                    axisOK = False
+                # 1,10 default not between minimum and maximum
+                if mappedAxisMin is not None and mappedAxisMax is not None and mappedAxisDef is not None:
+                    if not ((mappedAxisMin < mappedAxisDef <= mappedAxisMax) or (mappedAxisMin <= mappedAxisDef < mappedAxisMax)):
+                        self.problems.append(DesignSpaceProblem(1,10, dict(axisName=axisName)))
+                        axisOK = False
+            else:
+                # its a discrete axis
+                if ad.values is None:
+                    # 1,30 discrete axis values missing
+                    self.problems.append(DesignSpaceProblem(1,30, dict(axisName=axisName)))
+                    axisOK = False
+                elif ad.default not in ad.values:
+                    # 1,31 discrete axis default not in values
+                    self.problems.append(DesignSpaceProblem(1,31, dict(axisName=axisName)))
                     axisOK = False
             # 1.6	axis tag missing
             if ad.tag is None:
@@ -249,8 +270,8 @@ class DesignSpaceChecker(object):
                         self.problems.append(p)
 
         # XX
-        if not False in allAxes:
-           self.mapper = AxisMapper(self.ds.axes)
+        if all(allAxes):
+            self.mapper = AxisMapper(self.ds.axes)
 
     def checkSources(self):
         axisValues = self.data_getAxisValues()
@@ -276,7 +297,7 @@ class DesignSpaceChecker(object):
                         # or a faster scan that doesn't load the whole ufo?
                         if not sd.layerName in getUFOLayers(sd.path):
                             self.problems.append(DesignSpaceProblem(2,3, dict(path=sd.path, layerName=sd.layerName)))
-                if sd.location is None:            
+                if sd.location is None:
                     # 2,4 source location missing
                     self.problems.append(DesignSpaceProblem(2,4, dict(path=sd.path)))
                 else:
@@ -360,7 +381,7 @@ class DesignSpaceChecker(object):
         if sum(checks)<=1:
             return lastAxis
         return False
-    
+
     def checkInstances(self):
         axisValues = self.data_getAxisValues()
         defaultLocation = self.ds.newDefaultLocation(bend=True)
@@ -368,7 +389,7 @@ class DesignSpaceChecker(object):
         if len(self.ds.instances) == 0:
             self.problems.append(DesignSpaceProblem(3, 10))
         for i, jd in enumerate(self.ds.instances):
-            if jd.location is None:            
+            if jd.location is None:
                 # 3,1   instance location missing
                 self.problems.append(DesignSpaceProblem(3,1, dict(path=jd.path)))
             else:
@@ -401,13 +422,13 @@ class DesignSpaceChecker(object):
                 key = tuple(key)
                 if key not in allLocations:
                     allLocations[key] = []
-                allLocations[key].append((i,jd))
+                allLocations[key].append((i, jd))
         for key, items in allLocations.items():
             # 3,4   multiple instances on location
             if len(items) > 1:
                 deets = f"multiple instances at {prettyLocation(items[0][1].location)}"
-                self.problems.append(DesignSpaceProblem(3,4, dict(location=items[0][1].location, instances=[b for a,b in items]), details=deets))
-        
+                self.problems.append(DesignSpaceProblem(3,4, dict(location=items[0][1].location, instances=[b for a, b in items]), details=deets))
+
         # 3,5   instance location is anisotropic
         for i, jd in enumerate(self.ds.instances):
             # 3,6   missing family name
@@ -423,7 +444,7 @@ class DesignSpaceChecker(object):
                 deets = f"no location for {jd.familyName} {jd.styleName}"
                 self.problems.append(DesignSpaceProblem(3,8, dict(instance=jd), details=deets))
         # 3,9   duplicate instances
-    
+
     def checkGlyphs(self):
         # check all glyphs in all fonts
         # need to load the fonts before we can do this
@@ -435,7 +456,7 @@ class DesignSpaceChecker(object):
             if fontObj is None:
                 continue
             for glyphName in fontObj.keys():
-                if not glyphName in glyphs:
+                if glyphName not in glyphs:
                     glyphs[glyphName] = []
                 glyphs[glyphName].append(fontObj)
         for name in glyphs.keys():
@@ -478,7 +499,6 @@ class DesignSpaceChecker(object):
                 if not cm.baseGlyph in components:
                     components[cm.baseGlyph] = 0
                 components[cm.baseGlyph] += 1
-            #print('checkGlyph mg.anchors', mg.anchors, type(mg.anchors))
             for ad in mg.anchors:
                 # collect anchor counts
                 if not hasattr(ad, 'name'):
@@ -486,10 +506,10 @@ class DesignSpaceChecker(object):
                     continue
                 if ad.name not in anchors:
                     anchors[ad.name] = 0
-                anchors[ad.name] += 1                
+                anchors[ad.name] += 1
             # collect patterns of the whole glyph
             # the pattern is the key
-            if not pat in patterns:
+            if pat not in patterns:
                 patterns[pat] = []
             patterns[pat].append(loc)
             contourCount = 0
@@ -497,7 +517,7 @@ class DesignSpaceChecker(object):
                 if item is None: continue
                 if "beginPath" in item:
                     contourCount += 1
-            if not contourCount in contours:
+            if contourCount not in contours:
                 contours[contourCount] = 0
             contours[contourCount] += 1
         unicodeResults = unicodes.evaluate()
@@ -539,7 +559,8 @@ class DesignSpaceChecker(object):
     def checkKerning(self):
         # 5,4 kerning pair missing
         # 5,1 no kerning in default
-        if self.nf is None: return
+        if self.nf is None:
+            return
         if not self._anyKerning():
             # Check if there is *any* kerning first. If there is no kerning anywhere,
             # we should assume this is intentional and not flood warnings.
@@ -562,7 +583,7 @@ class DesignSpaceChecker(object):
             if len(fontObj.groups.keys()) == 0:
                 self.problems.append(DesignSpaceProblem(5,6, dict(fontObj=fontObj)))
             for sourceGroupName in fontObj.groups.keys():
-                if not sourceGroupName in defaultGroupNames:
+                if sourceGroupName not in defaultGroupNames:
                     # 5,3 kerning group missing
                     self.problems.append(DesignSpaceProblem(5,3, dict(fontObj=self.nf, groupName=sourceGroupName)))
                 else:
@@ -579,17 +600,18 @@ class DesignSpaceChecker(object):
         # entirely debateable what we should be testing.
         # Let's start with basic geometry
         # 6,3 source font info missing value for xheight
-        if self.nf is None: return
-        if self.nf.info.unitsPerEm == None:
+        if self.nf is None:
+            return
+        if self.nf.info.unitsPerEm is None:
             # 6,0 default font info missing value for units per em
             self.problems.append(DesignSpaceProblem(6,0, dict(fontObj=self.nf)))
-        if self.nf.info.ascender == None:
+        if self.nf.info.ascender is None:
             # 6,1 default font info missing value for ascender
             self.problems.append(DesignSpaceProblem(6,1, dict(fontObj=self.nf)))
-        if self.nf.info.descender == None:
+        if self.nf.info.descender is None:
             # 6,2 default font info missing value for descender
             self.problems.append(DesignSpaceProblem(6,2, dict(fontObj=self.nf)))
-        if self.nf.info.descender == None:
+        if self.nf.info.descender is None:
             # 6,3 default font info missing value for xheight
             self.problems.append(DesignSpaceProblem(6,3, dict(fontObj=self.nf)))
         for fontName, fontObj in self.ds.fonts.items():
@@ -600,7 +622,7 @@ class DesignSpaceChecker(object):
             # 6,4 source font unitsPerEm value different from default unitsPerEm
             if fontObj.info.unitsPerEm != self.nf.info.unitsPerEm:
                 self.problems.append(DesignSpaceProblem(6,4, dict(fontObj=fontObj, fontValue=fontObj.info.unitsPerEm, defaultValue=self.nf.info.unitsPerEm)))
-    
+
     def checkRules(self):
         # check the rules in the designspace
         # 7.0 source glyph missing
@@ -617,10 +639,17 @@ class DesignSpaceChecker(object):
                 if a == b:
                     # 7.2 source and destination glyphs the same
                     self.problems.append(DesignSpaceProblem(7,2, data=dict(rule=name, glyphName=a)))
+                for fontName, fontObj in self.ds.fonts.items():
+                    if a not in fontObj:
+                        # 7.0 source glyph missing
+                        self.problems.append(DesignSpaceProblem(7,0, data=dict(rule=name, glyphName=a, fontObj=fontObj)))
+                    if b not in fontObj:
+                        # 7.1 destination glyph missing
+                        self.problems.append(DesignSpaceProblem(7,1, data=dict(rule=name, glyphName=b, fontObj=fontObj)))
             if not rd.subs:
                 # 7.3 no substition glyphs defined
                 self.problems.append(DesignSpaceProblem(7,3, data=dict(rule=name)))
-                
+
             if len(rd.conditionSets) == 0:
                 # 7.4 no conditionset defined
                 self.problems.append(DesignSpaceProblem(7,4, data=dict(rule=name)))
@@ -631,7 +660,7 @@ class DesignSpaceChecker(object):
                     pat = list(cd.items())
                     pat.sort()
                     pat = tuple(pat)
-                    if not pat in patterns:
+                    if pat not in patterns:
                         patterns[pat] = True
                     else:
                         self.problems.append(DesignSpaceProblem(7,8, data=dict(rule=name)))
@@ -639,20 +668,52 @@ class DesignSpaceChecker(object):
                     if cd['minimum'] == cd['maximum']:
                         # 7.7 condition values are the same
                         self.problems.append(DesignSpaceProblem(7,7, data=dict(rule=name)))
-                    if cd['minimum'] != None and cd['maximum'] != None:
+                    if cd['minimum'] is not None and cd['maximum'] is not None:
                         if cd['name'] not in axisValues.keys():
                             # 7.5 condition values on unknown axis
                             self.problems.append(DesignSpaceProblem(7,5, data=dict(rule=name, axisName=cd['name'])))
                         else:
                             if cd['minimum'] < min(axisValues[cd['name']]) or cd['maximum'] > max(axisValues[cd['name']]):
                                 # 7.6 condition values out of axis bounds
-                                self.problems.append(DesignSpaceProblem(7,6, data=dict(rule=name, axisValues=axisValues[cd['name']], 
+                                self.problems.append(DesignSpaceProblem(7,6, data=dict(rule=name, axisValues=axisValues[cd['name']],
                                     conditionMinimum=cd.get('minimum'), conditionDefault=cd.get('default'), conditionMaximum=cd.get('maximum'))))
                     else:
-                        if cd.get('minimum') == None:
+                        if cd.get('minimum') is None:
                             self.problems.append(DesignSpaceProblem(7,10, data=dict(rule=name, axisValues=axisValues[cd['name']])))
-                        if cd.get('maximum') == None:
+                        if cd.get('maximum') is None:
                             self.problems.append(DesignSpaceProblem(7,11, data=dict(rule=name, axisValues=axisValues[cd['name']])))
+
+    def checkFeatures(self):
+        # check the rules in the designspace
+        # 8,0 source features file corrupt
+        # 8,1 source is missing feature
+        countedFeaturesTags = dict(
+            kern=0,
+            mark=0,
+            mkmk=0
+        )
+        for fontName, fontObj in self.ds.fonts.items():
+            try:
+                feaData = io.StringIO(fontObj.features.text)
+                feaParser = FeatureParser(feaData, set(fontObj.keys()), followIncludes=True, includeDir=os.path.dirname(fontObj.path))
+                existingFeaFile = feaParser.parse()
+                for element in existingFeaFile.statements:
+                    if isinstance(element, featureElements.FeatureBlock):
+                        if element.name in countedFeaturesTags:
+                            countedFeaturesTags[element.name] += 1
+            except Exception:
+                self.problems.append(DesignSpaceProblem(8,0))
+
+        sourceCount = len(self.ds.fonts)
+        for tag, value in countedFeaturesTags.items():
+            if value == 0:
+                # non of the sources have this feature
+                continue
+            elif value == sourceCount:
+                # all fo the sources have this features
+                continue
+            else:
+                self.problems.append(DesignSpaceProblem(8,1, data=dict(feature=tag)))
 
 
 if __name__ == "__main__":
@@ -677,7 +738,7 @@ if __name__ == "__main__":
     #                 print("\t -- "+str(n))
 
     pass
-    
+
     p = '../../tests/viable.designspace'
     dc = DesignSpaceChecker(p)
     dc.checkEverything()
