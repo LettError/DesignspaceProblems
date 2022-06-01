@@ -123,7 +123,7 @@ class DesignSpaceProblem(object):
         (7,11): 'condition with missing maximum',
 
         # 8 features
-        (8,0): 'source features file corrupt',
+        (8,0): 'source feature file corrupt',
         (8,1): 'source is missing feature'
     }
 
