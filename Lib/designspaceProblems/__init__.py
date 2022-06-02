@@ -640,6 +640,8 @@ class DesignSpaceChecker(object):
                     # 7.2 source and destination glyphs the same
                     self.problems.append(DesignSpaceProblem(7,2, data=dict(rule=name, glyphName=a)))
                 for fontName, fontObj in self.ds.fonts.items():
+                    if fontObj is None:
+                        continue
                     if a not in fontObj:
                         # 7.0 source glyph missing
                         self.problems.append(DesignSpaceProblem(7,0, data=dict(rule=name, glyphName=a, fontObj=fontObj)))
