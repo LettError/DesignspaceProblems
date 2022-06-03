@@ -27,6 +27,10 @@ def prettyLocation(loc):
     return '[' + ' '.join(t) + ']'
 
 
+def prettyFontName(font):
+    return f"{font.info.familyName} {font.info.styleName}"
+
+
 def getUFOLayers(ufoPath):
     # Peek into a ufo to read its layers.
     # <?xml version='1.0' encoding='UTF-8'?>
@@ -578,14 +582,14 @@ class DesignSpaceChecker(object):
                 continue
             # 5,0 no kerning in source
             if len(fontObj.kerning.keys()) == 0:
-                self.problems.append(DesignSpaceProblem(5,0, dict(fontObj=fontObj)))
+                self.problems.append(DesignSpaceProblem(5,0, dict(object=fontObj, font=prettyFontName(fontObj))))
             # 5,6 no kerning groups in source
             if len(fontObj.groups.keys()) == 0:
-                self.problems.append(DesignSpaceProblem(5,6, dict(fontObj=fontObj)))
+                self.problems.append(DesignSpaceProblem(5,6, dict(object=fontObj, font=prettyFontName(fontObj))))
             for sourceGroupName in fontObj.groups.keys():
                 if sourceGroupName not in defaultGroupNames:
                     # 5,3 kerning group missing
-                    self.problems.append(DesignSpaceProblem(5,3, dict(fontObj=self.nf, groupName=sourceGroupName)))
+                    self.problems.append(DesignSpaceProblem(5,3, dict(object=self.nf, font=prettyFontName(fontObj), groupName=sourceGroupName)))
                 else:
                     # check if they have the same members
                     sourceGroupMembers = fontObj.groups[sourceGroupName]
@@ -593,7 +597,7 @@ class DesignSpaceChecker(object):
                     if sourceGroupMembers != defaultGroupMembers:
                         # 5,2 kerning group members do not match
                         deets = f'{sourceGroupName}: {sourceGroupMembers}, {defaultGroupMembers}'
-                        self.problems.append(DesignSpaceProblem(5,2, dict(fontObj=self.nf, groupName=sourceGroupName), details=deets))
+                        self.problems.append(DesignSpaceProblem(5,2, dict(object=self.nf, font=prettyFontName(fontObj), groupName=sourceGroupName), details=deets))
 
     def checkFontInfo(self):
         # check some basic font info values
@@ -604,16 +608,16 @@ class DesignSpaceChecker(object):
             return
         if self.nf.info.unitsPerEm is None:
             # 6,0 default font info missing value for units per em
-            self.problems.append(DesignSpaceProblem(6,0, dict(fontObj=self.nf)))
+            self.problems.append(DesignSpaceProblem(6,0, dict(object=self.nf, font=prettyFontName(self.nf))))
         if self.nf.info.ascender is None:
             # 6,1 default font info missing value for ascender
-            self.problems.append(DesignSpaceProblem(6,1, dict(fontObj=self.nf)))
+            self.problems.append(DesignSpaceProblem(6,1, dict(object=self.nf, font=prettyFontName(self.nf))))
         if self.nf.info.descender is None:
             # 6,2 default font info missing value for descender
-            self.problems.append(DesignSpaceProblem(6,2, dict(fontObj=self.nf)))
+            self.problems.append(DesignSpaceProblem(6,2, dict(object=self.nf, font=prettyFontName(self.nf))))
         if self.nf.info.descender is None:
             # 6,3 default font info missing value for xheight
-            self.problems.append(DesignSpaceProblem(6,3, dict(fontObj=self.nf)))
+            self.problems.append(DesignSpaceProblem(6,3, dict(object=self.nf, font=prettyFontName(self.nf))))
         for fontName, fontObj in self.ds.fonts.items():
             if fontObj == self.nf:
                 continue
@@ -621,7 +625,7 @@ class DesignSpaceChecker(object):
                 continue
             # 6,4 source font unitsPerEm value different from default unitsPerEm
             if fontObj.info.unitsPerEm != self.nf.info.unitsPerEm:
-                self.problems.append(DesignSpaceProblem(6,4, dict(fontObj=fontObj, fontValue=fontObj.info.unitsPerEm, defaultValue=self.nf.info.unitsPerEm)))
+                self.problems.append(DesignSpaceProblem(6,4, dict(object=fontObj, font=prettyFontName(fontObj), fontValue=fontObj.info.unitsPerEm, defaultValue=self.nf.info.unitsPerEm)))
 
     def checkRules(self):
         # check the rules in the designspace
@@ -644,10 +648,10 @@ class DesignSpaceChecker(object):
                         continue
                     if a not in fontObj:
                         # 7.0 source glyph missing
-                        self.problems.append(DesignSpaceProblem(7,0, data=dict(rule=name, glyphName=a, fontObj=fontObj)))
+                        self.problems.append(DesignSpaceProblem(7,0, data=dict(rule=name, glyphName=a, object=fontObj, font=prettyFontName(fontObj))))
                     if b not in fontObj:
                         # 7.1 destination glyph missing
-                        self.problems.append(DesignSpaceProblem(7,1, data=dict(rule=name, glyphName=b, fontObj=fontObj)))
+                        self.problems.append(DesignSpaceProblem(7,1, data=dict(rule=name, glyphName=b, object=fontObj, font=prettyFontName(fontObj))))
             if not rd.subs:
                 # 7.3 no substition glyphs defined
                 self.problems.append(DesignSpaceProblem(7,3, data=dict(rule=name)))
