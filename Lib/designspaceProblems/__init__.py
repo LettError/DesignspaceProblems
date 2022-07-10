@@ -13,6 +13,7 @@ from ufoProcessor.varModels import AxisMapper
 
 from fontPens.digestPointPen import DigestPointStructurePen
 
+import designspaceProblems
 from designspaceProblems.problems import DesignSpaceProblem
 
 
@@ -88,6 +89,7 @@ class DesignSpaceChecker(object):
 
     def __init__(self, pathOrObject):
         # check things
+
         self.problems = []
         self.axesOK = None
         self.mapper = None
@@ -97,7 +99,7 @@ class DesignSpaceChecker(object):
                 try:
                     self.ds.read(pathOrObject)
                 except Exception:
-                    self.problems.append(DesignSpaceProblem(0,0), dict())
+                    self.problems.append(DesignSpaceProblem(0,0, dict()))
         else:
             self.ds = pathOrObject
 
@@ -180,7 +182,7 @@ class DesignSpaceChecker(object):
             # 1.5	axis name missing
             if ad.name is None:
                 axisName = f"unnamed_axis_{i}"
-                self.problems.append(DesignSpaceProblem(1,5), dict(axisName=axisName))
+                self.problems.append(DesignSpaceProblem(1,5, dict(axisName=axisName)))
                 axisOK = False
             else:
                 axisName = ad.name
@@ -278,11 +280,25 @@ class DesignSpaceChecker(object):
         if all(allAxes):
             self.mapper = AxisMapper(self.ds.axes)
 
-    def checkSources(self):
+    def hasDiscreteAxes(self):
+        if hasattr("hasDiscreteAxes", self.ds):
+            return self.ds.hasDiscreteAxes()
+        return None
+
+    def checkSources(self, discreteLocation=None):
         axisValues = self.data_getAxisValues()
         # 2,0 no sources defined
-        if len(self.ds.sources) == 0:
-            self.problems.append(DesignSpaceProblem(2,0))
+
+        if discreteLocation is None:
+            # no discrete location means no discrete axes, so we only have one interpolating system
+            if len(self.ds.sources) == 0:
+                self.problems.append(DesignSpaceProblem(2,0))
+        else:
+            # we're in a space with mixed axes, we can have multiple interpolation systems
+            sources = self.ds.findSourcesForDiscreteLocation(discreteLocation)
+            if len(sources) == 0:
+                self.problems.append(DesignSpaceProblem(2,0), details=f'at discrete location {discreteLocation}')
+
         for i, sd in enumerate(self.ds.sources):
             if sd.path is None:
                 self.problems.append(DesignSpaceProblem(2,1, dict(path=sd.path)))

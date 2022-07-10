@@ -7,6 +7,7 @@
   * `5. kerning`
   * `6. font info`
   * `7. rules`
+  * `8. features`
 
 ## 0. file
 
@@ -28,6 +29,8 @@
   * `1.12	mapped axis has overlapping output values (designspace)`
   * `1.13	mapped minimum > mapped maximum`
   * `1.14	axis minimum > axis maximum`
+  * `1.30	discrete axis values missing`
+  * `1.31	discrete axis default not in values`
 
 ## 2. sources
 
@@ -105,3 +108,8 @@
   * `7.9	rule without a name`
   * `7.10	condition with missing minimum`
   * `7.11	condition with missing maximum`
+
+## 8. features
+
+  * `8.0	source feature file corrupt`
+  * `8.1	source is missing feature`

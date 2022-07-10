@@ -169,11 +169,9 @@ class DesignSpaceProblem(object):
             dt += ", " + ' '.join(f"{key}: {info}" for key, info in self.data.items() if key != "object")
         return '[' + ": ".join(t) + dt + ' %s' % str(key) + ']'
 
-
 def allProblems():
     e = DesignSpaceProblem()
     return e._problems
-
 
 def makeErrorDocumentationTable():
     # write the categories and the errors in a .md file

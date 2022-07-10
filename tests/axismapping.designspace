@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<designspace format="4.0">
+<designspace format="5.0">
   <axes>
     <axis tag="ax01" name="ok_axis" minimum="200" maximum="800" default="200">
       <map input="200" output="0"/>
@@ -23,17 +23,13 @@
     <source filename="masters/geometryMaster1.ufo">
       <location>
         <dimension name="ok_axis" xvalue="200"/>
-        <dimension name="input_regression_axis" xvalue="500"/>
         <dimension name="output_regression_axis" xvalue="600"/>
-        <dimension name="mixedup_extremes_axis" xvalue="0"/>
       </location>
     </source>
     <source filename="masters/geometryMaster2.ufo">
       <location>
         <dimension name="ok_axis" xvalue="200"/>
-        <dimension name="input_regression_axis" xvalue="500"/>
         <dimension name="output_regression_axis" xvalue="800"/>
-        <dimension name="mixedup_extremes_axis" xvalue="0"/>
       </location>
     </source>
   </sources>
