@@ -7,13 +7,11 @@ import io
 from fontTools.feaLib.parser import Parser as FeatureParser
 from fontTools.feaLib import ast as featureElements
 
-import ufoProcessor
 from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer
 from ufoProcessor.varModels import AxisMapper
 
 from fontPens.digestPointPen import DigestPointStructurePen
 
-import designspaceProblems
 from designspaceProblems.problems import DesignSpaceProblem
 
 
@@ -112,12 +110,22 @@ class DesignSpaceChecker(object):
             # get all of them
             axes = {}
             for ad in self.ds.axes:
+                if hasattr(ad, "values"):
+                    axisMinimum = min(ad.values)
+                    axisMaximum = max(ad.values)
+                    axisDefault = ad.default
+                else:
+                    axisMinimum = ad.minimum
+                    axisMaximum = ad.maximum
+                    axisDefault = ad.default
                 # should these be mapped?
                 #$$
                 if mapped:
-                    axes[ad.name] = (ad.map_forward(ad.minimum), ad.map_forward(ad.default), ad.map_forward(ad.maximum))
+                    #axes[ad.name] = (ad.map_forward(ad.minimum), ad.map_forward(ad.default), ad.map_forward(ad.maximum))
+                    axes[ad.name] = (ad.map_forward(axisMinimum), ad.map_forward(axisDefault), ad.map_forward(axisMaximum))
                 else:
-                    axes[ad.name] = (ad.minimum, ad.default, ad.maximum)
+                    #axes[ad.name] = (ad.minimum, ad.default, ad.maximum)
+                    axes[ad.name] = (axisMinimum, axisDefault, axisMaximum)
             return axes
         for ad in self.ds.axes:
             if ad.name == axisName:
@@ -158,7 +166,13 @@ class DesignSpaceChecker(object):
             return False
         # designspace specific
         self.checkDesignSpaceGeometry()
-        self.checkSources()
+        # check sources, discrete or continuous
+        discreteLocations = self.ds.getDiscreteLocations()
+        if discreteLocations:
+            for dloc in discreteLocations:
+                self.checkSources(discreteLocation=dloc)
+        else:
+            self.checkSources()
         self.checkInstances()
         if not self.hasStructuralProblems():
             # font specific
@@ -285,19 +299,27 @@ class DesignSpaceChecker(object):
             return self.ds.hasDiscreteAxes()
         return None
 
-    def checkSources(self, discreteLocation=None):
-        axisValues = self.data_getAxisValues()
-        # 2,0 no sources defined
+    def checkLocationForIllegalDiscreteValues(self, location):
+        # check this location for values on discrete axes that are not defined. 
+        discreteAxes = self.ds.getOrderedDiscreteAxes()
 
+        for d in discreteAxes:
+            if not location.get(d.name, None) in d.values:
+                self.problems.append(DesignSpaceProblem(2,13), )
+
+    def checkSources(self, discreteLocation=None):
+        #@@
+        axisValues = self.data_getAxisValues()
         if discreteLocation is None:
             # no discrete location means no discrete axes, so we only have one interpolating system
+            # 2,0 no sources defined
             if len(self.ds.sources) == 0:
                 self.problems.append(DesignSpaceProblem(2,0))
         else:
             # we're in a space with mixed axes, we can have multiple interpolation systems
             sources = self.ds.findSourcesForDiscreteLocation(discreteLocation)
             if len(sources) == 0:
-                self.problems.append(DesignSpaceProblem(2,0), details=f'at discrete location {discreteLocation}')
+                self.problems.append(DesignSpaceProblem(2,0, details=f'no sources for discrete location {discreteLocation}'))
 
         for i, sd in enumerate(self.ds.sources):
             if sd.path is None:
@@ -365,6 +387,9 @@ class DesignSpaceChecker(object):
                 # 2,9 multiple sources on location
                 self.problems.append(DesignSpaceProblem(2,9))
         onAxis = set()
+        # check if the discrete values in the source location are valid
+        for i, sd in enumerate(self.ds.sources):
+            self.checkLocationForIllegalDiscreteValues(sd.location)
         # check if all axes have on-axis masters
         for i, sd in enumerate(self.ds.sources):
             name = self.isOnAxis(sd.location)
@@ -403,12 +428,16 @@ class DesignSpaceChecker(object):
             return lastAxis
         return False
 
-    def checkInstances(self):
+    def checkInstances(self, discreteLocation=None):
         axisValues = self.data_getAxisValues()
         defaultLocation = self.ds.newDefaultLocation(bend=True)
         defaultCandidates = []
+
+        if discreteLocation:
+            # check f there are instances defined for this discrete location
+            pass
         if len(self.ds.instances) == 0:
-            self.problems.append(DesignSpaceProblem(3, 10))
+            self.problems.append(DesignSpaceProblem(3,10))
         for i, jd in enumerate(self.ds.instances):
             if jd.location is None:
                 # 3,1   instance location missing
