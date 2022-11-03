@@ -27,7 +27,7 @@ setup(
     python_requires='>=3.1',
     setup_requires=wheel + ["setuptools_scm"],
     install_requires=[
-        "ufoProcessor>=1.0",
+        # "ufoProcessor>=1.0",
         "defcon[lxml]>=0.6.0",
         "fontMath>=0.4.9",
         "fontParts>=0.8.2",
