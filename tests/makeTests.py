@@ -157,8 +157,8 @@ def makeTests():
     printProblems(dc4)
     showProblems(dc4)
 
-    dc4.checkLocationForIllegalDiscreteValues(dict(snap=0,crackle=1000))
-
+    #print("checkLocationForIllegalDiscreteValues", dc4.checkLocationForIllegalDiscreteValues(dict(snap=0,crackle=1000)))
+    assert (2,13) in dc4.problems
 
 
     #assert (1,0) in dc.problems    # no axes defined

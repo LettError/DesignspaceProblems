@@ -47,6 +47,7 @@
   * `2.10	source location is anisotropic`
   * `2.11	axis without on-axis sources`
   * `2.12	no source on mapped default location`
+  * `2.13	location with illegal value for discrete axis`
 
 ## 3. instances
 
@@ -60,6 +61,7 @@
   * `3.8	missing output path`
   * `3.9	instance location is anisotropic`
   * `3.10	no instances defined`
+  * `3.11	no instances defined for discrete location`
 
 ## 4. glyphs
 

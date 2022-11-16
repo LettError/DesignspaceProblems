@@ -3,6 +3,7 @@ import glob
 import plistlib
 import math
 import io
+import traceback
 
 from fontTools.feaLib.parser import Parser as FeatureParser
 from fontTools.feaLib import ast as featureElements
@@ -93,10 +94,15 @@ class DesignSpaceChecker(object):
         self.mapper = None
         if isinstance(pathOrObject, str):
             self.ds = DesignSpaceProcessor()
+            print(self.ds)
+            print("trying", pathOrObject)
             if os.path.exists(pathOrObject):
                 try:
                     self.ds.read(pathOrObject)
+                    print('yes')
                 except Exception:
+                    print('no')
+                    print(traceback.format_exc())
                     self.problems.append(DesignSpaceProblem(0,0, dict()))
         else:
             self.ds = pathOrObject
@@ -186,6 +192,8 @@ class DesignSpaceChecker(object):
 
     def checkDesignSpaceGeometry(self):
         # 1.0	no axes defined
+        print('self.ds.path', self.ds.path)
+        print('self.ds.axes', self.ds.axes, len(self.ds.axes))
         if len(self.ds.axes) == 0:
             self.problems.append(DesignSpaceProblem(1,0))
         # 1.1	axis missing
@@ -305,7 +313,7 @@ class DesignSpaceChecker(object):
 
         for d in discreteAxes:
             if not location.get(d.name, None) in d.values:
-                self.problems.append(DesignSpaceProblem(2,13), )
+                self.problems.append(DesignSpaceProblem(2,13, dict(axisValues=d.values, locationValue=location.get(d.name, None))))
 
     def checkSources(self, discreteLocation=None):
         #@@
@@ -461,6 +469,9 @@ class DesignSpaceChecker(object):
                             # doesn't happen as ufoprocessor won't read add undefined axes to the locations
                             # 3,2   instance location has value for undefined axis
                             self.problems.append(DesignSpaceProblem(3,2, dict(axisName=axisName)))
+        # check for illegal values in discrete locations
+        for i, jd in enumerate(self.ds.instances):
+            self.checkLocationForIllegalDiscreteValues(jd.location)
         allLocations = {}
         for i, jd in enumerate(self.ds.instances):
             if jd.location is None:
@@ -790,8 +801,13 @@ if __name__ == "__main__":
     #                 print("\t -- "+str(n))
 
     pass
+    print(__file__)
+    import os
+    #p = '../../tests/viable.designspace'
+    path = '../../tests/viable_ds5.designspace'
+    path = "/Users/erik/code/ufoProcessor/Tests/202206 discrete spaces/test.ds5.designspace"
 
-    p = '../../tests/viable.designspace'
-    dc = DesignSpaceChecker(p)
+    print(os.path.exists(path))
+    dc = DesignSpaceChecker(path)
     dc.checkEverything()
     print(dc.problems)

@@ -59,7 +59,7 @@ class DesignSpaceProblem(object):
         (2,4):  "source location missing",
         (2,5):  "source location has value for undefined axis",
         (2,6):  "source location has out of bounds value",
-        (2,13): "source location with undefined value for discrete axis",
+        (2,13): "location with illegal value for discrete axis",
         (2,7):  "no source on unmapped default location",
         (2,12): "no source on mapped default location",
         (2,8):  "multiple sources on default location",
@@ -70,7 +70,6 @@ class DesignSpaceProblem(object):
         # 3 instances
         (3,1):  'instance location missing',
         (3,2):  "instance location has value for undefined axis",
-        (3,13): "instance location with undefined value for discrete axis",
         (3,3):  "instance location has out of bounds value",
         (3,4):  "multiple instances on location",
         (3,5):  "instance location requires extrapolation",

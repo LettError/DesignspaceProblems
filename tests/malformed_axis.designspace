@@ -2,6 +2,6 @@
 <designspace format="5.0">
   <axes>
     <axis tag="1111" name="snap" minimum="1000" maximum="1000" default="1000"/>
-    <axis tag="222" name="crackle" minimum="0" maximum="1000" default="-1000"/>
+    <axis tag="CRCK" name="crackle" minimum="0" maximum="1000" default="-1000"/>
   </axes>
 </designspace>
