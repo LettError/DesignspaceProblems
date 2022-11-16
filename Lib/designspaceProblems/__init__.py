@@ -1,9 +1,7 @@
 import os
-import glob
 import plistlib
 import math
 import io
-import traceback
 
 from fontTools.feaLib.parser import Parser as FeatureParser
 from fontTools.feaLib import ast as featureElements
@@ -94,16 +92,11 @@ class DesignSpaceChecker(object):
         self.mapper = None
         if isinstance(pathOrObject, str):
             self.ds = DesignSpaceProcessor()
-            print(self.ds)
-            print("trying", pathOrObject)
             if os.path.exists(pathOrObject):
                 try:
                     self.ds.read(pathOrObject)
-                    print('yes')
                 except Exception:
-                    print('no')
-                    print(traceback.format_exc())
-                    self.problems.append(DesignSpaceProblem(0,0, dict()))
+                    self.problems.append(DesignSpaceProblem(0, 0, dict()))
         else:
             self.ds = pathOrObject
 
@@ -192,8 +185,6 @@ class DesignSpaceChecker(object):
 
     def checkDesignSpaceGeometry(self):
         # 1.0	no axes defined
-        print('self.ds.path', self.ds.path)
-        print('self.ds.axes', self.ds.axes, len(self.ds.axes))
         if len(self.ds.axes) == 0:
             self.problems.append(DesignSpaceProblem(1,0))
         # 1.1	axis missing
@@ -308,7 +299,7 @@ class DesignSpaceChecker(object):
         return None
 
     def checkLocationForIllegalDiscreteValues(self, location):
-        # check this location for values on discrete axes that are not defined. 
+        # check this location for values on discrete axes that are not defined.
         discreteAxes = self.ds.getOrderedDiscreteAxes()
 
         for d in discreteAxes:
