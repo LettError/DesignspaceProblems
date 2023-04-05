@@ -316,7 +316,7 @@ class DesignSpaceChecker(object):
                 self.problems.append(DesignSpaceProblem(2,0))
         else:
             # we're in a space with mixed axes, we can have multiple interpolation systems
-            sources = self.ds.findSourcesForDiscreteLocation(discreteLocation)
+            sources = self.ds.findSourceDescriptorsForDiscreteLocation(discreteLocation)
             if len(sources) == 0:
                 self.problems.append(DesignSpaceProblem(2,0, details=f'no sources for discrete location {discreteLocation}'))
 
