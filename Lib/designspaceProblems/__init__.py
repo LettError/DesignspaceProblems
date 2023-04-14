@@ -6,7 +6,8 @@ import io
 from fontTools.feaLib.parser import Parser as FeatureParser
 from fontTools.feaLib import ast as featureElements
 
-from ufoProcessor import DesignSpaceProcessor, getUFOVersion, getLayer
+from ufoProcessor import getUFOVersion, getLayer
+from ufoProcessor.ufoOperator import UFOOperator
 from ufoProcessor.varModels import AxisMapper
 
 from fontPens.digestPointPen import DigestPointStructurePen
@@ -91,7 +92,8 @@ class DesignSpaceChecker(object):
         self.axesOK = None
         self.mapper = None
         if isinstance(pathOrObject, str):
-            self.ds = DesignSpaceProcessor()
+            #self.ds = DesignSpaceProcessor()
+            self.ds = UFOOperator()
             if os.path.exists(pathOrObject):
                 try:
                     self.ds.read(pathOrObject)
@@ -640,9 +642,9 @@ class DesignSpaceChecker(object):
                     self.problems.append(DesignSpaceProblem(5,3, dict(object=self.nf, font=prettyFontName(fontObj), groupName=sourceGroupName)))
                 else:
                     # check if they have the same members
-                    sourceGroupMembers = fontObj.groups[sourceGroupName]
-                    defaultGroupMembers = self.nf.groups[sourceGroupName]
-                    if sourceGroupMembers != defaultGroupMembers:
+                    sourceGroupMembers = list(fontObj.groups[sourceGroupName])
+                    defaultGroupMembers = list(self.nf.groups[sourceGroupName])
+                    if sourceGroupMembers != defaultGroupMembers:                    # # check if they have the same members
                         # 5,2 kerning group members do not match
                         deets = f'{sourceGroupName}: {sourceGroupMembers}, {defaultGroupMembers}'
                         self.problems.append(DesignSpaceProblem(5,2, dict(object=self.nf, font=prettyFontName(fontObj), groupName=sourceGroupName), details=deets))
@@ -771,32 +773,9 @@ class DesignSpaceChecker(object):
 
 
 if __name__ == "__main__":
-    # ufoProcessorRoot = "/Users/erik/code/ufoProcessor/Tests"
-    # paths = []
-    # for name in os.listdir(ufoProcessorRoot):
-    #     p = os.path.join(ufoProcessorRoot, name)
-    #     if os.path.isdir(p):
-    #         p2 = os.path.join(p, "*.designspace")
-    #         paths += glob.glob(p2)
-    # for p in paths:
-    #     dc = DesignSpaceChecker(p)
-    #     dc.checkEverything()
-    #     if dc.errors:
-    #         print("\n")
-    #         print(os.path.basename(p))
-    #         # search for specific errors!
-    #         for n in dc.errors:
-    #             print("\t" + str(n))
-    #         for n in dc.errors:
-    #             if n.category == 3:
-    #                 print("\t -- "+str(n))
-
-    pass
     print(__file__)
     import os
-    #p = '../../tests/viable.designspace'
     path = '../../tests/viable_ds5.designspace'
-    path = "/Users/erik/code/ufoProcessor/Tests/202206 discrete spaces/test.ds5.designspace"
 
     print(os.path.exists(path))
     dc = DesignSpaceChecker(path)
