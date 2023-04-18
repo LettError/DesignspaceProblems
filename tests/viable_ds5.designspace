@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<designspace format="5.0">
+  <axes>
+    <axis tag="snap" name="snap" minimum="0" maximum="1000" default="0"/>
+    <axis tag="DISC" name="discrete" values="0 1000" default="0"/>
+  </axes>
+  <rules>
+    <rule name="rule_no_subs">
+      <conditionset>
+        <condition name="lalala" minimum="100" maximum="200"/>
+        <condition name="snap" minimum="10000" maximum="2000"/>
+        <condition name="snap" minimum="10000"/>
+        <condition name="snap" maximum="10000"/>
+      </conditionset>
+      <conditionset>
+        <condition name="samesees_1" minimum="200" maximum="200"/>
+        <condition name="samesees_1" minimum="200" maximum="200"/>
+        <condition name="samesees_1" minimum="200" maximum="200"/>
+      </conditionset>
+      <conditionset>
+        <condition name="samesees_2" minimum="200" maximum="200"/>
+        <condition name="samesees_2" minimum="200" maximum="200"/>
+        <condition name="samesees_2" minimum="200" maximum="200"/>
+      </conditionset>
+    </rule>
+    <rule name="rule_no_conditionset">
+      <sub name="glyphFour" with="glyphFour"/>
+    </rule>
+    <rule name="rule_values_the_same">
+      <sub name="glyphFour" with="glyphFour"/>
+    </rule>
+    <rule>
+      <sub name="glyphFour" with="glyphFour"/>
+    </rule>
+  </rules>
+  <sources>
+    <source filename="masters/geometryMaster1.ufo">
+      <location>
+        <dimension name="snap" xvalue="0"/>
+        <dimension name="discrete" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster2.ufo">
+      <location>
+        <dimension name="snap" xvalue="1000"/>
+        <dimension name="discrete" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster3.ufo">
+      <location>
+        <dimension name="snap" xvalue="500"/>
+        <dimension name="discrete" xvalue="0"/>
+      </location>
+    </source>
+  </sources>
+  <instances>
+    <instance familyname="TestFamily" stylename="TestStyle" filename="instances/generatedInstance.ufo">
+      <location>
+        <dimension name="snap" xvalue="500"/>
+        <dimension name="discrete" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="" stylename="" filename="instances/generatedInstance2.ufo">
+      <location>
+        <dimension name="snap" xvalue="600"/>
+        <dimension name="discrete" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Aa" stylename="Bb" filename="instances/Aa-Bb.ufo">
+      <location>
+        <dimension name="snap" xvalue="600"/>
+        <dimension name="discrete" xvalue="0"/>
+      </location>
+    </instance>
+  </instances>
+</designspace>

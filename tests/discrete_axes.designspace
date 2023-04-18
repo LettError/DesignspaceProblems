@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<designspace format="5.0">
+  <axes>
+    <axis tag="SNAP" name="snap" minimum="0" maximum="1000" default="0"/>
+    <axis tag="CRCK" name="crackle" values="0 500" default="0"/>
+  </axes>
+  <sources>
+    <source filename="masters/geometryMaster1.ufo">
+      <location>
+        <dimension name="snap" xvalue="0"/>
+        <dimension name="crackle" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/geometryMaster2.ufo">
+      <location>
+        <dimension name="snap" xvalue="0"/>
+        <dimension name="crackle" xvalue="1000"/>
+      </location>
+    </source>
+  </sources>
+</designspace>

@@ -296,9 +296,19 @@ class DesignSpaceChecker(object):
             self.mapper = AxisMapper(self.ds.axes)
 
     def hasDiscreteAxes(self):
-        if hasattr("hasDiscreteAxes", self.ds):
+        if hasattr(self.ds, "hasDiscreteAxes"):
             return self.ds.hasDiscreteAxes()
         return None
+
+    def getDiscreteLocations(self, bend=True):
+        # wrapper for ds.getDiscreteLocations
+        # XX not sure we need the bends here
+        # if we have discrete axes: return a list of all the defaults
+        # if we don't: return a list with the one default.
+        # so we can iterate over the answer no matter where it is from
+        if hasattr(self.ds, "getDiscreteLocations"):
+            return self.ds.getDiscreteLocations()
+        return [self.ds.newDefaultLocation(bend=True)]
 
     def checkLocationForIllegalDiscreteValues(self, location):
         # check this location for values on discrete axes that are not defined.
@@ -360,8 +370,6 @@ class DesignSpaceChecker(object):
                                 self.problems.append(DesignSpaceProblem(2,5, dict(axisName=axisName)))
         mappedDefaultLocation = self.ds.newDefaultLocation(bend=True)
         mappedDefaultCandidates = []
-        #unmappedDefaultLocation = self.ds.newDefaultLocation(bend=False)
-        #unmappedDefaultCandidates = []
         for i, sd in enumerate(self.ds.sources):
             if sd.location == mappedDefaultLocation:
                 mappedDefaultCandidates.append(sd)
@@ -444,7 +452,12 @@ class DesignSpaceChecker(object):
                 # 3,1   instance location missing
                 self.problems.append(DesignSpaceProblem(3,1, dict(path=jd.path)))
             else:
-                for axisName, axisValue in jd.location.items():
+                continuous, discrete = self.ds.splitLocation(jd.location)
+                if discrete is not None:
+                    discreteName = f" Dloc:[{self.ds.nameLocation(discrete)}]"
+                else:
+                    discreteName = ""
+                for axisName, axisValue in continuous.items():
                     if type(axisValue) == tuple:
                         thisAxisValues = list(axisValue)
                     else:
@@ -455,7 +468,7 @@ class DesignSpaceChecker(object):
                             if not  (mn <= axisValue <= mx):
                                 # 3,5   instance location requires extrapolation
                                 # 3,3   instance location has out of bounds value
-                                deets = f'axis value for {axisName} is outside of extremes: {mn}, {mx}'
+                                deets = f'axis value for {axisName} is outside of extremes: {mn}, {mx}.{discreteName}'
                                 self.problems.append(DesignSpaceProblem(3,3, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue), details=deets))
                                 self.problems.append(DesignSpaceProblem(3,5, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue), details=deets))
                         else:
@@ -513,20 +526,22 @@ class DesignSpaceChecker(object):
                 if glyphName not in glyphs:
                     glyphs[glyphName] = []
                 glyphs[glyphName].append(fontObj)
+        discreteLocations = self.getDiscreteLocations()
         for name in glyphs.keys():
             if self.nf is not None:
                 if name not in self.nf:
                     deets = f'empty glyph at default: {name}'
                     self.problems.append(DesignSpaceProblem(4,7, dict(glyphName=name), details=deets))
-                self.checkGlyph(name)
+                for discreteLocation in discreteLocations:
+                    self.checkGlyph(name, discreteLocation=discreteLocation)
 
-    def checkGlyph(self, glyphName):
+    def checkGlyph(self, glyphName, discreteLocation=None):
         # For this test all glyphs will be loaded.
         # 4.6 non-default glyph is empty
         # 4.8 contour has wrong direction
         # 4.9 incompatible constructions for glyph
         # 4.10 different unicodes in glyph
-        items = self.ds.collectMastersForGlyph(glyphName)
+        items = self.ds.collectMastersForGlyph(glyphName, discreteLocation=discreteLocation)
         # collectMastersForGlyph returns MathGlyphs that have on-point bcps added
         # we need to load the actual glyphs from the ufo.
         patterns = {}
@@ -773,11 +788,11 @@ class DesignSpaceChecker(object):
 
 
 if __name__ == "__main__":
-    print(__file__)
     import os
     path = '../../tests/viable_ds5.designspace'
-
-    print(os.path.exists(path))
+    print(f"testing {path}")
+    print("exists:",    os.path.exists(path))
     dc = DesignSpaceChecker(path)
     dc.checkEverything()
-    print(dc.problems)
+    for problem in dc.problems:
+        print(problem)
