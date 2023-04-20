@@ -454,7 +454,7 @@ class DesignSpaceChecker(object):
             else:
                 continuous, discrete = self.ds.splitLocation(jd.location)
                 if discrete is not None:
-                    discreteName = f" Dloc:[{self.ds.nameLocation(discrete)}]"
+                    discreteName = f" discrete:[{self.ds.nameLocation(discrete)}]"
                 else:
                     discreteName = ""
                 for axisName, axisValue in continuous.items():
@@ -468,7 +468,7 @@ class DesignSpaceChecker(object):
                             if not  (mn <= axisValue <= mx):
                                 # 3,5   instance location requires extrapolation
                                 # 3,3   instance location has out of bounds value
-                                deets = f'axis value for {axisName} is outside of extremes: {mn}, {mx}.{discreteName}'
+                                deets = f'axis value {axisValue} for {axisName} is outside of extremes: {mn}, {mx}.{discreteName}'
                                 self.problems.append(DesignSpaceProblem(3,3, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue), details=deets))
                                 self.problems.append(DesignSpaceProblem(3,5, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue), details=deets))
                         else:
