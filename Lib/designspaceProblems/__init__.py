@@ -169,19 +169,19 @@ class DesignSpaceChecker(object):
         self.checkDesignSpaceGeometry()
         # check sources, discrete or continuous
         discreteLocations = self.ds.getDiscreteLocations()
-        if discreteLocations:
-            for dloc in discreteLocations:
-                self.checkSources(discreteLocation=dloc)
-        else:
-            self.checkSources()
-        self.checkInstances()
+        if not discreteLocations:
+            discreteLocations = [None]
+        for dloc in discreteLocations:
+            self.checkSources(discreteLocation=dloc)
+            self.checkInstances(discreteLocation=dloc)
         if not self.hasStructuralProblems():
             # font specific
             self.ds.loadFonts()
-            self.nf = self.ds.getNeutralFont()
-            self.checkKerning()
-            self.checkFontInfo()
-            self.checkGlyphs()
+            for dloc in discreteLocations:
+                #self.nf = self.ds.getNeutralFont()
+                self.checkKerning(discreteLocation=dloc)
+                self.checkFontInfo(discreteLocation=dloc)
+                self.checkGlyphs(discreteLocation=dloc)
             self.checkRules()
             self.checkFeatures()
 
@@ -192,7 +192,7 @@ class DesignSpaceChecker(object):
         # 1.1	axis missing
         allAxes = []
         for i, ad in enumerate(self.ds.axes):
-            axisIsDiscete = hasattr(ad, "values")
+            axisIsDiscrete = hasattr(ad, "values")
             axisOK = True
             # 1.5	axis name missing
             if ad.name is None:
@@ -202,11 +202,11 @@ class DesignSpaceChecker(object):
             else:
                 axisName = ad.name
             # 1.2	axis maximum missing
-            if not axisIsDiscete and ad.maximum is None:
+            if not axisIsDiscrete and ad.maximum is None:
                 self.problems.append(DesignSpaceProblem(1,2, dict(axisName=axisName)))
                 axisOK = False
             # 1.3	axis minimum missing
-            if not axisIsDiscete and ad.minimum is None:
+            if not axisIsDiscrete and ad.minimum is None:
                 self.problems.append(DesignSpaceProblem(1,3, dict(axisName=axisName)))
                 axisOK = False
             # 1.4	axis default missing
@@ -218,7 +218,7 @@ class DesignSpaceChecker(object):
             # we need to get the mapped values for minimum, default and maximum.
             # but any problems in the axis map can only be determined if we
             # are sure the axis is valid.
-            if not axisIsDiscete:
+            if not axisIsDiscrete:
                 # its a continuous axis
                 axisMin, axisDef, axisMax = self.data_getAxisValues(axisName, mapped=False)
                 mappedAxisMin, mappedAxisDef, mappedAxisMax = self.data_getAxisValues(axisName, mapped=True)
@@ -490,6 +490,7 @@ class DesignSpaceChecker(object):
         for key, items in allLocations.items():
             # 3,4   multiple instances on location
             if len(items) > 1:
+                print('multiple instances items', items)
                 deets = f"multiple instances at {prettyLocation(items[0][1].location)}"
                 self.problems.append(DesignSpaceProblem(3,4, dict(location=items[0][1].location, instances=[b for a, b in items]), details=deets))
 
@@ -509,33 +510,29 @@ class DesignSpaceChecker(object):
                 self.problems.append(DesignSpaceProblem(3,8, dict(instance=jd), details=deets))
         # 3,9   duplicate instances
 
-    def checkGlyphs(self):
-        # check all glyphs in all fonts
+    def checkGlyphs(self, discreteLocation=None):
+        # check all glyphs in all sources for this discrete location
         # need to load the fonts before we can do this
+        #nf = self.ds.getNeutralFont(discreteLocation=discreteLocation)
 
-        discreteLocations = self.getDiscreteLocations()
-        if not discreteLocations:
-            discreteLocations = [None]
+        glyphNames = set()
+        # 4.7 default glyph is empty
+        sourceDescriptors = self.ds.findSourceDescriptorsForDiscreteLocation(discreteLocation)
+        for sourceDescriptor in sourceDescriptors:
+            sourceFont = self.ds.fonts[sourceDescriptor.name]
+            if sourceFont is None:
+                continue
+            for glyphName in sourceFont.keys():
+                glyphNames.add(glyphName)
 
-        for discreteLocation in discreteLocations:
-            glyphNames = set()
-            # 4.7 default glyph is empty
-            sourceDescriptors = self.ds.findSourceDescriptorsForDiscreteLocation(discreteLocation)
-            for sourceDescriptor in sourceDescriptors:
-                sourceFont = self.ds.fonts[sourceDescriptor.name]
-                if sourceFont is None:
-                    continue
-                for glyphName in sourceFont.keys():
-                    glyphNames.add(glyphName)
-
-            defaultFont = self.ds.findDefaultFont(discreteLocation)
-            if defaultFont is not None:
-                for glyphName in glyphNames:
-                    if glyphName not in defaultFont:
-                        deets = f'empty glyph at default: {glyphName}'
-                        self.problems.append(DesignSpaceProblem(4, 7, dict(glyphName=glyphName), details=deets))
-                    else:
-                        self.checkGlyph(glyphName, discreteLocation=discreteLocation)
+        defaultFont = self.ds.findDefaultFont(discreteLocation)
+        if defaultFont is not None:
+            for glyphName in glyphNames:
+                if glyphName not in defaultFont:
+                    deets = f'empty glyph at default: {glyphName}'
+                    self.problems.append(DesignSpaceProblem(4, 7, dict(glyphName=glyphName), details=deets))
+                else:
+                    self.checkGlyph(glyphName, discreteLocation=discreteLocation)
 
     def discreteLocationAsString(self, loc=None):
         if loc is None:
@@ -641,23 +638,24 @@ class DesignSpaceChecker(object):
                     return True
         return False
 
-    def checkKerning(self):
+    def checkKerning(self, discreteLocation=None):
         # 5,4 kerning pair missing
         # 5,1 no kerning in default
-        if self.nf is None:
+        nf = self.ds.getNeutralFont(discreteLocation=discreteLocation)
+        if nf is None:
             return
         if not self._anyKerning():
             # Check if there is *any* kerning first. If there is no kerning anywhere,
             # we should assume this is intentional and not flood warnings.
             return
-        if len(self.nf.kerning.items()) == 0:
-            self.problems.append(DesignSpaceProblem(5,1, dict(fontObj=self.nf)))
+        if len(nf.kerning.items()) == 0:
+            self.problems.append(DesignSpaceProblem(5,1, dict(fontObj=nf)))
         # 5,5 no kerning groups in default
-        if len(self.nf.groups) == 0:
-            self.problems.append(DesignSpaceProblem(5,5, dict(fontObj=self.nf)))
-        defaultGroupNames = list(self.nf.groups.keys())
+        if len(nf.groups) == 0:
+            self.problems.append(DesignSpaceProblem(5,5, dict(fontObj=nf)))
+        defaultGroupNames = list(nf.groups.keys())
         for fontName, fontObj in self.ds.fonts.items():
-            if fontObj == self.nf:
+            if fontObj == nf:
                 continue
             if fontObj is None:
                 continue
@@ -670,49 +668,51 @@ class DesignSpaceChecker(object):
             for sourceGroupName in fontObj.groups.keys():
                 if sourceGroupName not in defaultGroupNames:
                     # 5,3 kerning group missing
-                    self.problems.append(DesignSpaceProblem(5,3, dict(object=self.nf, font=prettyFontName(fontObj), groupName=sourceGroupName)))
+                    self.problems.append(DesignSpaceProblem(5,3, dict(object=nf, font=prettyFontName(fontObj), groupName=sourceGroupName)))
                 else:
                     # check if they have the same members
                     sourceGroupMembers = list(fontObj.groups[sourceGroupName])
-                    defaultGroupMembers = list(self.nf.groups[sourceGroupName])
+                    defaultGroupMembers = list(nf.groups[sourceGroupName])
                     if sourceGroupMembers != defaultGroupMembers:                    # # check if they have the same members
                         # 5,2 kerning group members do not match
                         deets = f'{sourceGroupName}: {sourceGroupMembers}, {defaultGroupMembers}'
-                        self.problems.append(DesignSpaceProblem(5,2, dict(object=self.nf, font=prettyFontName(fontObj), groupName=sourceGroupName), details=deets))
+                        self.problems.append(DesignSpaceProblem(5,2, dict(object=nf, font=prettyFontName(fontObj), groupName=sourceGroupName), details=deets))
 
-    def checkFontInfo(self):
+    def checkFontInfo(self, discreteLocation=None):
+        nf = self.ds.getNeutralFont(discreteLocation=discreteLocation)
         # check some basic font info values
         # entirely debateable what we should be testing.
         # Let's start with basic geometry
         # 6,3 source font info missing value for xheight
-        if self.nf is None:
+        if nf is None:
             return
-        if self.nf.info.unitsPerEm is None:
+        if nf.info.unitsPerEm is None:
             # 6,0 default font info missing value for units per em
-            self.problems.append(DesignSpaceProblem(6,0, dict(object=self.nf, font=prettyFontName(self.nf))))
-        if self.nf.info.ascender is None:
+            self.problems.append(DesignSpaceProblem(6,0, dict(object=nf, font=prettyFontName(nf))))
+        if nf.info.ascender is None:
             # 6,1 default font info missing value for ascender
-            self.problems.append(DesignSpaceProblem(6,1, dict(object=self.nf, font=prettyFontName(self.nf))))
-        if self.nf.info.descender is None:
+            self.problems.append(DesignSpaceProblem(6,1, dict(object=nf, font=prettyFontName(nf))))
+        if nf.info.descender is None:
             # 6,2 default font info missing value for descender
-            self.problems.append(DesignSpaceProblem(6,2, dict(object=self.nf, font=prettyFontName(self.nf))))
-        if self.nf.info.descender is None:
+            self.problems.append(DesignSpaceProblem(6,2, dict(object=nf, font=prettyFontName(nf))))
+        if nf.info.descender is None:
             # 6,3 default font info missing value for xheight
-            self.problems.append(DesignSpaceProblem(6,3, dict(object=self.nf, font=prettyFontName(self.nf))))
+            self.problems.append(DesignSpaceProblem(6,3, dict(object=nf, font=prettyFontName(nf))))
         for fontName, fontObj in self.ds.fonts.items():
-            if fontObj == self.nf:
+            if fontObj == nf:
                 continue
             if fontObj is None:
                 continue
             # 6,4 source font unitsPerEm value different from default unitsPerEm
-            if fontObj.info.unitsPerEm != self.nf.info.unitsPerEm:
-                self.problems.append(DesignSpaceProblem(6,4, dict(object=fontObj, font=prettyFontName(fontObj), fontValue=fontObj.info.unitsPerEm, defaultValue=self.nf.info.unitsPerEm)))
+            if fontObj.info.unitsPerEm != nf.info.unitsPerEm:
+                self.problems.append(DesignSpaceProblem(6,4, dict(object=fontObj, font=prettyFontName(fontObj), fontValue=fontObj.info.unitsPerEm, defaultValue=nf.info.unitsPerEm)))
 
-    def checkRules(self):
+    def checkRules(self, discreteLocation=None):
         # check the rules in the designspace
         # 7.0 source glyph missing
         # 7.1 destination glyph missing
         # 7.8 duplicate conditions
+        #nf = self.ds.getNeutralFont(discreteLocation=discreteLocation)
         axisValues = self.data_getAxisValues()
         for i, rd in enumerate(self.ds.rules):
             if rd.name is None:
