@@ -607,7 +607,7 @@ class DesignSpaceChecker(object):
             contours[contourCount] += 1
         unicodeResults = unicodes.evaluate()
         if unicodeResults:
-            deets = f'multiple unicode values in glyph {glyphName} {dLocString}: {unicodeResults}'
+            deets = f'multiple unicode values in glyph {glyphName} {dLocString}: {", ".join(unicodeResults)}'
             self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults, discreteLocation=dLocString), details=deets))
         if len(components) != 0:
             for baseGlyphName, refCount in components.items():
