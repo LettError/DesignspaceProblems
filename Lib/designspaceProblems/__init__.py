@@ -560,7 +560,6 @@ class DesignSpaceChecker(object):
         components = {}
         unicodes = UnicodeCollector()
         anchors = {}
-        print(items)
         for loc, mg, masters in items:
             masterName = masters.get('sourceName')
             masterFont = self.ds.fonts.get(masterName)
@@ -812,4 +811,4 @@ if __name__ == "__main__":
 
     print(dc.discreteLocationAsString({'countedItems': 1.0, 'outlined': 0.0}))
     print(dc.discreteLocationAsString())
-    print(dc.discreteLocationAsString({}))    
+    print(dc.discreteLocationAsString({}))
