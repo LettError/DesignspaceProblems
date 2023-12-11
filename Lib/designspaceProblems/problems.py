@@ -57,9 +57,9 @@ class DesignSpaceProblem(object):
         (2,2):  "source UFO format too old, recommend update.",
         (2,3):  "source layer missing",
         (2,4):  "source location missing",
-        (2,5):  "source location has value for undefined axis",
-        (2,6):  "source location has out of bounds value",
-        (2,13): "location with illegal value for discrete axis",
+        (2,5):  "undefined axis in source location",
+        (2,6):  "out of bounds value in source location",
+        (2,13): "illegal value in discrete axis",
         (2,7):  "no source on unmapped default location",
         (2,12): "no source on mapped default location",
         (2,8):  "multiple sources on default location",
@@ -69,8 +69,8 @@ class DesignSpaceProblem(object):
 
         # 3 instances
         (3,1):  'instance location missing',
-        (3,2):  "instance location has value for undefined axis",
-        (3,3):  "instance location has out of bounds value",
+        (3,2):  "undefined axis in instance location",
+        (3,3):  "out of bounds value in instance location",
         (3,4):  "multiple instances on location",
         (3,5):  "instance location requires extrapolation",
         (3,9):  "instance location is anisotropic",
@@ -84,19 +84,19 @@ class DesignSpaceProblem(object):
         (4,0): 'different number of contours in glyph',
         (4,1): 'different components in glyph',
         (4,2): 'different anchors in glyph',
-        (4,3): 'different number of on-curve points on contour',
-        (4,4): 'different number of off-curve points on contour',
+        (4,3): 'different on-curves on contour',
+        (4,4): 'different off-curves on contour',
         (4,5): 'curve has wrong type',
         (4,6): 'non-default glyph is empty',
         (4,7): 'default glyph is empty',
         (4,8): 'contour has wrong direction',
-        (4,9): 'incompatible constructions for glyph',
+        (4,9): 'incompatible glyph',
         (4,10): 'different unicodes in glyph',
 
         # 5 kerning
         (5,0): 'no kerning in source',
         (5,1): 'no kerning in default',
-        (5,2): 'kerning group members do not match',
+        (5,2): 'kerning group does not match',
         (5,3): 'kerning group missing in default',
         (5,4): 'kerning pair missing',
         (5,5): 'no kerning groups in default',
@@ -104,11 +104,11 @@ class DesignSpaceProblem(object):
         (5,7): 'kerning group members sorted differently',
 
         # 6 font info
-        (6,0): 'default font info missing value for units per em',
-        (6,1): 'default font info missing value for ascender',
-        (6,2): 'default font info missing value for descender',
-        (6,3): 'default font info missing value for xheight',
-        (6,4): 'source font unitsPerEm value different from default unitsPerEm',
+        (6,0): 'default font info no upm value',
+        (6,1): 'default font info no ascender value',
+        (6,2): 'default font info no descender value',
+        (6,3): 'default font info no xheight value',
+        (6,4): 'source font upm value different from default upm',
 
         # 7 rules
         (7,0): 'source glyph missing',
@@ -168,7 +168,7 @@ class DesignSpaceProblem(object):
         if self.details is not None:
             dt += " / " + self.details
         if self.data is not None:
-            dt += ", " + ' '.join(f"{key}: {info}" for key, info in self.data.items() if key != "object")
+            dt += ", " + ', '.join(f"{key}: {info}" for key, info in self.data.items() if key != "object" and info is not "")
         return '[' + ": ".join(t) + dt + ' %s' % str(key) + ']'
 
 def allProblems():

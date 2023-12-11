@@ -1,4 +1,4 @@
-# make some tests
+-# make some tests
 
 import os, glob
 from pprint import pprint

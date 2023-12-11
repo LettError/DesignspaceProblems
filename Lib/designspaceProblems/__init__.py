@@ -53,7 +53,7 @@ def getUFOLayers(ufoPath):
 class UnicodeCollector(object):
     def __init__(self):
         # do some admin on the unicodes of master glyphs
-        # aeach glyph can have multiple unicodes
+        # each glyph can have multiple unicodes
         # so rake in all unicodes of all masters
         self.unicodes = {}
         self.masterCount = 0
@@ -442,9 +442,10 @@ class DesignSpaceChecker(object):
         defaultLocation = self.ds.newDefaultLocation(bend=True)
         defaultCandidates = []
 
+        discreteName = ""
         if discreteLocation:
             # check f there are instances defined for this discrete location
-            pass
+            discreteName = self.discreteLocationAsString(discreteLocation)
         if len(self.ds.instances) == 0:
             self.problems.append(DesignSpaceProblem(3,10))
         for i, jd in enumerate(self.ds.instances):
@@ -453,10 +454,6 @@ class DesignSpaceChecker(object):
                 self.problems.append(DesignSpaceProblem(3,1, dict(path=jd.path)))
             else:
                 continuous, discrete = self.ds.splitLocation(jd.location)
-                if discrete is not None:
-                    discreteName = f" discrete:[{self.ds.nameLocation(discrete)}]"
-                else:
-                    discreteName = ""
                 for axisName, axisValue in continuous.items():
                     if type(axisValue) == tuple:
                         thisAxisValues = list(axisValue)
@@ -468,9 +465,9 @@ class DesignSpaceChecker(object):
                             if not  (mn <= axisValue <= mx):
                                 # 3,5   instance location requires extrapolation
                                 # 3,3   instance location has out of bounds value
-                                deets = f'axis value {axisValue} for {axisName} is outside of extremes: {mn}, {mx}.{discreteName}'
-                                self.problems.append(DesignSpaceProblem(3,3, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue), details=deets))
-                                self.problems.append(DesignSpaceProblem(3,5, dict(axisMinimum=mn, axisMaximum=mx, locationValue=axisValue), details=deets))
+                                deets = f'{jd.familyName}-{jd.styleName} {axisName}: {axisValue} is outside of extremes'
+                                self.problems.append(DesignSpaceProblem(3,3, dict(min=mn, max=mx, value=axisValue), details=deets))
+                                self.problems.append(DesignSpaceProblem(3,5, dict(min=mn, max=mx, value=axisValue), details=deets))
                         else:
                             # doesn't happen as ufoprocessor won't read add undefined axes to the locations
                             # 3,2   instance location has value for undefined axis
@@ -480,11 +477,11 @@ class DesignSpaceChecker(object):
             self.checkLocationForIllegalDiscreteValues(jd.location)
         allLocations = {}
         for i, jd in enumerate(self.ds.instances):
-            if jd.location is None:
-                deets = f'No location for {jd.familyName} {jd.styleName}'
+            if not jd.designLocation and not jd.userLocation:
+                deets = f'No design or user location for {jd.familyName} {jd.styleName}'
                 self.problems.append(DesignSpaceProblem(3,1, dict(instance=i), details=deets))
             else:
-                key = list(jd.location.items())
+                key = list(jd.getFullDesignLocation(self.ds).items())
                 key.sort()
                 key = tuple(key)
                 if key not in allLocations:
@@ -515,25 +512,45 @@ class DesignSpaceChecker(object):
     def checkGlyphs(self):
         # check all glyphs in all fonts
         # need to load the fonts before we can do this
-        if not hasattr(self.ds, "collectMastersForGlyph"):
-            return
-        glyphs = {}
-        # 4.7 default glyph is empty
-        for fontName, fontObj in self.ds.fonts.items():
-            if fontObj is None:
-                continue
-            for glyphName in fontObj.keys():
-                if glyphName not in glyphs:
-                    glyphs[glyphName] = []
-                glyphs[glyphName].append(fontObj)
+
         discreteLocations = self.getDiscreteLocations()
-        for name in glyphs.keys():
-            if self.nf is not None:
-                if name not in self.nf:
-                    deets = f'empty glyph at default: {name}'
-                    self.problems.append(DesignSpaceProblem(4,7, dict(glyphName=name), details=deets))
-                for discreteLocation in discreteLocations:
-                    self.checkGlyph(name, discreteLocation=discreteLocation)
+        if not discreteLocations:
+            discreteLocations = [None]
+
+        for discreteLocation in discreteLocations:
+            glyphNames = set()
+            # 4.7 default glyph is empty
+            sourceDescriptors = self.ds.findSourceDescriptorsForDiscreteLocation(discreteLocation)
+            for sourceDescriptor in sourceDescriptors:
+                sourceFont = self.ds.fonts[sourceDescriptor.name]
+                if sourceFont is None:
+                    continue
+                for glyphName in sourceFont.keys():
+                    glyphNames.add(glyphName)
+
+            defaultFont = self.ds.findDefaultFont(discreteLocation)
+            if defaultFont is not None:
+                for glyphName in glyphNames:
+                    if glyphName not in defaultFont:
+                        deets = f'empty glyph at default: {glyphName}'
+                        self.problems.append(DesignSpaceProblem(4, 7, dict(glyphName=glyphName), details=deets))
+                    else:
+                        self.checkGlyph(glyphName, discreteLocation=discreteLocation)
+
+    def discreteLocationAsString(self, loc=None):
+        if loc is None:
+            return ""
+        t = []
+        axisNames = list(loc.keys())
+        axisNames.sort()
+        for name in axisNames:
+            v = loc[name]
+            if int(v) == v:
+                vt = f"{int(v)}"
+            else:
+                vt = f"{v:3.2f}"
+            t.append(f"{name}:{vt}")
+        return " ".join(t)
 
     def checkGlyph(self, glyphName, discreteLocation=None):
         # For this test all glyphs will be loaded.
@@ -541,9 +558,8 @@ class DesignSpaceChecker(object):
         # 4.8 contour has wrong direction
         # 4.9 incompatible constructions for glyph
         # 4.10 different unicodes in glyph
-        items = self.ds.collectMastersForGlyph(glyphName, discreteLocation=discreteLocation)
-        # collectMastersForGlyph returns MathGlyphs that have on-point bcps added
-        # we need to load the actual glyphs from the ufo.
+        dLocString = self.discreteLocationAsString(discreteLocation)
+        items, unicodesFromOperator = self.ds.collectSourcesForGlyph(glyphName, discreteLocation=discreteLocation, asMathGlyph=False)
         patterns = {}
         contours = {}
         components = {}
@@ -591,27 +607,27 @@ class DesignSpaceChecker(object):
             contours[contourCount] += 1
         unicodeResults = unicodes.evaluate()
         if unicodeResults:
-            deets = f'multiple unicode values in glyph {glyphName}: {unicodeResults}'
-            self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults), details=deets))
+            deets = f'multiple unicode values in glyph {glyphName} {dLocString}: {unicodeResults}'
+            self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults, discreteLocation=dLocString), details=deets))
         if len(components) != 0:
             for baseGlyphName, refCount in components.items():
                 if refCount % len(items) != 0:
                     # there can be multiples of components with the same baseglyph
                     # so the actual number of components is not important
                     # but each master should have the same number
-                    self.problems.append(DesignSpaceProblem(4,1, dict(glyphName=glyphName, baseGlyph=baseGlyphName)))
+                    self.problems.append(DesignSpaceProblem(4,1, dict(glyphName=glyphName, baseGlyph=baseGlyphName, discreteLocation=dLocString)))
         if len(anchors) != 0:
             for anchorName, anchorCount in anchors.items():
                 if anchorCount < len(items):
                     # 4.2 different number of anchors in glyph
-                    self.problems.append(DesignSpaceProblem(4,2, dict(glyphName=glyphName, anchorName=anchorName)))
+                    self.problems.append(DesignSpaceProblem(4,2, dict(glyphName=glyphName, anchorName=anchorName, discreteLocation=dLocString)))
         if len(contours) != 1:
             # 4.0 different number of contours in glyph
-            self.problems.append(DesignSpaceProblem(4,0, dict(glyphName=glyphName)))
+            self.problems.append(DesignSpaceProblem(4,0, dict(glyphName=glyphName, discreteLocation=dLocString)))
         if len(patterns.keys()) > 1:
             # 4,9 incompatible constructions for glyph
             # maybe this is enough to start with
-            self.problems.append(DesignSpaceProblem(4,9, dict(glyphName=glyphName)))
+            self.problems.append(DesignSpaceProblem(4,9, dict(glyphName=glyphName, discreteLocation=dLocString)))
             # 4.1 different number of components in glyph
             # 4.3 different number of on-curve points on contour
             # 4.4 different number of off-curve points on contour
@@ -789,10 +805,15 @@ class DesignSpaceChecker(object):
 
 if __name__ == "__main__":
     import os
-    path = '../../tests/viable_ds5.designspace'
+    path = "../../tests_ds5/ds5.designspace"
     print(f"testing {path}")
     print("exists:",    os.path.exists(path))
     dc = DesignSpaceChecker(path)
     dc.checkEverything()
     for problem in dc.problems:
         print(problem)
+
+
+    print(dc.discreteLocationAsString({'countedItems': 1.0, 'outlined': 0.0}))
+    print(dc.discreteLocationAsString())
+    print(dc.discreteLocationAsString({}))

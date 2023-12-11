@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>designspace.location</key>
+    <array>
+      <array>
+        <string>width</string>
+        <array>
+          <real>400.0</real>
+          <real>700.0</real>
+        </array>
+      </array>
+      <array>
+        <string>countedItems</string>
+        <real>1.0</real>
+      </array>
+      <array>
+        <string>outlined</string>
+        <real>0.0</real>
+      </array>
+    </array>
+    <key>designspace.mathmodel</key>
+    <string>mutatorMath</string>
+    <key>public.glyphOrder</key>
+    <array>
+      <string>glyphTwo</string>
+      <string>glyphOne</string>
+    </array>
+  </dict>
+</plist>

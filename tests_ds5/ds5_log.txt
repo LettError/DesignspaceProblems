@@ -1,0 +1,638 @@
+2023-10-23 19:20
+## ../../Tests/ds5/ds5.designspace
+	UFO version: 3
+	round Geometry: False
+	interpolating with varlib
+## loadFonts
+	- loaded: geometrySource_c_400_d1_1_d2_0.ufo, layer: public.default, format: 3, id: 101853AD0
+	- loaded: geometrySource_c_400_d1_1_d2_1.ufo, layer: public.default, format: 3, id: 1022E00D0
+	- loaded: geometrySource_c_400_d1_2_d2_0.ufo, layer: public.default, format: 3, id: 106A27510
+	- loaded: geometrySource_c_400_d1_2_d2_1.ufo, layer: public.default, format: 3, id: 106A27150
+	- loaded: geometrySource_c_400_d1_3_d2_0.ufo, layer: public.default, format: 3, id: 106A31D50
+	- loaded: geometrySource_c_400_d1_3_d2_1.ufo, layer: public.default, format: 3, id: 106A3CB50
+	- loaded: geometrySource_c_1000_d1_1_d2_0.ufo, layer: public.default, format: 3, id: 106A25E10
+	- loaded: geometrySource_c_1000_d1_1_d2_1.ufo, layer: public.default, format: 3, id: 106A321D0
+	- loaded: geometrySource_c_1000_d1_2_d2_0.ufo, layer: public.default, format: 3, id: 106A3FDD0
+	- loaded: geometrySource_c_1000_d1_2_d2_1.ufo, layer: public.default, format: 3, id: 106A1BD90
+	- loaded: geometrySource_c_1000_d1_3_d2_0.ufo, layer: public.default, format: 3, id: 106A3EC10
+	- loaded: geometrySource_c_1000_d1_3_d2_1.ufo, layer: public.default, format: 3, id: 106A4F910
+		-- loadFonts requested, but fonts are loaded already and no reload requested
+## generateUFO
+	- Generating UFO at designspaceLocation {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 0.0}
+			Anisotropic location for "geometryInstance One Wide Solid"
+			{'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 0.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a59650>
+			2 glyphs added
+		geometryInstance_c_(400, 700)_d1_1_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 1.0}
+			Anisotropic location for "geometryInstance One Wide Open"
+			{'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 1.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c0e690>
+			2 glyphs added
+		geometryInstance_c_(400, 700)_d1_1_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 0.0}
+			Anisotropic location for "geometryInstance Two Wide Solid"
+			{'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 0.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c2d890>
+			2 glyphs added
+		geometryInstance_c_(400, 700)_d1_2_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 1.0}
+			Anisotropic location for "geometryInstance Two Wide Open"
+			{'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 1.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c162d0>
+			2 glyphs added
+		geometryInstance_c_(400, 700)_d1_2_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 0.0}
+			Anisotropic location for "geometryInstance Three Wide Solid"
+			{'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 0.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c66fd0>
+			2 glyphs added
+		geometryInstance_c_(400, 700)_d1_3_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 1.0}
+			Anisotropic location for "geometryInstance Three Wide Open"
+			{'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 1.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106ca2050>
+			2 glyphs added
+		geometryInstance_c_(400, 700)_d1_3_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 300.0, 'countedItems': 1.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 300.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c640d0>
+			2 glyphs added
+		geometryInstance_c_300_d1_1_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 300.0, 'countedItems': 1.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 300.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c92ed0>
+			2 glyphs added
+		geometryInstance_c_300_d1_1_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 300.0, 'countedItems': 2.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 300.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cab150>
+			2 glyphs added
+		geometryInstance_c_300_d1_2_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 300.0, 'countedItems': 2.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 300.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c87290>
+			2 glyphs added
+		geometryInstance_c_300_d1_2_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 300.0, 'countedItems': 3.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 300.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cab490>
+			2 glyphs added
+		geometryInstance_c_300_d1_3_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 300.0, 'countedItems': 3.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 300.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a4d0d0>
+			2 glyphs added
+		geometryInstance_c_300_d1_3_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 400.0, 'countedItems': 1.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 400.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cabf90>
+			2 glyphs added
+		geometryInstance_c_400_d1_1_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 400.0, 'countedItems': 1.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 400.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cb99d0>
+			2 glyphs added
+		geometryInstance_c_400_d1_1_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 400.0, 'countedItems': 2.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 400.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cab9d0>
+			2 glyphs added
+		geometryInstance_c_400_d1_2_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 400.0, 'countedItems': 2.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 400.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cbbb90>
+			2 glyphs added
+		geometryInstance_c_400_d1_2_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 400.0, 'countedItems': 3.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 400.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106ca3ed0>
+			2 glyphs added
+		geometryInstance_c_400_d1_3_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 400.0, 'countedItems': 3.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 400.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cbb410>
+			2 glyphs added
+		geometryInstance_c_400_d1_3_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 550.0, 'countedItems': 1.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 550.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cabe90>
+			2 glyphs added
+		geometryInstance_c_550_d1_1_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 550.0, 'countedItems': 1.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 550.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c853d0>
+			2 glyphs added
+		geometryInstance_c_550_d1_1_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 550.0, 'countedItems': 2.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 550.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c0f3d0>
+			2 glyphs added
+		geometryInstance_c_550_d1_2_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 550.0, 'countedItems': 2.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 550.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cb8850>
+			2 glyphs added
+		geometryInstance_c_550_d1_2_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 550.0, 'countedItems': 3.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 550.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cba190>
+			2 glyphs added
+		geometryInstance_c_550_d1_3_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 550.0, 'countedItems': 3.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 550.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cb9250>
+			2 glyphs added
+		geometryInstance_c_550_d1_3_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 700.0, 'countedItems': 1.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 700.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cba050>
+			2 glyphs added
+		geometryInstance_c_700_d1_1_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 700.0, 'countedItems': 1.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 700.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cb8650>
+			2 glyphs added
+		geometryInstance_c_700_d1_1_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 700.0, 'countedItems': 2.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 700.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cbb550>
+			2 glyphs added
+		geometryInstance_c_700_d1_2_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 700.0, 'countedItems': 2.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 700.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cbbb10>
+			2 glyphs added
+		geometryInstance_c_700_d1_2_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 700.0, 'countedItems': 3.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 700.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cb8cd0>
+			2 glyphs added
+		geometryInstance_c_700_d1_3_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 700.0, 'countedItems': 3.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 700.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cb9d50>
+			2 glyphs added
+		geometryInstance_c_700_d1_3_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 1000.0, 'countedItems': 1.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 1000.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cb9f10>
+			2 glyphs added
+		geometryInstance_c_1000_d1_1_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 1000.0, 'countedItems': 1.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 1000.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cbbfd0>
+			2 glyphs added
+		geometryInstance_c_1000_d1_1_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 1000.0, 'countedItems': 2.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 1000.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c925d0>
+			2 glyphs added
+		geometryInstance_c_1000_d1_2_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 1000.0, 'countedItems': 2.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 1000.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cbbb10>
+			2 glyphs added
+		geometryInstance_c_1000_d1_2_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 1000.0, 'countedItems': 3.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 1000.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c86250>
+			2 glyphs added
+		geometryInstance_c_1000_d1_3_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 1000.0, 'countedItems': 3.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 1000.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cba290>
+			2 glyphs added
+		geometryInstance_c_1000_d1_3_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 1100.0, 'countedItems': 1.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 1100.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cb9210>
+			2 glyphs added
+		geometryInstance_c_1100_d1_1_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 1100.0, 'countedItems': 1.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 1100.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cba4d0>
+			2 glyphs added
+		geometryInstance_c_1100_d1_1_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 1100.0, 'countedItems': 2.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 1100.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cbabd0>
+			2 glyphs added
+		geometryInstance_c_1100_d1_2_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 1100.0, 'countedItems': 2.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 1100.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106ca2050>
+			2 glyphs added
+		geometryInstance_c_1100_d1_2_d2_1.ufo
+	- Generating UFO at designspaceLocation {'width': 1100.0, 'countedItems': 3.0, 'outlined': 0.0}
+			makeOneKerning for {'width': 1100.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c91050>
+			2 glyphs added
+		geometryInstance_c_1100_d1_3_d2_0.ufo
+	- Generating UFO at designspaceLocation {'width': 1100.0, 'countedItems': 3.0, 'outlined': 1.0}
+			makeOneKerning for {'width': 1100.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c91110>
+			2 glyphs added
+		geometryInstance_c_1100_d1_3_d2_1.ufo
+		Generated 84 glyphs altogether.
+		-- loadFonts requested, but fonts are loaded already and no reload requested
+			Anisotropic location for "geometryInstance One Wide Solid"
+			{'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 0.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c92690>
+			1 glyphs added
+			Anisotropic location for "geometryInstance One Wide Open"
+			{'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 1.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a7a9d0>
+			1 glyphs added
+			Anisotropic location for "geometryInstance Two Wide Solid"
+			{'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 0.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c70e50>
+			1 glyphs added
+			Anisotropic location for "geometryInstance Two Wide Open"
+			{'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 1.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a6ec10>
+			1 glyphs added
+			Anisotropic location for "geometryInstance Three Wide Solid"
+			{'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 0.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a79410>
+			1 glyphs added
+			Anisotropic location for "geometryInstance Three Wide Open"
+			{'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 1.0}
+			makeOneKerning for {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': (400.0, 700.0), 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106ca21d0>
+			1 glyphs added
+			makeOneKerning for {'width': 300.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c3fcd0>
+			1 glyphs added
+			makeOneKerning for {'width': 300.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a5b010>
+			1 glyphs added
+			makeOneKerning for {'width': 300.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c46a10>
+			1 glyphs added
+			makeOneKerning for {'width': 300.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c15a50>
+			1 glyphs added
+			makeOneKerning for {'width': 300.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106ca2550>
+			1 glyphs added
+			makeOneKerning for {'width': 300.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 300.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a3c490>
+			1 glyphs added
+			makeOneKerning for {'width': 400.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c72e90>
+			1 glyphs added
+			makeOneKerning for {'width': 400.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c46010>
+			1 glyphs added
+			makeOneKerning for {'width': 400.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c15350>
+			1 glyphs added
+			makeOneKerning for {'width': 400.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c16d90>
+			1 glyphs added
+			makeOneKerning for {'width': 400.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a7a650>
+			1 glyphs added
+			makeOneKerning for {'width': 400.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphOne', 'glyphTwo'), 100), (('glyphTwo', 'glyphOne'), -100), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 400.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106ca3190>
+			1 glyphs added
+			makeOneKerning for {'width': 550.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c46010>
+			1 glyphs added
+			makeOneKerning for {'width': 550.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106cab290>
+			1 glyphs added
+			makeOneKerning for {'width': 550.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c93e90>
+			1 glyphs added
+			makeOneKerning for {'width': 550.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106ca8e50>
+			1 glyphs added
+			makeOneKerning for {'width': 550.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c15ad0>
+			1 glyphs added
+			makeOneKerning for {'width': 550.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -275), (('glyphOne', 'glyphTwo'), 275), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 550.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106caa010>
+			1 glyphs added
+			makeOneKerning for {'width': 700.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c93310>
+			1 glyphs added
+			makeOneKerning for {'width': 700.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c92050>
+			1 glyphs added
+			makeOneKerning for {'width': 700.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a78a10>
+			1 glyphs added
+			makeOneKerning for {'width': 700.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c70210>
+			1 glyphs added
+			makeOneKerning for {'width': 700.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c44810>
+			1 glyphs added
+			makeOneKerning for {'width': 700.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -450), (('glyphOne', 'glyphTwo'), 450), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 700.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c71990>
+			1 glyphs added
+			makeOneKerning for {'width': 1000.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c46c50>
+			1 glyphs added
+			makeOneKerning for {'width': 1000.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c93010>
+			1 glyphs added
+			makeOneKerning for {'width': 1000.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a7a690>
+			1 glyphs added
+			makeOneKerning for {'width': 1000.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c17350>
+			1 glyphs added
+			makeOneKerning for {'width': 1000.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c44d90>
+			1 glyphs added
+			makeOneKerning for {'width': 1000.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1000.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c71410>
+			1 glyphs added
+			makeOneKerning for {'width': 1100.0, 'countedItems': 1.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 1.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c91910>
+			1 glyphs added
+			makeOneKerning for {'width': 1100.0, 'countedItems': 1.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 1.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106ca2ad0>
+			1 glyphs added
+			makeOneKerning for {'width': 1100.0, 'countedItems': 2.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 2.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c70e10>
+			1 glyphs added
+			makeOneKerning for {'width': 1100.0, 'countedItems': 2.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 2.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a58f90>
+			1 glyphs added
+			makeOneKerning for {'width': 1100.0, 'countedItems': 3.0, 'outlined': 0.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 3.0, 'outlined': 0.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a7b710>
+			1 glyphs added
+			makeOneKerning for {'width': 1100.0, 'countedItems': 3.0, 'outlined': 1.0}
+				4 kerning pairs added
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphOne'), 400), (('glyphTwo', 'glyphOne'), -800), (('glyphOne', 'glyphTwo'), 800), (('glyphTwo', 'glyphTwo'), -400)])
+			makeOneInfo for {'width': 1100.0, 'countedItems': 3.0, 'outlined': 1.0}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106a7a890>
+			1 glyphs added
+			makeOneKerning for {'countedItems': 3.0, 'outlined': 1.0, 'width': 963}
+				makeOneKerning outcome: dict_items([(('glyphOne', 'glyphTwo'), 756.8333333333334)])
+			makeOneInfo for {'countedItems': 1.0, 'outlined': 0.0, 'width': 557}
+				makeOneInfo outcome: <fontMath.mathInfo.MathInfo object at 0x106c0db50>
