@@ -76,7 +76,10 @@ class UnicodeCollector(object):
         incomplete = []
         for u, count in self.unicodes.items():
             if count != self.masterCount:
-                incomplete.append(u)
+                if u is None:
+                    incomplete.append("None")
+                else:
+                    incomplete.append(f"0x{u:X}")
         return incomplete
 
 
@@ -490,7 +493,6 @@ class DesignSpaceChecker(object):
         for key, items in allLocations.items():
             # 3,4   multiple instances on location
             if len(items) > 1:
-                print('multiple instances items', items)
                 deets = f"multiple instances at {prettyLocation(items[0][1].location)}"
                 self.problems.append(DesignSpaceProblem(3,4, dict(location=items[0][1].location, instances=[b for a, b in items]), details=deets))
 
@@ -605,7 +607,10 @@ class DesignSpaceChecker(object):
         unicodeResults = unicodes.evaluate()
         if unicodeResults:
             deets = f'multiple unicode values in glyph {glyphName} {dLocString}: {", ".join(unicodeResults)}'
-            self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults, discreteLocation=dLocString), details=deets))
+            if discreteLocation is not None:
+                self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults, discreteLocation=dLocString)))
+            else:
+                self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults)))
         if len(components) != 0:
             for baseGlyphName, refCount in components.items():
                 if refCount % len(items) != 0:
@@ -661,14 +666,14 @@ class DesignSpaceChecker(object):
                 continue
             # 5,0 no kerning in source
             if len(fontObj.kerning.keys()) == 0:
-                self.problems.append(DesignSpaceProblem(5,0, dict(object=fontObj, font=prettyFontName(fontObj))))
+                self.problems.append(DesignSpaceProblem(5,0, dict(font=prettyFontName(fontObj))))
             # 5,6 no kerning groups in source
             if len(fontObj.groups.keys()) == 0:
-                self.problems.append(DesignSpaceProblem(5,6, dict(object=fontObj, font=prettyFontName(fontObj))))
+                self.problems.append(DesignSpaceProblem(5,6, dict(font=prettyFontName(fontObj))))
             for sourceGroupName in fontObj.groups.keys():
                 if sourceGroupName not in defaultGroupNames:
                     # 5,3 kerning group missing
-                    self.problems.append(DesignSpaceProblem(5,3, dict(object=nf, font=prettyFontName(fontObj), groupName=sourceGroupName)))
+                    self.problems.append(DesignSpaceProblem(5,3, dict(font=prettyFontName(fontObj), groupName=sourceGroupName)))
                 else:
                     # check if they have the same members
                     sourceGroupMembers = list(fontObj.groups[sourceGroupName])
@@ -676,7 +681,7 @@ class DesignSpaceChecker(object):
                     if sourceGroupMembers != defaultGroupMembers:                    # # check if they have the same members
                         # 5,2 kerning group members do not match
                         deets = f'{sourceGroupName}: {sourceGroupMembers}, {defaultGroupMembers}'
-                        self.problems.append(DesignSpaceProblem(5,2, dict(object=nf, font=prettyFontName(fontObj), groupName=sourceGroupName), details=deets))
+                        self.problems.append(DesignSpaceProblem(5,2, dict(font=prettyFontName(fontObj), groupName=sourceGroupName), details=deets))
 
     def checkFontInfo(self, discreteLocation=None):
         nf = self.ds.getNeutralFont(discreteLocation=discreteLocation)
@@ -688,16 +693,16 @@ class DesignSpaceChecker(object):
             return
         if nf.info.unitsPerEm is None:
             # 6,0 default font info missing value for units per em
-            self.problems.append(DesignSpaceProblem(6,0, dict(object=nf, font=prettyFontName(nf))))
+            self.problems.append(DesignSpaceProblem(6,0, dict(font=prettyFontName(nf))))
         if nf.info.ascender is None:
             # 6,1 default font info missing value for ascender
-            self.problems.append(DesignSpaceProblem(6,1, dict(object=nf, font=prettyFontName(nf))))
+            self.problems.append(DesignSpaceProblem(6,1, dict(font=prettyFontName(nf))))
         if nf.info.descender is None:
             # 6,2 default font info missing value for descender
-            self.problems.append(DesignSpaceProblem(6,2, dict(object=nf, font=prettyFontName(nf))))
+            self.problems.append(DesignSpaceProblem(6,2, dict(font=prettyFontName(nf))))
         if nf.info.descender is None:
             # 6,3 default font info missing value for xheight
-            self.problems.append(DesignSpaceProblem(6,3, dict(object=nf, font=prettyFontName(nf))))
+            self.problems.append(DesignSpaceProblem(6,3, dict(font=prettyFontName(nf))))
         for fontName, fontObj in self.ds.fonts.items():
             if fontObj == nf:
                 continue
@@ -705,14 +710,13 @@ class DesignSpaceChecker(object):
                 continue
             # 6,4 source font unitsPerEm value different from default unitsPerEm
             if fontObj.info.unitsPerEm != nf.info.unitsPerEm:
-                self.problems.append(DesignSpaceProblem(6,4, dict(object=fontObj, font=prettyFontName(fontObj), fontValue=fontObj.info.unitsPerEm, defaultValue=nf.info.unitsPerEm)))
+                self.problems.append(DesignSpaceProblem(6,4, dict(font=prettyFontName(fontObj), fontValue=fontObj.info.unitsPerEm, defaultValue=nf.info.unitsPerEm)))
 
     def checkRules(self, discreteLocation=None):
         # check the rules in the designspace
         # 7.0 source glyph missing
         # 7.1 destination glyph missing
         # 7.8 duplicate conditions
-        #nf = self.ds.getNeutralFont(discreteLocation=discreteLocation)
         axisValues = self.data_getAxisValues()
         for i, rd in enumerate(self.ds.rules):
             if rd.name is None:
@@ -729,10 +733,10 @@ class DesignSpaceChecker(object):
                         continue
                     if a not in fontObj:
                         # 7.0 source glyph missing
-                        self.problems.append(DesignSpaceProblem(7,0, data=dict(rule=name, glyphName=a, object=fontObj, font=prettyFontName(fontObj))))
+                        self.problems.append(DesignSpaceProblem(7,0, data=dict(rule=name, glyphName=a, font=prettyFontName(fontObj))))
                     if b not in fontObj:
                         # 7.1 destination glyph missing
-                        self.problems.append(DesignSpaceProblem(7,1, data=dict(rule=name, glyphName=b, object=fontObj, font=prettyFontName(fontObj))))
+                        self.problems.append(DesignSpaceProblem(7,1, data=dict(rule=name, glyphName=b, font=prettyFontName(fontObj))))
             if not rd.subs:
                 # 7.3 no substition glyphs defined
                 self.problems.append(DesignSpaceProblem(7,3, data=dict(rule=name)))
