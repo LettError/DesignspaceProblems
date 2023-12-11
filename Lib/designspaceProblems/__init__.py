@@ -529,8 +529,11 @@ class DesignSpaceChecker(object):
                 if name not in self.nf:
                     deets = f'empty glyph at default: {name}'
                     self.problems.append(DesignSpaceProblem(4,7, dict(glyphName=name), details=deets))
-                for discreteLocation in discreteLocations:
-                    self.checkGlyph(name, discreteLocation=discreteLocation)
+                if discreteLocations:
+                    for discreteLocation in discreteLocations:
+                        self.checkGlyph(name, discreteLocation=discreteLocation)
+                else:
+                    self.checkGlyph(name, discreteLocation=None)
 
     def discreteLocationAsString(self, loc=None):
         if loc is None:
