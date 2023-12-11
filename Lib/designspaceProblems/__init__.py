@@ -477,11 +477,11 @@ class DesignSpaceChecker(object):
             self.checkLocationForIllegalDiscreteValues(jd.location)
         allLocations = {}
         for i, jd in enumerate(self.ds.instances):
-            if jd.location is None:
-                deets = f'No location for {jd.familyName} {jd.styleName}'
+            if not jd.designLocation and not jd.userLocation:
+                deets = f'No design or user location for {jd.familyName} {jd.styleName}'
                 self.problems.append(DesignSpaceProblem(3,1, dict(instance=i), details=deets))
             else:
-                key = list(jd.location.items())
+                key = list(jd.getFullDesignLocation(self.ds).items())
                 key.sort()
                 key = tuple(key)
                 if key not in allLocations:
@@ -512,28 +512,30 @@ class DesignSpaceChecker(object):
     def checkGlyphs(self):
         # check all glyphs in all fonts
         # need to load the fonts before we can do this
-        if not hasattr(self.ds, "collectMastersForGlyph"):
-            return
-        glyphs = {}
-        # 4.7 default glyph is empty
-        for fontName, fontObj in self.ds.fonts.items():
-            if fontObj is None:
-                continue
-            for glyphName in fontObj.keys():
-                if glyphName not in glyphs:
-                    glyphs[glyphName] = []
-                glyphs[glyphName].append(fontObj)
+
         discreteLocations = self.getDiscreteLocations()
-        for name in glyphs.keys():
-            if self.nf is not None:
-                if name not in self.nf:
-                    deets = f'empty glyph at default: {name}'
-                    self.problems.append(DesignSpaceProblem(4,7, dict(glyphName=name), details=deets))
-                if discreteLocations:
-                    for discreteLocation in discreteLocations:
-                        self.checkGlyph(name, discreteLocation=discreteLocation)
-                else:
-                    self.checkGlyph(name, discreteLocation=None)
+        if not discreteLocations:
+            discreteLocations = [None]
+
+        for discreteLocation in discreteLocations:
+            glyphNames = set()
+            # 4.7 default glyph is empty
+            sourceDescriptors = self.ds.findSourceDescriptorsForDiscreteLocation(discreteLocation)
+            for sourceDescriptor in sourceDescriptors:
+                sourceFont = self.ds.fonts[sourceDescriptor.name]
+                if sourceFont is None:
+                    continue
+                for glyphName in sourceFont.keys():
+                    glyphNames.add(glyphName)
+
+            defaultFont = self.ds.findDefaultFont(discreteLocation)
+            if defaultFont is not None:
+                for glyphName in glyphNames:
+                    if glyphName not in defaultFont:
+                        deets = f'empty glyph at default: {glyphName}'
+                        self.problems.append(DesignSpaceProblem(4, 7, dict(glyphName=glyphName), details=deets))
+                    else:
+                        self.checkGlyph(glyphName, discreteLocation=discreteLocation)
 
     def discreteLocationAsString(self, loc=None):
         if loc is None:
@@ -605,7 +607,7 @@ class DesignSpaceChecker(object):
             contours[contourCount] += 1
         unicodeResults = unicodes.evaluate()
         if unicodeResults:
-            deets = f'multiple unicode values in glyph {glyphName}{dLocString}: {unicodeResults}'
+            deets = f'multiple unicode values in glyph {glyphName} {dLocString}: {unicodeResults}'
             self.problems.append(DesignSpaceProblem(4,10, dict(glyphName=glyphName, unicodes=unicodeResults, discreteLocation=dLocString), details=deets))
         if len(components) != 0:
             for baseGlyphName, refCount in components.items():

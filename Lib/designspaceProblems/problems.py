@@ -168,7 +168,7 @@ class DesignSpaceProblem(object):
         if self.details is not None:
             dt += " / " + self.details
         if self.data is not None:
-            dt += ", " + ', '.join(f"{key}: {info}" for key, info in self.data.items() if key != "object")
+            dt += ", " + ', '.join(f"{key}: {info}" for key, info in self.data.items() if key != "object" and info is not "")
         return '[' + ": ".join(t) + dt + ' %s' % str(key) + ']'
 
 def allProblems():
