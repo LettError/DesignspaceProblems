@@ -79,6 +79,7 @@ class DesignSpaceProblem(object):
         (3,8):  "missing output path",
         (3,10): "no instances defined",
         (3,11): "no instances defined for discrete location",
+        (3,12): "illegal value in discrete axis",
 
         # 4 glyphs
         (4,0): 'different number of contours in glyph',

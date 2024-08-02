@@ -313,13 +313,15 @@ class DesignSpaceChecker(object):
             return self.ds.getDiscreteLocations()
         return [self.ds.newDefaultLocation(bend=True)]
 
-    def checkLocationForIllegalDiscreteValues(self, location):
+    def checkLocationForIllegalDiscreteValues(self, location, descriptorType="source"):
         # check this location for values on discrete axes that are not defined.
         discreteAxes = self.ds.getOrderedDiscreteAxes()
-
         for d in discreteAxes:
             if not location.get(d.name, None) in d.values:
-                self.problems.append(DesignSpaceProblem(2,13, dict(axisValues=d.values, locationValue=location.get(d.name, None))))
+                if descriptorType == "source":
+                    self.problems.append(DesignSpaceProblem(2,13, dict(axisValues=d.values, locationValue=location.get(d.name, None))))
+                elif descriptorType == "instance":
+                    self.problems.append(DesignSpaceProblem(3,12, dict(axisValues=d.values, locationValue=location.get(d.name, None))))
 
     def checkSources(self, discreteLocation=None):
         #@@
@@ -452,11 +454,14 @@ class DesignSpaceChecker(object):
         if len(self.ds.instances) == 0:
             self.problems.append(DesignSpaceProblem(3,10))
         for i, jd in enumerate(self.ds.instances):
-            if jd.location is None:
+            # it's `jd` because `id` is obviously a reserved word
+            jdLocation = jd.getFullDesignLocation(self.ds)
+            
+            if jdLocation is None:
                 # 3,1   instance location missing
                 self.problems.append(DesignSpaceProblem(3,1, dict(path=jd.path)))
             else:
-                continuous, discrete = self.ds.splitLocation(jd.location)
+                continuous, discrete = self.ds.splitLocation(jdLocation)
                 for axisName, axisValue in continuous.items():
                     if type(axisValue) == tuple:
                         thisAxisValues = list(axisValue)
@@ -477,7 +482,8 @@ class DesignSpaceChecker(object):
                             self.problems.append(DesignSpaceProblem(3,2, dict(axisName=axisName)))
         # check for illegal values in discrete locations
         for i, jd in enumerate(self.ds.instances):
-            self.checkLocationForIllegalDiscreteValues(jd.location)
+            jdLocation = jd.getFullUserLocation(self.ds)
+            self.checkLocationForIllegalDiscreteValues(jdLocation, descriptorType="instance")
         allLocations = {}
         for i, jd in enumerate(self.ds.instances):
             if not jd.designLocation and not jd.userLocation:
@@ -498,16 +504,18 @@ class DesignSpaceChecker(object):
 
         # 3,5   instance location is anisotropic
         for i, jd in enumerate(self.ds.instances):
+            jdLocation = jd.getFullUserLocation(self.ds)
+            
             # 3,6   missing family name
-            if jd.familyName is None:
-                deets = f"instance at {prettyLocation(jd.location)}"
+            if not jd.familyName:
+                deets = f"instance at {prettyLocation(jdLocation)}"
                 self.problems.append(DesignSpaceProblem(3,6, dict(instance=jd), details=deets))
             # 3,7   missing style name
-            if jd.styleName is None:
-                deets = f"instance at {prettyLocation(jd.location)}"
+            if not jd.styleName:
+                deets = f"instance at {prettyLocation(jdLocation)}"
                 self.problems.append(DesignSpaceProblem(3,7, dict(instance=jd), details=deets))
             # 3,8   missing output path
-            if jd.filename is None:
+            if not jd.filename:
                 deets = f"no location for {jd.familyName} {jd.styleName}"
                 self.problems.append(DesignSpaceProblem(3,8, dict(instance=jd), details=deets))
         # 3,9   duplicate instances
