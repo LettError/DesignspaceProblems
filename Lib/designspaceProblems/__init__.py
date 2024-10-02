@@ -800,8 +800,8 @@ class DesignSpaceChecker(object):
                     if isinstance(element, featureElements.FeatureBlock):
                         if element.name in countedFeaturesTags:
                             countedFeaturesTags[element.name] += 1
-            except Exception:
-                self.problems.append(DesignSpaceProblem(8,0))
+            except Exception as err:
+                self.problems.append(DesignSpaceProblem(8,0, details=str(err)))
 
         sourceCount = len(self.ds.fonts)
         for tag, value in countedFeaturesTags.items():
@@ -813,6 +813,7 @@ class DesignSpaceChecker(object):
                 continue
             else:
                 self.problems.append(DesignSpaceProblem(8,1, data=dict(feature=tag)))
+
 
 
 if __name__ == "__main__":
@@ -829,3 +830,4 @@ if __name__ == "__main__":
     print(dc.discreteLocationAsString({'countedItems': 1.0, 'outlined': 0.0}))
     print(dc.discreteLocationAsString())
     print(dc.discreteLocationAsString({}))
+
