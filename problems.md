@@ -62,6 +62,7 @@
   * `3.9	instance location is anisotropic`
   * `3.10	no instances defined`
   * `3.11	no instances defined for discrete location`
+  * `3.12	illegal value in discrete axis`
 
 ## 4. glyphs
 
@@ -81,7 +82,7 @@
 
   * `5.0	no kerning in source`
   * `5.1	no kerning in default`
-  * `5.2	kerning group does not match`
+  * `5.2	kerning group has differnt members`
   * `5.3	kerning group missing in default`
   * `5.4	kerning pair missing`
   * `5.5	no kerning groups in default`

@@ -97,9 +97,11 @@ class DesignSpaceProblem(object):
         # 5 kerning
         (5,0): 'no kerning in source',
         (5,1): 'no kerning in default',
-        (5,2): 'kerning group does not match',
-        (5,3): 'kerning group missing in default',
         (5,4): 'kerning pair missing',
+
+        # 5b groups
+        (5,2): 'kerning group has differnt members',
+        (5,3): 'kerning group missing in default',
         (5,5): 'no kerning groups in default',
         (5,6): 'no kerning groups in source',
         (5,7): 'kerning group members sorted differently',
