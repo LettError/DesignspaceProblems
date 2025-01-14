@@ -686,10 +686,15 @@ class DesignSpaceChecker(object):
                     # check if they have the same members
                     sourceGroupMembers = list(fontObj.groups[sourceGroupName])
                     defaultGroupMembers = list(nf.groups[sourceGroupName])
-                    if sourceGroupMembers != defaultGroupMembers:                    # # check if they have the same members
-                        # 5,2 kerning group members do not match
-                        deets = f'{sourceGroupName}: {sourceGroupMembers}, {defaultGroupMembers}'
-                        self.problems.append(DesignSpaceProblem(5,2, dict(font=prettyFontName(fontObj), groupName=sourceGroupName), details=deets))
+                    if sourceGroupMembers != defaultGroupMembers:  # They're different
+                        if sorted(sourceGroupMembers) == sorted(defaultGroupMembers): # but when sorted, they're the same
+                             # 5,7 kerning group members sorted differently
+                            deets = f'{sourceGroupName}: {sourceGroupMembers}, {defaultGroupMembers}'
+                            self.problems.append(DesignSpaceProblem(5,7, dict(font=prettyFontName(fontObj), groupName=sourceGroupName), details=deets))
+                        else: # after sorting, the group members was different
+                            # 5,2 kerning group members do not match
+                            deets = f'{sourceGroupName}: {sourceGroupMembers}, {defaultGroupMembers}'
+                            self.problems.append(DesignSpaceProblem(5,2, dict(font=prettyFontName(fontObj), groupName=sourceGroupName), details=deets))
 
     def checkFontInfo(self, discreteLocation=None):
         nf = self.ds.getNeutralFont(discreteLocation=discreteLocation)
