@@ -1,0 +1,7 @@
+defcon[lxml]>=0.6.0
+fontMath>=0.4.9
+fontParts>=0.8.2
+fontPens>=0.2.4
+fontTools[ufo,lxml]>=3.32.0
+mutatorMath>=2.1.2
+ufoProcessor>=1.0

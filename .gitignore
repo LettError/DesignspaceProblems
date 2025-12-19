@@ -15,3 +15,9 @@ Lib/designspaceProblems/_version.py
 
 tests/20190324 ufolib issue
 tests/_*
+
+# Virtual environment
+venv/
+
+# IDE
+.vscode/

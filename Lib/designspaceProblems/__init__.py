@@ -15,6 +15,52 @@ from fontPens.digestPointPen import DigestPointStructurePen
 from designspaceProblems.problems import DesignSpaceProblem
 
 
+def parseDigestContours(pat):
+    """Parse a digest tuple into per-contour statistics.
+
+    Returns a list of dicts, one per contour:
+        {'on_curves': int, 'off_curves': int, 'types': tuple}
+    """
+    contours = []
+    current = None
+    for item in pat:
+        if isinstance(item, tuple) and item[0] == 'beginPath':
+            current = {'on_curves': 0, 'off_curves': 0, 'types': []}
+        elif item == 'endPath':
+            if current is not None:
+                current['types'] = tuple(current['types'])
+                contours.append(current)
+            current = None
+        elif current is not None:
+            if item is None:
+                current['off_curves'] += 1
+            else:
+                current['on_curves'] += 1
+                current['types'].append(item)
+    return contours
+
+
+def getContourDirection(contour):
+    """Calculate contour direction using signed area (shoelace formula).
+
+    Returns 1 for counter-clockwise, -1 for clockwise, 0 for degenerate.
+    """
+    area = 0
+    points = [(p.x, p.y) for p in contour if p.segmentType is not None]
+    n = len(points)
+    if n < 3:
+        return 0
+    for i in range(n):
+        j = (i + 1) % n
+        area += points[i][0] * points[j][1]
+        area -= points[j][0] * points[i][1]
+    if area > 0:
+        return 1
+    elif area < 0:
+        return -1
+    return 0
+
+
 def prettyLocation(loc):
     if loc is None:
         return "[no location]"
@@ -572,6 +618,8 @@ class DesignSpaceChecker(object):
         components = {}
         unicodes = UnicodeCollector()
         anchors = {}
+        contourStats = {}  # pat -> list of contour stats
+        contourDirections = []  # list of (loc, directions) per master
         for loc, mg, masters in items:
             masterName = masters.get('sourceName')
             masterFont = self.ds.fonts.get(masterName)
@@ -612,6 +660,12 @@ class DesignSpaceChecker(object):
             if contourCount not in contours:
                 contours[contourCount] = 0
             contours[contourCount] += 1
+            # collect per-contour stats for detailed checks
+            if pat not in contourStats:
+                contourStats[pat] = parseDigestContours(pat)
+            # collect contour directions for 4.8
+            directions = tuple(getContourDirection(c) for c in mg)
+            contourDirections.append((loc, directions))
         unicodeResults = unicodes.evaluate()
         if unicodeResults:
             deets = f'multiple unicode values in glyph {glyphName} {dLocString}: {", ".join(unicodeResults)}'
@@ -636,12 +690,42 @@ class DesignSpaceChecker(object):
             self.problems.append(DesignSpaceProblem(4,0, dict(glyphName=glyphName, discreteLocation=dLocString)))
         if len(patterns.keys()) > 1:
             # 4,9 incompatible constructions for glyph
-            # maybe this is enough to start with
             self.problems.append(DesignSpaceProblem(4,9, dict(glyphName=glyphName, discreteLocation=dLocString)))
-            # 4.1 different number of components in glyph
-            # 4.3 different number of on-curve points on contour
-            # 4.4 different number of off-curve points on contour
-            # 4.5 curve has wrong type
+            # detailed checks: compare first pattern to others
+            pats = list(contourStats.keys())
+            refStats = contourStats[pats[0]]
+            reported43 = set()
+            reported44 = set()
+            reported45 = set()
+            for otherPat in pats[1:]:
+                otherStats = contourStats[otherPat]
+                # compare contour by contour
+                minLen = min(len(refStats), len(otherStats))
+                for ci in range(minLen):
+                    ref = refStats[ci]
+                    other = otherStats[ci]
+                    if ref['on_curves'] != other['on_curves'] and ci not in reported43:
+                        # 4.3 different number of on-curve points on contour
+                        self.problems.append(DesignSpaceProblem(4,3, dict(glyphName=glyphName, contourIndex=ci, discreteLocation=dLocString)))
+                        reported43.add(ci)
+                    if ref['off_curves'] != other['off_curves'] and ci not in reported44:
+                        # 4.4 different number of off-curve points on contour
+                        self.problems.append(DesignSpaceProblem(4,4, dict(glyphName=glyphName, contourIndex=ci, discreteLocation=dLocString)))
+                        reported44.add(ci)
+                    if ref['types'] != other['types'] and ci not in reported45:
+                        # 4.5 curve has wrong type
+                        self.problems.append(DesignSpaceProblem(4,5, dict(glyphName=glyphName, contourIndex=ci, discreteLocation=dLocString)))
+                        reported45.add(ci)
+        # 4.8 contour has wrong direction
+        if len(contourDirections) > 1:
+            refDirs = contourDirections[0][1]
+            reportedContours = set()
+            for loc, dirs in contourDirections[1:]:
+                if dirs != refDirs:
+                    for ci, (rd, od) in enumerate(zip(refDirs, dirs)):
+                        if rd != od and rd != 0 and od != 0 and ci not in reportedContours:
+                            self.problems.append(DesignSpaceProblem(4,8, dict(glyphName=glyphName, contourIndex=ci, discreteLocation=dLocString)))
+                            reportedContours.add(ci)
 
     def _anyKerning(self):
         # return True if there is kerning in one of the masters
